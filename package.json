@@ -9,16 +9,26 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.6",
+    "@mdi/js": "^7.1.96",
+    "@mdi/react": "^1.6.1",
+    "@reduxjs/toolkit": "^1.9.1",
     "@sentry/nextjs": "^7.26.0",
+    "@tanstack/react-query": "^4.20.4",
+    "axios": "^1.2.1",
     "clsx": "^1.2.1",
     "date-fns": "^2.29.3",
+    "i18next": "^22.4.6",
+    "keen-slider": "^6.8.5",
     "next": "13.0.6",
+    "next-i18next": "^13.0.2",
     "openapi-typescript": "^6.1.0",
     "react": "18.2.0",
     "react-datepicker": "^4.8.0",
     "react-dom": "18.2.0",
-    "typescript": "4.9.4",
-    "zustand": "^4.1.5"
+    "react-i18next": "^12.1.1",
+    "redux-persist": "^6.0.0",
+    "typescript": "4.9.4"
   },
   "devDependencies": {
     "@types/node": "18.11.15",
@@ -26,6 +36,7 @@
     "@types/react-dom": "18.0.9",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
+    "autoprefixer": "^10.4.13",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
     "eslint-config-prettier": "^8.5.0",
@@ -35,7 +46,8 @@
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.10",
     "eslint-prettier": "^0.0.0-empty",
-    "postcss": "^8.4.16",
-    "prettier": "^2.7.1"
+    "postcss": "^8.4.20",
+    "prettier": "^2.7.1",
+    "tailwindcss": "^3.2.4"
   }
 }

@@ -19,7 +19,6 @@ module.exports = {
 	plugins: ['react', '@typescript-eslint'],
 	rules: {
 		'no-mixed-spaces-and-tabs': 0,
-		'@next/next/no-img-element': 'off',
 		// 'linebreak-style': ['error', 'unix'],
 		quotes: ['error', 'single'],
 		semi: ['error', 'never'],

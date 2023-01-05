@@ -1,0 +1,5 @@
+node_modules
+/.vscode
+/.git
+/lib/api.types.ts
+/next.config.js
