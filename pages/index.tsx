@@ -46,7 +46,7 @@ const Main = () => {
 		isError: isCitiesIsError,
 	} = useQuery(['cities'], () => getCities({ locale: locale as string }))
 
-	const [isAlert, setIsAlert] = useState(true)
+	const [isAlert, setIsAlert] = useState(false)
 	if (isCitiesLoading || isToursLoading) return <>Loading...</>
 	if (isToursError || isCitiesIsError) return <>Error!</>
 	return (

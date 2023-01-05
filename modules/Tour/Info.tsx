@@ -1,5 +1,3 @@
-import { Tour } from '@/API/types/Tour'
-import { Card } from '@/components/Layout/Card'
 import { ListOption } from '@/components/Tour/ListOption'
 import { Button } from '@/components/UI/Button'
 import { mdiClockTimeThree, mdiMapMarker } from '@mdi/js'
@@ -25,7 +23,7 @@ export const Info = ({ className }: Props) => {
 				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 				commodo consequat.
 			</p>
-			{[1, 2, 3, 4, 5, 6].map((item, index) => (
+			{[1, 2, 3, 4, 5, 6].map(item => (
 				<ListOption
 					key={item}
 					icon={mdiClockTimeThree}
