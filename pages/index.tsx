@@ -56,8 +56,8 @@ const Main = () => {
 			</Head>
 			<AlertModal isVisible={isAlert} onClose={() => setIsAlert(false)} />
 			<Container className='flex flex-row pt-10 pb-24'>
-				<Sidebar className='w-80'></Sidebar>
-				<div className='w-full h-full'>
+				<Sidebar className='w-80 shrink-0 grow-0'></Sidebar>
+				<div className='w-full h-full grow-1'>
 					<Search></Search>
 					<Cards title={t('popularTours')} tours={tours} />
 					<Cards title='Популярные' tours={tours} />

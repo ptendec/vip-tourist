@@ -10,13 +10,14 @@ import {
 	REHYDRATE,
 } from 'redux-persist'
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage'
+import favouritesReducer from './favourites/index'
 
 const storage = createWebStorage('local')
 
 const rootReducer = combineReducers({
 	// user: userReducer,
 	// cart: cartReducer,
-	// favorites: favoritesReducer,
+	favourites: favouritesReducer,
 })
 
 const persistConfig = {

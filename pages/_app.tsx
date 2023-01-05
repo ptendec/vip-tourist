@@ -10,6 +10,9 @@ import { ReactElement, ReactNode, useState } from 'react'
 import '../styles/globals.css'
 
 import { appWithTranslation } from 'next-i18next'
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import store, { persistor } from 'store'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -24,11 +27,15 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
 	const [queryClient] = useState(() => new QueryClient())
 	usePreserveScroll()
 	return (
-		<QueryClientProvider client={queryClient}>
-			<Hydrate state={pageProps.dehydratedState}>
-				<Component {...pageProps} />
-			</Hydrate>
-		</QueryClientProvider>
+		<Provider store={store}>
+			<PersistGate loading={null} persistor={persistor}>
+				<QueryClientProvider client={queryClient}>
+					<Hydrate state={pageProps.dehydratedState}>
+						<Component {...pageProps} />
+					</Hydrate>
+				</QueryClientProvider>
+			</PersistGate>
+		</Provider>
 	)
 }
 
