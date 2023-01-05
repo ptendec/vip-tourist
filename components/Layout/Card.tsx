@@ -1,6 +1,6 @@
 import { ComponentPropsWithoutRef } from 'react'
 import Image from 'next/image'
-import { Tour } from '@/API/types'
+import { Tour } from '@/API/types/Tour'
 
 interface Props extends ComponentPropsWithoutRef<'div'> {
 	tour: Tour

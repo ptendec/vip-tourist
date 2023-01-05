@@ -1,4 +1,4 @@
-import { Tour } from '@/API/types'
+import { Tour } from '@/API/types/Tour'
 import { Card } from '@/components/Layout/Card'
 
 interface Props {

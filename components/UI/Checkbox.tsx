@@ -1,7 +1,5 @@
 import { mdiCheckboxBlankOutline, mdiCheckboxMarked } from '@mdi/js'
 import Icon from '@mdi/react'
-import { useState } from 'react'
-import { animated, useSpring, config, useSpringRef } from 'react-spring'
 
 interface Props {
 	checked: boolean
