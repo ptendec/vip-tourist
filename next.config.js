@@ -14,9 +14,9 @@ const nextConfig = {
 	images: {
 		domains: [
 			'http://37.140.241.144/',
-			'https://37.140.241.144/',
 			'37.140.241.144',
 			'res.cloudinary.com',
+			'server.viptourist.club',
 		],
 	},
 	i18n,

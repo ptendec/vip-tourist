@@ -9,8 +9,8 @@ export const Button = ({
 	<button
 		{...rest}
 		className={clsx(
+			'flex items-center justify-center bg-green text-white font-semibold rounded-lg py-3 w-full text-sm outline-none',
 			className,
-			'flex items-center justify-center bg-green text-white font-semibold rounded-lg py-4 w-full',
 		)}
 	>
 		{children}

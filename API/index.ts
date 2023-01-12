@@ -2,7 +2,7 @@ import Router from 'next/router'
 import axios from 'axios'
 import store from 'store'
 
-const URL = 'http://37.140.241.144:1337'
+const URL = process.env.NEXT_PUBLIC_API_URL
 
 const $host = axios.create({
 	baseURL: URL,

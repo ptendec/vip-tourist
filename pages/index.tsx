@@ -55,15 +55,15 @@ const Main = () => {
 				<title>Проверка</title>
 			</Head>
 			<AlertModal isVisible={isAlert} onClose={() => setIsAlert(false)} />
-			<Container className='flex flex-row pt-10 pb-24'>
-				<Sidebar className='w-80 shrink-0 grow-0'></Sidebar>
-				<div className='w-full h-full grow-1'>
+			<div className='flex '>
+				<Sidebar className='basis-80 grow-1 srhink-0'></Sidebar>
+				<Container className='justify-self-center pt-10 pb-24 flex flex-col'>
 					<Search></Search>
 					<Cards title={t('popularTours')} tours={tours} />
 					<Cards title='Популярные' tours={tours} />
 					<Towns cities={cities}></Towns>
-				</div>
-			</Container>
+				</Container>
+			</div>
 		</>
 	)
 }

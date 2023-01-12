@@ -1,13 +1,18 @@
+import { components } from '@/API/types/api.types'
+import { Review } from '@/components/Tour/Review'
+
 interface Props {
-	a: string
+	reviews: components['schemas']['Tour']['reviews']
 }
 
-export const Review = ({ a }: Props) => {
+export const Reviews = ({ reviews }: Props) => {
 	return (
 		<div>
-			<p>Отзывы (6)</p>
+			<p>Отзывы ({reviews?.length})</p>
 			<div>
-				<Review a={''} />
+				{reviews?.map(review => (
+					<Review key={review.id} review={review} />
+				))}
 			</div>
 		</div>
 	)

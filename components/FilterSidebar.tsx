@@ -4,6 +4,7 @@ import { Fragment, useState } from 'react'
 import Icon from '@mdi/react'
 import { mdiClose } from '@mdi/js'
 import { staticCategories } from 'utilities/static'
+import { Button } from './UI/Button'
 
 interface Props {
 	isVisible: boolean
@@ -54,6 +55,7 @@ export const FilterSidebar = ({ isVisible, onClose }: Props) => {
 					</label>
 				</Fragment>
 			))}
+			<Button className='py-2'>Применить</Button>
 		</div>
 	)
 }

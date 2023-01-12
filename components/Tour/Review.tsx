@@ -1,12 +1,14 @@
+import { components } from '@/API/types/api.types'
 import { mdiStar } from '@mdi/js'
 import Icon from '@mdi/react'
 import Image from 'next/image'
+import { ArrayElement } from 'utilities/interfaces'
 
 interface Props {
-	a?: string
+	review: ArrayElement<components['schemas']['Tour']['reviews']>
 }
 
-export const Review = ({ a }: Props) => {
+export const Review = ({ review }: Props) => {
 	return (
 		<div className='flex gap-x-3'>
 			<span className='relative h-8 basis-8 shrink-0 inline-block'>
@@ -14,7 +16,7 @@ export const Review = ({ a }: Props) => {
 			</span>
 			<div className=''>
 				<div className='flex'>
-					<p className='text-sm font-semibold mr-2'>Имя Фамилия</p>
+					<p className='text-sm font-semibold mr-2'>{review.name}</p>
 					<div className='flex translate-x-1'>
 						{[1, 2, 3, 4, 5].map(item => (
 							<Icon
@@ -27,13 +29,8 @@ export const Review = ({ a }: Props) => {
 						))}
 					</div>
 				</div>
-				<span className='text-xs text-gray'>23.01.2021</span>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-					eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-					minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-					aliquip ex ea commodo consequat.
-				</p>
+				<span className='text-xs text-gray'>{review.updated_by}</span>
+				<p>{review.text}</p>
 				<button className='text-green text-xs font-semibold'>Перевести</button>
 			</div>
 		</div>

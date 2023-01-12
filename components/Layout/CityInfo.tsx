@@ -3,8 +3,13 @@ import Icon from '@mdi/react'
 import { useState } from 'react'
 import { FilterSidebar } from '../FilterSidebar'
 import { mdiCalendarBlank } from '@mdi/js'
+import { components } from '@/API/types/api.types'
 
-export const CityInfo = () => {
+interface Props {
+	city: components['schemas']['City']
+}
+
+export const CityInfo = ({ city }: Props) => {
 	const [isCategories, setIsCategories] = useState(false)
 
 	return (
@@ -15,10 +20,12 @@ export const CityInfo = () => {
 			/>
 			<div className='flex justify-between'>
 				<div>
-					<h1 className='text-xl font-semibold mb-2'>Алматы</h1>
+					<h1 className='text-xl font-semibold mb-2'>{city?.name}</h1>
 					<p className='flex '>
 						<Icon size={1} color='#86A545' path={mdiMapMarker} />
-						<span className='text-gray text-md '>Казахстан, Алматы</span>
+						<span className='text-gray text-md '>
+							{`${city.country?.name}, ${city?.name}`}
+						</span>
 					</p>
 				</div>
 				<div className='flex items-center'>

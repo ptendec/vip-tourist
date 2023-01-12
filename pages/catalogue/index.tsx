@@ -16,12 +16,7 @@ import { useTranslation } from 'react-i18next'
 
 const Main = () => {
 	const { locale } = useRouter()
-	const { data, isLoading, isError } = useQuery(['tours'], () =>
-		getTours({ locale: locale as string }),
-	)
-	const { t } = useTranslation()
-	if (isLoading) return <>Loading...</>
-	if (isError) return <>Error!</>
+
 	return (
 		<>
 			<Head>
@@ -34,8 +29,6 @@ const Main = () => {
 					<span className='relative h-40 w-full inline-block my-8'>
 						<Image fill src='/images/demo.png' alt={''}></Image>
 					</span>
-					<CityInfo />
-					<Cards title={t('popularTours')} tours={data} />
 				</div>
 			</Container>
 		</>

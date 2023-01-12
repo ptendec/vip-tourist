@@ -1,9 +1,10 @@
+import { components } from '@/API/types/api.types'
 import { City } from '@/API/types/City'
 import { Town } from '@/components/Layout/Town'
 import { useKeenSlider } from 'keen-slider/react'
 
 interface Props {
-	cities: City[]
+	cities: components['schemas']['City'][]
 }
 
 export const Towns = ({ cities }: Props) => {
@@ -25,7 +26,7 @@ export const Towns = ({ cities }: Props) => {
 			<p className='font-semibold text-lg mb-4 mt-8'>Города</p>
 			<div ref={ref} className='flex flex-row keen-slider overflow-hidden'>
 				{cities.map(city => (
-					<Town className='keen-slider__slide' key={city._id} city={city} />
+					<Town className='keen-slider__slide' key={city.id} city={city} />
 				))}
 			</div>
 		</div>

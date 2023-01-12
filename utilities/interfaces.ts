@@ -10,10 +10,16 @@ export interface Breadcrumb {
 
 export interface QueryParams {
 	locale: string
+	id?: string
 }
 
 export interface AdditionalInfo {
 	id: string
 	title: string
 	description: string
+}
+
+export interface AuthorizationFields {
+	email: string
+	password: string
 }
