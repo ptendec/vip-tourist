@@ -2,7 +2,7 @@ import Router from 'next/router'
 import axios from 'axios'
 import store from 'store'
 
-const URL = process.env.NEXT_PUBLIC_API_URL
+const URL = 'https://server.viptourist.club'
 
 const $host = axios.create({
 	baseURL: URL,
