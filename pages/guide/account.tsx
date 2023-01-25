@@ -3,15 +3,14 @@ import { getTours } from '@/API/tour.service'
 import { AlertModal } from '@/components/Modal/AlertModal'
 import { Sidebar } from '@/components/Sidebar'
 import { Container } from '@/components/UI/Container'
-import { Cards } from '@/modules/Cards'
 import { Layout } from '@/modules/Layout'
-import { Search } from '@/modules/Search'
-import { Towns } from '@/modules/Towns'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
+import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactElement, useState } from 'react'
 import { json } from 'utilities/utilities'
@@ -34,22 +33,22 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
 const Main = () => {
 	const { t } = useTranslation()
-	const { locale } = useRouter()
-	const {
-		data: tours,
-		isLoading: isToursLoading,
-		isError: isToursError,
-	} = useQuery(['tours'], () => getTours({ locale: locale as string }))
+	const { locale, pathname } = useRouter()
 
-	const {
-		data: cities,
-		isLoading: isCitiesLoading,
-		isError: isCitiesIsError,
-	} = useQuery(['cities'], () => getCities({ locale: locale as string }))
+	const profileLinks = [
+		{
+			id: 1,
+			name: t('profile'),
+			href: '/guide/profile',
+		},
+		{
+			id: 2,
+			name: t('account'),
+			href: '/guide/account',
+		},
+	]
 
 	const [isAlert, setIsAlert] = useState(false)
-	if (isCitiesLoading || isToursLoading) return <>Loading...</>
-	if (isToursError || isCitiesIsError) return <>Error!</>
 
 	return (
 		<>
@@ -59,11 +58,21 @@ const Main = () => {
 			<AlertModal isVisible={isAlert} onClose={() => setIsAlert(false)} />
 			<div className='flex '>
 				<Sidebar className='basis-80 grow-1 srhink-0'></Sidebar>
-				<Container className='justify-self-center pt-10 pb-24 flex flex-col'>
-					<Search></Search>
-					<Cards title={t('popularTours')} tours={tours} />
-					<Cards title='Популярные' tours={tours} />
-					<Towns cities={cities}></Towns>
+				<Container className='justify-self-center pt-10'>
+					<div className='flex gap-x-3'>
+						{profileLinks.map(link => (
+							<Link
+								className={clsx(
+									'px-4 py-2 text-sm border border-[#E9EAE8] rounded-lg font-semibold',
+									pathname === link.href && 'border-green text-green',
+								)}
+								key={link.id}
+								href={link.href}
+							>
+								{link.name}
+							</Link>
+						))}
+					</div>
 				</Container>
 			</div>
 		</>

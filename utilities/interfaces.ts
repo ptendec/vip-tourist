@@ -27,3 +27,13 @@ export interface AuthorizationFields {
 export type ArrayElement<
 	ArrayType extends readonly unknown[] | undefined | null,
 > = ArrayType extends readonly (infer ElementType)[] ? ElementType : never
+
+export interface User {
+	uid: string
+	email: string
+}
+
+export interface AuthContext {
+	user: User | null
+	loading: boolean
+}

@@ -47,7 +47,6 @@ const Main = () => {
 		getTours({ locale: locale as string }),
 	)
 	const { t } = useTranslation()
-	console.log(city)
 	if (isLoading || isCityLoading) return <>Loading...</>
 	if (isError || isCityError) return <>Error!</>
 	return (

@@ -9,10 +9,8 @@ import type { AppProps } from 'next/app'
 import { ReactElement, ReactNode, useState } from 'react'
 import '../styles/globals.css'
 
+import { AuthUserProvider } from 'context/AuthContext'
 import { appWithTranslation } from 'next-i18next'
-import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
-import store, { persistor } from 'store'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -25,17 +23,17 @@ type AppPropsWithLayout = AppProps & {
 
 function App({ Component, pageProps }: AppPropsWithLayout) {
 	const [queryClient] = useState(() => new QueryClient())
+
 	usePreserveScroll()
+
 	return (
-		<Provider store={store}>
-			<PersistGate loading={null} persistor={persistor}>
-				<QueryClientProvider client={queryClient}>
-					<Hydrate state={pageProps.dehydratedState}>
-						<Component {...pageProps} />
-					</Hydrate>
-				</QueryClientProvider>
-			</PersistGate>
-		</Provider>
+		<QueryClientProvider client={queryClient}>
+			<Hydrate state={pageProps.dehydratedState}>
+				<AuthUserProvider>
+					<Component {...pageProps} />
+				</AuthUserProvider>
+			</Hydrate>
+		</QueryClientProvider>
 	)
 }
 

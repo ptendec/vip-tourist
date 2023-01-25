@@ -1,7 +1,6 @@
 import { components } from './types/api.types'
 import { QueryParams } from '../utilities/interfaces'
 import { $host } from 'API'
-import { City } from './types/City'
 
 export const getCountries = async ({
 	locale,

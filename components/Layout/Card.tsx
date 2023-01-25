@@ -1,12 +1,11 @@
-import { ComponentPropsWithoutRef } from 'react'
-import Image from 'next/image'
-import Icon from '@mdi/react'
-import { mdiCardsHeart, mdiStar } from '@mdi/js'
-import { useAppDispatch, useAppSelector } from '@/hooks/useStore'
-import { addFavourite, removeFavourite } from 'store/favourites'
-import Link from 'next/link'
-import clsx from 'clsx'
 import { components } from '@/API/types/api.types'
+import { mdiCardsHeart, mdiStar } from '@mdi/js'
+import Icon from '@mdi/react'
+import clsx from 'clsx'
+import Image from 'next/image'
+import Link from 'next/link'
+import { ComponentPropsWithoutRef } from 'react'
+import { useFavouritesStore } from 'store/favourites'
 import { ArrayElement } from 'utilities/interfaces'
 
 interface Props extends ComponentPropsWithoutRef<'div'> {
@@ -16,14 +15,12 @@ interface Props extends ComponentPropsWithoutRef<'div'> {
 }
 
 export const Card = ({ tour, className }: Props) => {
-	const dispatch = useAppDispatch()
-	const favourites = useAppSelector(state => state.favourites.favorites)
-
+	const { favourites, addFavourite, removeFavourite } = useFavouritesStore(
+		state => state,
+	)
 	const isTourInFavourite = favourites.find(favourite => favourite === tour.id)
 	const addToFavourites = () => {
-		isTourInFavourite
-			? dispatch(removeFavourite(tour.id))
-			: dispatch(addFavourite(tour.id))
+		isTourInFavourite ? removeFavourite(tour.id) : addFavourite(tour.id)
 	}
 	return (
 		<div

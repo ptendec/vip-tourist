@@ -1,27 +1,27 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { create } from 'zustand'
+import { devtools, persist } from 'zustand/middleware'
 
-interface InitialState {
-	favorites: string[]
+interface Favourites {
+	favourites: string[]
+	addFavourite: (id: string) => void
+	removeFavourite: (id: string) => void
 }
 
-const initialState: InitialState = {
-	favorites: [],
-}
-
-const favouritesSlice = createSlice({
-	name: 'favourites',
-	initialState,
-	reducers: {
-		addFavourite(state, action: PayloadAction<string>) {
-			state.favorites.push(action.payload)
-		},
-		removeFavourite(state, action: PayloadAction<string>) {
-			state.favorites = state.favorites.filter(
-				favorite => favorite !== action.payload,
-			)
-		},
-	},
-})
-
-export const { addFavourite, removeFavourite } = favouritesSlice.actions
-export default favouritesSlice.reducer
+export const useFavouritesStore = create<Favourites>()(
+	devtools(
+		persist(
+			set => ({
+				favourites: [],
+				addFavourite: id =>
+					set(state => ({ favourites: [...state.favourites, id] })),
+				removeFavourite: id =>
+					set(state => ({
+						favourites: state.favourites.filter(favorite => favorite !== id),
+					})),
+			}),
+			{
+				name: 'favourites',
+			},
+		),
+	),
+)

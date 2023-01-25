@@ -4,7 +4,7 @@ import react, { ComponentPropsWithoutRef, ReactNode } from 'react'
 
 interface Props extends ComponentPropsWithoutRef<'input'> {
 	icon?: ReactNode | string
-	label?: string
+	label?: string | null
 	error?: string
 	className?: string
 }
@@ -34,7 +34,10 @@ export const Input = react.forwardRef<HTMLInputElement, Props>(
 					<input
 						ref={ref}
 						{...rest}
-						className='block border-gray border bg-white py-3 pl-10 px-5 w-full self-center rounded-lg outline-0 placeholder:text-sm text-sm'
+						className={clsx(
+							'block border-gray border bg-white py-3  px-5 w-full self-center rounded-lg outline-0 placeholder:text-sm text-sm',
+							icon && 'pl-10',
+						)}
 					/>
 				</div>
 				<span className='text-[#EB455F] text-xs font-medium'>{error}</span>
