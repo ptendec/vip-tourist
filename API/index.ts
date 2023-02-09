@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Router from 'next/router'
 
-const URL = 'http://37.140.241.144:1337'
+const URL = 'https://server.viptourist.club'
 
 const $host = axios.create({
 	baseURL: URL,
