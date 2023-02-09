@@ -48,7 +48,7 @@ const Main = () => {
 					<div className='flex'>
 						<Link
 							href='/auth/authorization'
-							className='rounded-full p-1.5 shadow-md transition-all duration-600 ease-out hover:-translate-x-[2px] justify-self-start w-8 h-8 flex items-center'
+							className='rounded-full p-1.5 shadow-md transition-all duration-700 ease-out hover:-translate-x-[2px] justify-self-start w-8 h-8 flex items-center'
 						>
 							<Icon path={mdiChevronLeft} size={1} color='#3B3F32' />
 						</Link>

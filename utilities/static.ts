@@ -1,6 +1,14 @@
-import { AdditionalInfo } from 'utilities/interfaces'
+import {
+	mdiAccount,
+	mdiAccountKey,
+	mdiAccountPlus,
+	mdiBell,
+	mdiBook,
+	mdiHeart,
+	mdiHome,
+} from '@mdi/js'
+import { AdditionalInfo, Navbar } from 'utilities/interfaces'
 import { Breadcrumb } from './interfaces'
-import { Categories } from 'utilities/interfaces'
 export const SidebarOptions = [
 	{
 		id: 1,
@@ -239,5 +247,113 @@ export const additionalInfoList: AdditionalInfo[] = [
 		title: 'Важная информация',
 		description:
 			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+	},
+]
+
+const addTourSteps = [
+	{
+		id: 1,
+		name: 'Choose city',
+		t: 'addTour',
+	},
+	{
+		id: 2,
+		name: 'Describe tour',
+		t: 'addTour',
+	},
+	{
+		id: 3,
+		name: 'Additional',
+		t: 'additional',
+	},
+	{
+		id: 4,
+		name: 'Pricing',
+		t: 'addTour',
+	},
+	{
+		id: 5,
+		name: 'Images upload',
+		t: 'photos',
+	},
+	{
+		id: 6,
+		name: 'Preview',
+		t: 'addTour',
+	},
+]
+
+export const touristTopNavbar: Navbar[] = [
+	{
+		id: 1,
+		href: '/',
+		label: 'home',
+		icon: mdiHome,
+	},
+	{
+		id: 2,
+		href: '/favourites',
+		label: 'wishlist',
+		icon: mdiHeart,
+	},
+	{
+		id: 3,
+		href: '/bookings',
+		label: 'booking',
+		icon: mdiBook,
+	},
+	{
+		id: 4,
+		href: '/notifications',
+		label: 'notifications',
+		icon: mdiBell,
+	},
+	{
+		id: 5,
+		href: '/profile/tourist',
+		label: 'profile',
+		icon: mdiAccount,
+	},
+]
+
+export const guideTopNavbar: Navbar[] = [
+	{
+		id: 1,
+		href: '/',
+		label: 'home',
+		icon: mdiHome,
+	},
+	{
+		id: 2,
+		href: '/profile/guide',
+		label: 'profile',
+		icon: mdiAccount,
+	},
+]
+
+export const noAuthTopNavbar: Navbar[] = [
+	{
+		id: 1,
+		href: '/',
+		label: 'home',
+		icon: mdiHome,
+	},
+	{
+		id: 2,
+		href: '/favourites',
+		label: 'wishlist',
+		icon: mdiHeart,
+	},
+	{
+		id: 2,
+		href: '/auth/registration',
+		label: 'signUp',
+		icon: mdiAccountPlus,
+	},
+	{
+		id: 3,
+		href: '/auth/authorization',
+		label: 'login',
+		icon: mdiAccountKey,
 	},
 ]

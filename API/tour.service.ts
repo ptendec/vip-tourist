@@ -1,7 +1,6 @@
-import { components } from './types/api.types'
-import { QueryParams } from './../utilities/interfaces'
 import { $host } from 'API'
-import { Tour } from './types/Tour'
+import { QueryParams } from './../utilities/interfaces'
+import { components } from './types/api.types'
 
 export const getTours = async ({
 	locale,
@@ -17,5 +16,18 @@ export const getTour = async ({
 }: QueryParams): Promise<components['schemas']['Tour']> => {
 	return await (
 		await $host.get(`/tours/${id}?_locale=${locale}`)
+	).data
+}
+
+export const getFavourites = async ({
+	locale,
+	tours,
+}: {
+	locale: string
+	tours: string[]
+}): Promise<components['schemas']['Tour'][]> => {
+	const requestParam = tours.join('&id_in=')
+	return await (
+		await $host.get(`/tours?_locale=${locale}&id_in=${requestParam}`)
 	).data
 }

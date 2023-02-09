@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { useFavouritesStore } from 'store/favourites'
 import { ArrayElement } from 'utilities/interfaces'
+import NoSSR from '../Common/NoSSR'
 
 interface Props extends ComponentPropsWithoutRef<'div'> {
 	tour:
@@ -42,17 +43,19 @@ export const Card = ({ tour, className }: Props) => {
 			<span className='top-3 absolute left-3 rounded-lg bg-yellow py-1 px-3 font-bold'>
 				$ {tour.price}
 			</span>
-			<button
-				onClick={addToFavourites}
-				className='top-3 absolute right-3 rounded-full bg-white p-[4px]'
-			>
-				<Icon
-					path={mdiCardsHeart}
-					size={0.7}
-					color={isTourInFavourite ? '#EB455F' : '#BFBFBF'}
-					className='relative translate-y-[0.5px] '
-				/>
-			</button>
+			<NoSSR>
+				<button
+					onClick={addToFavourites}
+					className='top-3 absolute right-3 rounded-full bg-white p-[4px]'
+				>
+					<Icon
+						path={mdiCardsHeart}
+						size={0.7}
+						color={isTourInFavourite ? '#EB455F' : '#BFBFBF'}
+						className='relative translate-y-[0.5px] '
+					/>
+				</button>
+			</NoSSR>
 			<div className='w-full px-3 py-3 border-lightGray border rounded-lg border-t-0'>
 				<Link href={`/tour/${tour.id}`}>
 					<p className='font-semibold text-sm mb-1'>{tour.name}</p>

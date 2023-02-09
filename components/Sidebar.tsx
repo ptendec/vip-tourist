@@ -1,30 +1,75 @@
-import { ComponentPropsWithoutRef } from 'react'
+import { getProfile } from '@/API/profile.service'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
+import { getNavbarList } from '@/utilities/utilities'
+import Icon from '@mdi/react'
+import { useQuery } from '@tanstack/react-query'
+import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import Link from 'next/link'
-export const Sidebar = (props: ComponentPropsWithoutRef<'div'>) => {
+import { useRouter } from 'next/router'
+import { ComponentPropsWithoutRef } from 'react'
+import NoSSR from './Common/NoSSR'
+
+export const Sidebar = ({
+	className,
+	...rest
+}: ComponentPropsWithoutRef<'div'>) => {
+	const { t } = useTranslation()
+	const { locale, pathname } = useRouter()
+	const { user } = useFirebaseAuth()
+	const { data, isLoading, isError } = useQuery(
+		['profile', user?.uid],
+		() =>
+			getProfile({
+				locale: locale as string,
+				uid: user?.uid as string,
+			}),
+		{
+			retry: 0,
+			refetchOnWindowFocus: false,
+		},
+	)
+	if (isLoading) return <>Loading...</>
+
 	return (
-		<div {...props}>
-			<Link href='/' className=''>
-				VIP TOURIST
-			</Link>
-			<div className='mt-10'>
-				<Link
-					href='/'
-					className='flex flex-row items-center group rounded-lg hover:bg-[#F6F6F5] px-7 py-2'
-				>
-					<svg
-						width='20'
-						height='17'
-						viewBox='0 0 20 17'
-						fill='none'
-						xmlns='http://www.w3.org/2000/svg'
-						className='mr-3 group-hover:fill-green fill-gray'
-					>
-						<path d='M8 17V11H12V17H17V9H20L10 0L0 9H3V17H8Z' />
-					</svg>
-					<span className=''>Главная</span>
+		<NoSSR>
+			<div
+				className={clsx(className, '2xl:hidden border-r border-[#E9EAE8] px-6')}
+				{...rest}
+			>
+				<Link href='/' className='relative inline-block '>
+					<Image src='/images/logo.svg' alt='VipTourist' fill />
 				</Link>
+				<div className='mt-10'>
+					{getNavbarList(user, data).map(link => (
+						<Link
+							key={link.id}
+							href={link.href}
+							className={clsx(
+								'flex flex-row items-center gap-x-3 group rounded-lg hover:bg-[#F6F6F5] px-7 py-2 transition-all duration-600 ease-out font-semibold capitalize',
+							)}
+						>
+							<Icon
+								className={clsx(
+									pathname === link.href ? 'text-green' : 'text-gray',
+								)}
+								path={link.icon}
+								size={1}
+							/>
+							<span
+								className={clsx(
+									pathname === link.href
+										? 'text-green font-semibold'
+										: 'text-lightDark',
+								)}
+							>
+								{t(link.label)}
+							</span>
+						</Link>
+					))}
+				</div>
 			</div>
-		</div>
+		</NoSSR>
 	)
 }

@@ -1,6 +1,5 @@
 import { getCities } from '@/API/city.service'
 import { getTours } from '@/API/tour.service'
-import { AlertModal } from '@/components/Modal/AlertModal'
 import { Sidebar } from '@/components/Sidebar'
 import { Button } from '@/components/UI/Button'
 import Checkbox from '@/components/UI/Checkbox'
@@ -54,7 +53,6 @@ const Main = () => {
 		},
 	]
 
-	const [isAlert, setIsAlert] = useState(false)
 	const [hasWhatsapp, setHasWhatsapp] = useState(false)
 	const [hasViber, setHasViber] = useState(false)
 	const [hasTelegram, setHasTelegram] = useState(false)
@@ -64,7 +62,6 @@ const Main = () => {
 			<Head>
 				<title>Проверка</title>
 			</Head>
-			<AlertModal isVisible={isAlert} onClose={() => setIsAlert(false)} />
 			<div className='flex '>
 				<Sidebar className='basis-80 grow-1 srhink-0'></Sidebar>
 				<Container className='justify-self-center pt-10 flex flex-col'>
@@ -84,7 +81,7 @@ const Main = () => {
 					</div>
 					<div className='w-5/12 self-center flex flex-col items-center pb-10'>
 						<span className='w-32 h-32 relative inline-block'>
-							<Button className='z-10 absolute right-0 bottom-0 bg-green p-2 rounded-full hover:scale-[1.05] w-9 h-9'>
+							<Button className='z-10 absolute right-0 bottom-0 bg-green p-2 rounded-full hover:scale-[1.05	] w-9 h-9'>
 								<Icon color='#fff' path={mdiCamera} size={0.8} />
 							</Button>
 							<Image alt='User photo' fill src='/images/demo8.png' />

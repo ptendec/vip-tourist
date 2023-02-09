@@ -1,7 +1,6 @@
 import { components } from '@/API/types/api.types'
 import { Card } from '@/components/Layout/Card'
 import { useKeenSlider } from 'keen-slider/react'
-import { ArrayElement } from 'utilities/interfaces'
 
 interface Props {
 	title: string

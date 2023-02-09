@@ -1,23 +1,21 @@
+import { components } from '@/API/types/api.types'
 import { Article } from '@/components/Tour/Article'
-import { Fragment } from 'react'
-import { AdditionalInfo as AdditionalInfoInterface } from 'utilities/interfaces'
+import { useTranslation } from 'next-i18next'
 
 interface Props {
-	additionalInfos: AdditionalInfoInterface[]
+	tour: components['schemas']['Tour']
 }
 
-export const AdditionalInfo = ({ additionalInfos }: Props) => {
+export const AdditionalInfo = ({ tour }: Props) => {
+	const { t } = useTranslation()
 	return (
 		<div className='mt-8'>
-			{additionalInfos.map(additionalInfo => (
-				<Fragment key={additionalInfo.id}>
-					<Article
-						title={additionalInfo.title}
-						description={additionalInfo.description}
-					/>
-					<div className='my-8 w-full h-[1px] bg-lightGray' />
-				</Fragment>
-			))}
+			<Article title={t('Что включено')} description={tour.included} />
+			<div className='my-8 w-full h-[1px] bg-lightGray' />
+			<Article title={t('Возьмите с собой')} description={tour.not_included} />
+			<div className='my-8 w-full h-[1px] bg-lightGray' />
+			<Article title={t('Важная информация')} description={tour.note} />
+			<div className='my-8 w-full h-[1px] bg-lightGray' />
 		</div>
 	)
 }

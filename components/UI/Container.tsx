@@ -5,7 +5,7 @@ interface Props extends ComponentPropsWithoutRef<'div'> {
 	children: ReactNode
 }
 export const Container = ({ children, className, ...rest }: Props) => (
-	<div className={clsx('container mx-auto', className)} {...rest}>
+	<div className={clsx('container', className)} {...rest}>
 		{children}
 	</div>
 )

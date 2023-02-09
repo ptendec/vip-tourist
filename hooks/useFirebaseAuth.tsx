@@ -1,9 +1,4 @@
-import {
-	createUserWithEmailAndPassword,
-	signInWithEmailAndPassword,
-	signOut,
-} from 'firebase/auth'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { User } from 'utilities/interfaces'
 import { auth } from '../config/firebase'
 

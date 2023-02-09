@@ -1,6 +1,7 @@
 import { getCities } from '@/API/city.service'
 import { getTours } from '@/API/tour.service'
-import { AlertModal } from '@/components/Modal/AlertModal'
+import NoSSR from '@/components/Common/NoSSR'
+import { Alert } from '@/components/Modal/Alert'
 import { Sidebar } from '@/components/Sidebar'
 import { Container } from '@/components/UI/Container'
 import { Cards } from '@/modules/Cards'
@@ -44,25 +45,28 @@ const Main = () => {
 	const {
 		data: cities,
 		isLoading: isCitiesLoading,
-		isError: isCitiesIsError,
+		isError: isCitiesError,
 	} = useQuery(['cities'], () => getCities({ locale: locale as string }))
 
-	const [isAlert, setIsAlert] = useState(false)
+	const [isAlert, setIsAlert] = useState(Math.random() < 0.2)
+
 	if (isCitiesLoading || isToursLoading) return <>Loading...</>
-	if (isToursError || isCitiesIsError) return <>Error!</>
+	if (isToursError || isCitiesError) return <>Error!</>
 
 	return (
 		<>
 			<Head>
 				<title>Проверка</title>
 			</Head>
-			<AlertModal isVisible={isAlert} onClose={() => setIsAlert(false)} />
-			<div className='flex '>
-				<Sidebar className='basis-80 grow-1 srhink-0'></Sidebar>
-				<Container className='justify-self-center pt-10 pb-24 flex flex-col'>
-					<Search></Search>
+			<NoSSR>
+				<Alert isVisible={isAlert} onClose={() => setIsAlert(false)} />
+			</NoSSR>
+			<div className='flex justify-center w-full'>
+				<Sidebar className='basis-80 shrink-0'></Sidebar>
+				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] shrink'>
+					<Search />
 					<Cards title={t('popularTours')} tours={tours} />
-					<Cards title='Популярные' tours={tours} />
+					<Cards title={t('popularTours')} tours={tours} />
 					<Towns cities={cities}></Towns>
 				</Container>
 			</div>

@@ -1,6 +1,6 @@
 import { getCities } from '@/API/city.service'
 import { getTours } from '@/API/tour.service'
-import { AlertModal } from '@/components/Modal/AlertModal'
+import { Alert } from '@/components/Modal/Alert'
 import { Sidebar } from '@/components/Sidebar'
 import { Container } from '@/components/UI/Container'
 import { Cards } from '@/modules/Cards'
@@ -56,7 +56,7 @@ const Main = () => {
 			<Head>
 				<title>Проверка</title>
 			</Head>
-			<AlertModal isVisible={isAlert} onClose={() => setIsAlert(false)} />
+			<Alert isVisible={isAlert} onClose={() => setIsAlert(false)} />
 			<div className='flex '>
 				<Sidebar className='basis-80 grow-1 srhink-0'></Sidebar>
 				<Container className='justify-self-center pt-10 pb-24 flex flex-col'>

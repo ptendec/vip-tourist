@@ -28,6 +28,9 @@ module.exports = {
 			dark: '#181E0C',
 		},
 		screens: {
+			'2xl': {
+				max: '1536px',
+			},
 			xl: {
 				max: '1200px',
 			},

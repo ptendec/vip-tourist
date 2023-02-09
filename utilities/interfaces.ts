@@ -4,8 +4,8 @@ export interface Categories {
 }
 
 export interface Breadcrumb {
-	name: string
-	href: string
+	name?: string
+	href?: string
 }
 
 export interface QueryParams {
@@ -36,4 +36,17 @@ export interface User {
 export interface AuthContext {
 	user: User | null
 	loading: boolean
+}
+
+export interface ListItem {
+	id: number
+	icon?: string
+	value: string
+}
+
+export interface Navbar {
+	id: number
+	href: string
+	label: string
+	icon: string
 }
