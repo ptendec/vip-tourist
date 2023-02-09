@@ -47,7 +47,7 @@ export const Sidebar = ({
 							key={link.id}
 							href={link.href}
 							className={clsx(
-								'flex flex-row items-center gap-x-3 group rounded-lg hover:bg-[#F6F6F5] px-7 py-2 transition-all duration-600 ease-out font-semibold capitalize',
+								'flex flex-row items-center gap-x-3 group rounded-lg hover:bg-[#F6F6F5] px-7 py-2 transition-all duration-600 ease-out capitalize',
 							)}
 						>
 							<Icon
