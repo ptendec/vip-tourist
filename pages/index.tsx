@@ -48,7 +48,7 @@ const Main = () => {
 		isError: isCitiesError,
 	} = useQuery(['cities'], () => getCities({ locale: locale as string }))
 
-	const [isAlert, setIsAlert] = useState(Math.random() < 0.2)
+	const [isAlert, setIsAlert] = useState(Math.random() < 0.9)
 
 	if (isCitiesLoading || isToursLoading) return <>Loading...</>
 	if (isToursError || isCitiesError) return <>Error!</>
@@ -56,14 +56,14 @@ const Main = () => {
 	return (
 		<>
 			<Head>
-				<title>Проверка</title>
+				<title>VipTourist</title>
 			</Head>
 			<NoSSR>
 				<Alert isVisible={isAlert} onClose={() => setIsAlert(false)} />
 			</NoSSR>
 			<div className='flex justify-center w-full'>
-				<Sidebar className='basis-80 shrink-0'></Sidebar>
-				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] shrink'>
+				<Sidebar className='basis-64 shrink-0'></Sidebar>
+				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0'>
 					<Search />
 					<Cards title={t('popularTours')} tours={tours} />
 					<Cards title={t('popularTours')} tours={tours} />

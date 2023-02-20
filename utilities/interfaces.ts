@@ -4,12 +4,13 @@ export interface Categories {
 }
 
 export interface Breadcrumb {
+	id: number
 	name?: string
 	href?: string
 }
 
 export interface QueryParams {
-	locale: string
+	locale?: string
 	id?: string
 }
 
@@ -49,4 +50,11 @@ export interface Navbar {
 	href: string
 	label: string
 	icon: string
+}
+
+export interface ProfileFields {
+	fullName: string
+	email: string
+	phone: string
+	socialLink: string
 }

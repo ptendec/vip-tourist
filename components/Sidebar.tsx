@@ -23,14 +23,14 @@ export const Sidebar = ({
 		() =>
 			getProfile({
 				locale: locale as string,
-				uid: user?.uid as string,
+				id: user?.uid as string,
 			}),
 		{
 			retry: 0,
 			refetchOnWindowFocus: false,
 		},
 	)
-	if (isLoading) return <>Loading...</>
+	// if (isLoading) return <>Loading...</>
 
 	return (
 		<NoSSR>

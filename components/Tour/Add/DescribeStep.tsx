@@ -3,8 +3,14 @@ import { Input } from '@/components/UI/Input'
 import { Textarea } from '@/components/UI/Textarea'
 import { ListItem } from '@/utilities/interfaces'
 import { useTranslation } from 'next-i18next'
+import { useEffect } from 'react'
 
 export const DescribeStep = () => {
+	useEffect(() => {
+		return () => {
+			console.log('here')
+		}
+	}, [])
 	const { t } = useTranslation()
 	return (
 		<>

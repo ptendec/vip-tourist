@@ -216,14 +216,17 @@ export const staticCategories = [
 
 export const staticBreadcrumbs: Breadcrumb[] = [
 	{
+		id: 1,
 		href: '/',
 		name: 'Главная',
 	},
 	{
+		id: 2,
 		href: '/city/',
 		name: 'Алматы',
 	},
 	{
+		id: 3,
 		href: '/tour/',
 		name: 'Тур',
 	},
@@ -298,7 +301,7 @@ export const touristTopNavbar: Navbar[] = [
 	},
 	{
 		id: 3,
-		href: '/bookings',
+		href: '/tourist/orders',
 		label: 'booking',
 		icon: mdiBook,
 	},
@@ -310,7 +313,7 @@ export const touristTopNavbar: Navbar[] = [
 	},
 	{
 		id: 5,
-		href: '/profile/tourist',
+		href: '/tourist/profile',
 		label: 'profile',
 		icon: mdiAccount,
 	},
@@ -325,9 +328,15 @@ export const guideTopNavbar: Navbar[] = [
 	},
 	{
 		id: 2,
-		href: '/profile/guide',
+		href: '/guide/profile',
 		label: 'profile',
 		icon: mdiAccount,
+	},
+	{
+		id: 3,
+		href: '/notifications',
+		label: 'notifications',
+		icon: mdiBell,
 	},
 ]
 
@@ -345,15 +354,28 @@ export const noAuthTopNavbar: Navbar[] = [
 		icon: mdiHeart,
 	},
 	{
-		id: 2,
+		id: 3,
 		href: '/auth/registration',
 		label: 'signUp',
 		icon: mdiAccountPlus,
 	},
 	{
-		id: 3,
+		id: 4,
 		href: '/auth/authorization',
 		label: 'login',
 		icon: mdiAccountKey,
+	},
+]
+
+export const favouritesBreadcrumbs: Breadcrumb[] = [
+	{
+		id: 1,
+		name: 'home',
+		href: '/',
+	},
+	{
+		id: 2,
+		name: 'wishlist',
+		href: '/',
 	},
 ]

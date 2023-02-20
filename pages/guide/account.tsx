@@ -6,9 +6,9 @@ import { Container } from '@/components/UI/Container'
 import { Tag } from '@/components/UI/Tag'
 import { Layout } from '@/modules/Layout'
 import {
-	mdiAccount,
 	mdiCheckCircle,
 	mdiChevronRight,
+	mdiCurrencyUsd,
 	mdiPlus,
 	mdiWallet,
 } from '@mdi/js'
@@ -23,6 +23,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactElement } from 'react'
+import { Tooltip } from 'react-tooltip'
 import { json } from 'utilities/utilities'
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -63,6 +64,13 @@ const Main = () => {
 			<Head>
 				<title>Проверка</title>
 			</Head>
+			<Tooltip
+				anchorId='addTour'
+				content='Добавить тур'
+				place='bottom'
+				noArrow
+			/>
+
 			<div className='flex '>
 				<Sidebar className='basis-80 grow-1 srhink-0'></Sidebar>
 				<Container className='justify-self-center py-10'>
@@ -101,7 +109,7 @@ const Main = () => {
 							<Icon
 								color='#BFBFBF'
 								className='mr-2'
-								path={mdiWallet}
+								path={mdiCurrencyUsd}
 								size={1}
 							/>
 							Пополнить баланс
@@ -116,7 +124,7 @@ const Main = () => {
 					<div className='mt-8'>
 						<p className='font-semibold text-lg flex gap-x-3 items-center'>
 							Мои туры
-							<Link target='_blank' href='/guide/add/tour'>
+							<Link id='addTour' target='_blank' href='/guide/tour?state=add'>
 								<Button className='rounded-full w-6 h-6'>
 									<Icon path={mdiPlus} size={0.8} />
 								</Button>
@@ -172,12 +180,12 @@ const Main = () => {
 								<p className='font-semibold'>Тур в Чарынский каньон</p>
 								<p className='mt-2'>x1 230.0 $</p>
 								<p className='mt-1 text-gray'>Egor Letov</p>
-								<span className='block bg-gray h-[0.33px] my-[10px]' />
-								<p className='flex items-center gap-x-3 text-gray'>
-									<Icon path={mdiAccount} size={1} />
-									Турист еще не использовал билет
-								</p>
-								<span className='block bg-gray h-[0.33px] my-[10px]' />
+								{/* <span className='block bg-gray h-[0.33px] my-[10px]' /> */}
+								{/* <p className='flex items-center gap-x-3 text-gray'> */}
+								{/* <Icon path={mdiAccount} size={1} /> */}
+								{/* Турист еще не использовал билет */}
+								{/* </p> */}
+								{/* <span className='block bg-gray h-[0.33px] my-[10px]' /> */}
 								<p className='flex items-center gap-x-3 text-green'>
 									<Icon path={mdiCheckCircle} size={1} color='#86A545' />
 									Вы подтвердили билет

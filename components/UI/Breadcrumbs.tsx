@@ -2,15 +2,15 @@ import { mdiChevronRight } from '@mdi/js'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { Fragment } from 'react'
+import { ComponentPropsWithoutRef, Fragment } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { Breadcrumb } from 'utilities/interfaces'
 
-interface Props {
+interface Props extends ComponentPropsWithoutRef<'div'> {
 	breadcrumbs: Breadcrumb[]
 }
 
-export const Breadcrumbs = ({ breadcrumbs }: Props) => {
+export const Breadcrumbs = ({ breadcrumbs, className }: Props) => {
 	return (
 		<>
 			<Tooltip
@@ -20,7 +20,7 @@ export const Breadcrumbs = ({ breadcrumbs }: Props) => {
 				noArrow
 			/>
 
-			<div className='flex items-center'>
+			<div className={clsx('flex items-center', className)}>
 				{breadcrumbs.map((breadcrumb, index) => (
 					<Fragment key={index}>
 						<Link

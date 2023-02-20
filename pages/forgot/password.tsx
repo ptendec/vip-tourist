@@ -44,7 +44,7 @@ const Main = () => {
 				<title>Забыл пароль</title>
 			</Head>
 			<Container className='flex flex-row items-center h-screen justify-around'>
-				<div className='basis-4/12'>
+				<div className='basis-4/12 lg:basis-full'>
 					<div className='flex'>
 						<Link
 							href='/auth/authorization'
@@ -85,7 +85,7 @@ const Main = () => {
 						</div>
 					</form>
 				</div>
-				<div className='basis-5/12'></div>
+				<div className='basis-5/12 lg:hidden'></div>
 			</Container>
 		</>
 	)

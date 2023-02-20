@@ -60,3 +60,9 @@ input[type="checkbox"] {
     background: #E9EAE8;
   }
 }
+
+.bill-mask {
+  --mask: radial-gradient(40px at 0 40px, #0000 98%, #000) 0 -40px;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+}

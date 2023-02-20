@@ -2,7 +2,6 @@ import { components } from '@/API/types/api.types'
 import { mdiCardsHeart, mdiStar } from '@mdi/js'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
-import Image from 'next/image'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { useFavouritesStore } from 'store/favourites'
@@ -26,19 +25,20 @@ export const Card = ({ tour, className }: Props) => {
 	return (
 		<div
 			className={clsx(
-				'rounded-lg relative basis-3/12 flex flex-col',
+				' border-lightGray border rounded-lg relative basis-3/12 flex flex-col max-w-[215px] xs:max-w-none lg:basis-52 xs:basis-10/12 xs:mb-5',
 				className,
 			)}
 		>
 			<Link href={`/tour/${tour.id}`}>
-				<span className='w-full h-32 relative inline-block rounded-t-lg'>
-					<Image
-						src={tour.mainPhotoUrl as string}
-						alt={tour.name}
-						fill
-						className='rounded-t-lg'
-					/>
-				</span>
+				{/* <span className='w-full h-32 relative inline-block rounded-t-lg'> */}
+				{/* eslint-disable-next-line @next/next/no-img-element */}
+				<img
+					src={tour.mainPhotoUrl as string}
+					alt={tour.name}
+					// fill
+					className='w-full h-32 relative inline-block rounded-t-lg'
+				/>
+				{/* </span> */}
 			</Link>
 			<span className='top-3 absolute left-3 rounded-lg bg-yellow py-1 px-3 font-bold'>
 				$ {tour.price}
@@ -56,7 +56,7 @@ export const Card = ({ tour, className }: Props) => {
 					/>
 				</button>
 			</NoSSR>
-			<div className='w-full px-3 py-3 border-lightGray border rounded-lg border-t-0'>
+			<div className='w-full px-3 py-3 rounded-lg border-t-0'>
 				<Link href={`/tour/${tour.id}`}>
 					<p className='font-semibold text-sm mb-1'>{tour.name}</p>
 				</Link>
@@ -69,7 +69,9 @@ export const Card = ({ tour, className }: Props) => {
 							<Icon key={element} path={mdiStar} size={0.7} color='#FFCE1F' />
 						))}
 					</span>
-					<span className='text-sm text-lightDark ml-2'>(6 отзывов)</span>
+					<span className='text-sm text-lightDark ml-2'>
+						({tour.reviews?.length} отзывов)
+					</span>
 				</div>
 			</div>
 		</div>

@@ -26,6 +26,7 @@ module.exports = {
 			lightGray: '#E9EAE8',
 			lightDark: '#3B3F32',
 			dark: '#181E0C',
+			light: '#F8F8F8',
 		},
 		screens: {
 			'2xl': {

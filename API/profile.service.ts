@@ -15,11 +15,30 @@ export const createProfile = async ({
 
 export const getProfile = async ({
 	locale,
-	uid,
-}: QueryParams & { uid: string }): Promise<
+	id,
+}: QueryParams): Promise<components['schemas']['Profile']> => {
+	return await (
+		await $host.get(`/profiles/${id}/?_locale=${locale}`)
+	).data
+}
+
+export const editProfile = async ({
+	locale,
+	request,
+	id,
+}: QueryParams & { request: components['schemas']['NewProfile'] }): Promise<
 	components['schemas']['Profile']
 > => {
 	return await (
-		await $host.get(`/profiles/${uid}/?_locale=${locale}`)
+		await $host.put(`/profiles/${id}`, request)
+	).data
+}
+
+export const changeAvatar = async (formData: FormData): Promise<any> => {
+	return await (
+		await $host.post(
+			'https://api.cloudinary.com/v1_1/dlexnnoda/image/upload',
+			formData,
+		)
 	).data
 }

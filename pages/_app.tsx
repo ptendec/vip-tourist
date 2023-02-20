@@ -23,14 +23,14 @@ type AppPropsWithLayout = AppProps & {
 
 function App({ Component, pageProps }: AppPropsWithLayout) {
 	const [queryClient] = useState(() => new QueryClient())
-
+	const getLayout = Component.getLayout ?? (page => page)
 	usePreserveScroll()
 
 	return (
 		<QueryClientProvider client={queryClient}>
 			<Hydrate state={pageProps.dehydratedState}>
 				<AuthUserProvider>
-					<Component {...pageProps} />
+					{getLayout(<Component {...pageProps} />)}
 				</AuthUserProvider>
 			</Hydrate>
 		</QueryClientProvider>

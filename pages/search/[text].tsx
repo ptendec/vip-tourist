@@ -1,5 +1,6 @@
-import { getCities } from '@/API/city.service'
-import { getTours } from '@/API/tour.service'
+import { searchCity } from '@/API/city.service'
+import { searchTour } from '@/API/tour.service'
+import NoSSR from '@/components/Common/NoSSR'
 import { Alert } from '@/components/Modal/Alert'
 import { Sidebar } from '@/components/Sidebar'
 import { Container } from '@/components/UI/Container'
@@ -19,10 +20,16 @@ import { json } from 'utilities/utilities'
 export const getServerSideProps: GetServerSideProps = async context => {
 	const queryClient = new QueryClient()
 	await queryClient.prefetchQuery(['tours'], () =>
-		getTours({ locale: context.locale as string }),
+		searchCity({
+			locale: context.locale as string,
+			name: context.query.text as string,
+		}),
 	)
 	await queryClient.prefetchQuery(['cities'], () =>
-		getCities({ locale: context.locale as string }),
+		searchTour({
+			locale: context.locale as string,
+			name: context.query.text as string,
+		}),
 	)
 	return {
 		props: {
@@ -34,35 +41,41 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
 const Main = () => {
 	const { t } = useTranslation()
-	const { locale } = useRouter()
+	const { locale, query } = useRouter()
 	const {
 		data: tours,
 		isLoading: isToursLoading,
 		isError: isToursError,
-	} = useQuery(['tours'], () => getTours({ locale: locale as string }))
+	} = useQuery(['tours', query.text], () =>
+		searchTour({ locale: locale as string, name: query.text as string }),
+	)
 
 	const {
 		data: cities,
 		isLoading: isCitiesLoading,
-		isError: isCitiesIsError,
-	} = useQuery(['cities'], () => getCities({ locale: locale as string }))
+		isError: isCitiesError,
+	} = useQuery(['search', 'cities', query.text], () =>
+		searchCity({ locale: locale as string, name: query.text as string }),
+	)
 
-	const [isAlert, setIsAlert] = useState(false)
+	const [isAlert, setIsAlert] = useState(Math.random() < 0.9)
+
 	if (isCitiesLoading || isToursLoading) return <>Loading...</>
-	if (isToursError || isCitiesIsError) return <>Error!</>
+	if (isToursError || isCitiesError) return <>Error!</>
 
 	return (
 		<>
 			<Head>
-				<title>Проверка</title>
+				<title>VipTourist</title>
 			</Head>
-			<Alert isVisible={isAlert} onClose={() => setIsAlert(false)} />
-			<div className='flex '>
-				<Sidebar className='basis-80 grow-1 srhink-0'></Sidebar>
-				<Container className='justify-self-center pt-10 pb-24 flex flex-col'>
-					<Search></Search>
-					<Cards title={t('popularTours')} tours={tours} />
-					<Cards title='Популярные' tours={tours} />
+			<NoSSR>
+				<Alert isVisible={isAlert} onClose={() => setIsAlert(false)} />
+			</NoSSR>
+			<div className='flex justify-center w-full'>
+				<Sidebar className='basis-64 shrink-0'></Sidebar>
+				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0'>
+					<Search />
+					<Cards title={t('tours')} tours={tours} />
 					<Towns cities={cities}></Towns>
 				</Container>
 			</div>

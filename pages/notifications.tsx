@@ -1,37 +1,28 @@
-import { getFavourites } from '@/API/tour.service'
+import { getNotifications } from '@/API/notification.service'
 import NoSSR from '@/components/Common/NoSSR'
 import { Sidebar } from '@/components/Sidebar'
-import { NoFavourites } from '@/components/Static/Empty/Favourites'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
-import { Cards } from '@/modules/Cards'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
-import { ReactElement, useEffect } from 'react'
-import { useFavouritesStore } from 'store/favourites'
+import { ReactElement } from 'react'
 import { favouritesBreadcrumbs } from 'utilities/static'
 
 const Main = () => {
 	const { locale, query } = useRouter()
 	const { t } = useTranslation()
-	const { favourites } = useFavouritesStore(state => state)
+	const { user } = useFirebaseAuth()
 
-	const { data, isLoading, isError, refetch } = useQuery(
-		['favourites'],
-		() => getFavourites({ locale: locale as string, tours: favourites }),
-		{
-			enabled: !!favourites.length,
-		},
+	const { data, isLoading, isError } = useQuery(['favourites'], () =>
+		getNotifications({ locale: locale as string, uid: user?.uid as string }),
 	)
 
-	useEffect(() => {
-		refetch()
-	}, [favourites])
-
 	if (isLoading) return <>Loading...</>
+	if (isError) return <>Error...</>
 
 	return (
 		<>
@@ -47,13 +38,7 @@ const Main = () => {
 							className='self-start mb-8'
 							breadcrumbs={favouritesBreadcrumbs}
 						/>
-						<NoSSR>
-							{favourites.length === 0 ? (
-								<NoFavourites />
-							) : (
-								<Cards tours={data} />
-							)}
-						</NoSSR>
+						<NoSSR>{null}</NoSSR>
 					</div>
 				</Container>
 			</div>

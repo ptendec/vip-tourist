@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const { i18n } = require('./next-i18next.config')
 const nextConfig = {
-	reactStrictMode: true,
+	reactStrictMode: false,
 	swcMinify: true,
 	async rewrites() {
 		return [
@@ -17,6 +17,7 @@ const nextConfig = {
 			'37.140.241.144',
 			'res.cloudinary.com',
 			'server.viptourist.club',
+			'ui-avatars.com',
 		],
 	},
 	i18n,

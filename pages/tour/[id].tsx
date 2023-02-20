@@ -63,14 +63,17 @@ const Main = () => {
 
 	const breadcrumbs: Breadcrumb[] = [
 		{
+			id: 1,
 			href: '/',
-			name: `${t('home')}`,
+			name: 'home',
 		},
 		{
+			id: 2,
 			href: '/city/',
 			name: tour?.city?.name,
 		},
 		{
+			id: 3,
 			href: `/tour/${tour?.id}`,
 			name: `${tour?.name}`,
 		},
@@ -82,20 +85,24 @@ const Main = () => {
 	return (
 		<>
 			<Head>
-				<title>{tour?.name}</title>
+				<title>{tour.name} | VipTourist</title>
+				<meta name='description' content={tour.description} />
 			</Head>
-			<Container className='flex flex-row pt-10 pb-24'>
-				<Sidebar className='w-80'></Sidebar>
-				<div className='w-full h-full'>
+			<div className='flex justify-center w-full'>
+				<Sidebar className='basis-64 shrink-0'></Sidebar>
+				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0'>
 					<Breadcrumbs breadcrumbs={breadcrumbs} />
 					<div className='flex gap-x-5'>
 						<Info country={country} tour={tour} className='basis-1/2' />
-						<Photos className='flex flex-col basis-1/2 gap-5' />
+						<Photos
+							images={tour.image_urls}
+							className='flex flex-col basis-1/2 gap-5'
+						/>
 					</div>
 					<AdditionalInfo tour={tour} />
 					<Reviews reviews={tour.reviews} />
-				</div>
-			</Container>
+				</Container>
+			</div>
 		</>
 	)
 }

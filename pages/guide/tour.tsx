@@ -15,7 +15,7 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { json } from 'utilities/utilities'
 
@@ -38,11 +38,11 @@ export const getServerSideProps: GetServerSideProps = async context => {
 const steps = [
 	{
 		id: 1,
-		component: <CityStep />,
+		component: <DescribeStep />,
 	},
 	{
 		id: 2,
-		component: <DescribeStep />,
+		component: <CityStep />,
 	},
 	{
 		id: 3,
@@ -60,13 +60,10 @@ const steps = [
 
 const Main = () => {
 	const { t } = useTranslation()
-	const { locale, pathname } = useRouter()
+	const { locale, pathname, query } = useRouter()
 
 	const [step, setStep] = useState(0)
 
-	useEffect(() => {
-		console.log(step, steps[step]?.component)
-	}, [step])
 	return (
 		<>
 			<Head>

@@ -1,7 +1,6 @@
-import { components } from './types/api.types'
-import { QueryParams } from '../utilities/interfaces'
 import { $host } from 'API'
-import { City } from './types/City'
+import { QueryParams } from '../utilities/interfaces'
+import { components } from './types/api.types'
 
 export const getCities = async ({
 	locale,
@@ -17,5 +16,16 @@ export const getCity = async ({
 }: QueryParams): Promise<components['schemas']['City']> => {
 	return await (
 		await $host.get(`/cities/${id}/?_locale=${locale}`)
+	).data
+}
+
+export const searchCity = async ({
+	locale,
+	name,
+}: QueryParams & { name: string }): Promise<
+	components['schemas']['City'][]
+> => {
+	return await (
+		await $host.get(`/cities/?_locale=${locale}&name_contains=${name}`)
 	).data
 }

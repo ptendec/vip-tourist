@@ -1,9 +1,8 @@
-import { ComponentPropsWithoutRef } from 'react'
-import Image from 'next/image'
-import { City } from '@/API/types/City'
-import clsx from 'clsx'
-import Link from 'next/link'
 import { components } from '@/API/types/api.types'
+import clsx from 'clsx'
+import Image from 'next/image'
+import Link from 'next/link'
+import { ComponentPropsWithoutRef } from 'react'
 interface Props extends ComponentPropsWithoutRef<'div'> {
 	city: components['schemas']['City']
 }
@@ -12,7 +11,7 @@ export const Town = ({ city, className }: Props) => {
 	return (
 		<div
 			className={clsx(
-				'rounded-lg relative basis-3/12 flex flex-col ',
+				'rounded-lg relative basis-3/12 flex flex-col max-w-[215px] lg:basis-52 xs:gap-x-0 l xs:max-w-none xs:basis-10/12 xs:mb-5',
 				className,
 			)}
 		>

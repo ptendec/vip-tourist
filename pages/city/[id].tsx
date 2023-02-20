@@ -1,21 +1,20 @@
-import { FilterSidebar } from '@/components/FilterSidebar'
-import { Sidebar } from '@/components/Sidebar'
-import { Container } from '@/components/UI/Container'
-import { Layout } from '@/modules/Layout'
-import Head from 'next/head'
-import { ReactElement } from 'react'
-import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
-import { staticBreadcrumbs } from 'utilities/static'
-import { CityInfo } from '@/components/Layout/CityInfo'
-import Image from 'next/image'
-import { Cards } from '@/modules/Cards'
-import { getTours } from '@/API/tour.service'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
-import { useRouter } from 'next/dist/client/router'
-import { useTranslation } from 'react-i18next'
 import { getCity } from '@/API/city.service'
+import { getTours } from '@/API/tour.service'
+import { CityInfo } from '@/components/Layout/CityInfo'
+import { Sidebar } from '@/components/Sidebar'
+import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
+import { Container } from '@/components/UI/Container'
+import { Cards } from '@/modules/Cards'
+import { Layout } from '@/modules/Layout'
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { GetServerSideProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useRouter } from 'next/dist/client/router'
+import Head from 'next/head'
+import Image from 'next/image'
+import { ReactElement } from 'react'
+import { useTranslation } from 'react-i18next'
+import { staticBreadcrumbs } from 'utilities/static'
 
 export const getServerSideProps: GetServerSideProps = async context => {
 	const queryClient = new QueryClient()
@@ -49,22 +48,26 @@ const Main = () => {
 	const { t } = useTranslation()
 	if (isLoading || isCityLoading) return <>Loading...</>
 	if (isError || isCityError) return <>Error!</>
+	console.log(city.name)
+
+	// TODO: Попросить добавить описание для города в угоду SEO
 	return (
 		<>
 			<Head>
-				<title>Проверка</title>
+				<title>{city.name} | VipTourist</title>
+				<meta name='description' content={city.name} />
 			</Head>
-			<Container className='flex flex-row pt-10 pb-24'>
-				<Sidebar className='w-80'></Sidebar>
-				<div className='w-full h-full'>
+			<div className='flex justify-center w-full'>
+				<Sidebar className='basis-64 shrink-0'></Sidebar>
+				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0'>
 					<Breadcrumbs breadcrumbs={staticBreadcrumbs} />
 					<span className='relative h-40 w-full inline-block my-8'>
 						<Image fill src='/images/demo.png' alt={''}></Image>
 					</span>
 					<CityInfo city={city} />
 					<Cards title={t('popularTours')} tours={city.tours} />
-				</div>
-			</Container>
+				</Container>
+			</div>
 		</>
 	)
 }
