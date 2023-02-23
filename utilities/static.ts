@@ -7,7 +7,7 @@ import {
 	mdiHeart,
 	mdiHome,
 } from '@mdi/js'
-import { AdditionalInfo, Navbar } from 'utilities/interfaces'
+import { AdditionalInfo, Languages, Navbar } from 'utilities/interfaces'
 import { Breadcrumb } from './interfaces'
 export const SidebarOptions = [
 	{
@@ -377,5 +377,92 @@ export const favouritesBreadcrumbs: Breadcrumb[] = [
 		id: 2,
 		name: 'wishlist',
 		href: '/',
+	},
+]
+
+export const currencyList: Languages[] = [
+	{
+		id: 1,
+		value: 'USD',
+		name: 'American Dollar',
+		symbol: '$',
+	},
+	{
+		id: 2,
+		value: 'EUR',
+		name: 'Euro',
+		symbol: '€',
+	},
+	{
+		id: 3,
+		value: 'AED',
+		name: 'UAE Dirham',
+		symbol: 'د.إ',
+	},
+	{
+		id: 4,
+		value: 'THB',
+		name: 'Thai Baht',
+		symbol: '฿',
+	},
+	{
+		id: 5,
+		value: 'TRY',
+		name: 'Turkish Lira',
+		symbol: '₺',
+	},
+	{
+		id: 6,
+		value: 'GBP',
+		name: 'Great British Pound',
+		symbol: '£',
+	},
+]
+
+export const langList = [
+	{
+		id: 1,
+		name: 'english',
+		value: 'en',
+	},
+	{
+		id: 1,
+		name: 'russian',
+		value: 'ru-ru',
+	},
+	{
+		id: 1,
+		name: 'german',
+		value: 'de-de',
+	},
+	{
+		id: 1,
+		name: 'thai',
+		value: 'th-th',
+	},
+	{
+		id: 1,
+		name: 'turkish',
+		value: 'tr-tr',
+	},
+	{
+		id: 1,
+		name: 'french',
+		value: 'fr-fr',
+	},
+	{
+		id: 1,
+		name: 'arabian',
+		value: 'ar-ar',
+	},
+	{
+		id: 1,
+		name: 'spanish',
+		value: 'es-es',
+	},
+	{
+		id: 1,
+		name: 'italian',
+		value: 'it-it',
 	},
 ]

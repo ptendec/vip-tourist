@@ -9,17 +9,17 @@ import { Info } from '@/modules/Tour/Info'
 import { Photos } from '@/modules/Tour/Photos'
 import { Reviews } from '@/modules/Tour/Reviews'
 import { Breadcrumb } from '@/utilities/interfaces'
+import { json } from '@/utilities/utilities'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next/types'
 import { ReactElement } from 'react'
-import { useTranslation } from 'react-i18next'
 
 export const getServerSideProps: GetServerSideProps = async context => {
 	const queryClient = new QueryClient()
-
 	await queryClient.prefetchQuery(['tour', context.params?.id], () =>
 		getTour({
 			locale: context.locale as string,
@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 	return {
 		props: {
 			...(await serverSideTranslations(context.locale as string, ['common'])),
-			dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+			dehydratedState: json(dehydrate(queryClient)),
 		},
 	}
 }
@@ -69,7 +69,7 @@ const Main = () => {
 		},
 		{
 			id: 2,
-			href: '/city/',
+			href: `/city/${tour?.city?.id}`,
 			name: tour?.city?.name,
 		},
 		{
@@ -90,10 +90,14 @@ const Main = () => {
 			</Head>
 			<div className='flex justify-center w-full'>
 				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0'>
+				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-5'>
 					<Breadcrumbs breadcrumbs={breadcrumbs} />
-					<div className='flex gap-x-5'>
-						<Info country={country} tour={tour} className='basis-1/2' />
+					<div className='flex gap-x-5 lg:flex-col'>
+						<Info
+							country={country}
+							tour={tour}
+							className='basis-1/2 flex flex-col'
+						/>
 						<Photos
 							images={tour.image_urls}
 							className='flex flex-col basis-1/2 gap-5'

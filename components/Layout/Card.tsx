@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { useFavouritesStore } from 'store/favourites'
+import { usePreferencesStore } from 'store/preferences'
 import { ArrayElement } from 'utilities/interfaces'
 import NoSSR from '../Common/NoSSR'
 
@@ -15,6 +16,7 @@ interface Props extends ComponentPropsWithoutRef<'div'> {
 }
 
 export const Card = ({ tour, className }: Props) => {
+	const { currency } = usePreferencesStore(state => state)
 	const { favourites, addFavourite, removeFavourite } = useFavouritesStore(
 		state => state,
 	)
@@ -22,6 +24,12 @@ export const Card = ({ tour, className }: Props) => {
 	const addToFavourites = () => {
 		isTourInFavourite ? removeFavourite(tour.id) : addFavourite(tour.id)
 	}
+
+	// const { data, isLoading } = useQuery(['currency', currency], () =>
+	// getCurrency(currency.value),
+	// )
+
+	// TODO: Настроить отображение рейтинга
 	return (
 		<div
 			className={clsx(
@@ -41,7 +49,14 @@ export const Card = ({ tour, className }: Props) => {
 				{/* </span> */}
 			</Link>
 			<span className='top-3 absolute left-3 rounded-lg bg-yellow py-1 px-3 font-bold'>
-				$ {tour.price}
+				<NoSSR>
+					{
+						// isLoading && tour.adult_price && data
+						// ? `${currency.symbol} ${data * tour.adult_price ?? 0}`
+						// : `${currency.symbol} ${tour.price}`
+						tour.price
+					}
+				</NoSSR>
 			</span>
 			<NoSSR>
 				<button

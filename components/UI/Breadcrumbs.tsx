@@ -38,7 +38,7 @@ export const Breadcrumbs = ({ breadcrumbs, className }: Props) => {
 						</Link>
 						{breadcrumbs.length - 1 !== index && (
 							<Icon
-								className='translate-y-[2px]'
+								className='mt-auto'
 								path={mdiChevronRight}
 								size={0.7}
 								color='#BFBFBF'

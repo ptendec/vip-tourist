@@ -19,3 +19,11 @@ export const getOrder = async ({
 		await $host.get(`/order/${id}/?_locale=${locale}`)
 	).data
 }
+
+export const getMyOrders = async ({
+	id,
+}: QueryParams): Promise<components['schemas']['Tour'][]> => {
+	return await (
+		await $host.get(`/orders/?profile.uid=${id}`)
+	).data
+}

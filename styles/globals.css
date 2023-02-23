@@ -66,3 +66,11 @@ input[type="checkbox"] {
   -webkit-mask: var(--mask);
   mask: var(--mask);
 }
+
+button {
+  outline: none;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #86A545 !important;
+}

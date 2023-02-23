@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		},
 	}
 }
-
+// TODO: При авторизации через гугл проверить, имеется ли у него профиль, если да, то получить его, если профиля нет, то создать новую
 const Main = () => {
 	const { locale, push } = useRouter()
 	const { t } = useTranslation()

@@ -3,12 +3,19 @@ import NoSSR from '@/components/Common/NoSSR'
 import { Buy } from '@/components/Modal/Buy'
 import { ListOption } from '@/components/Tour/ListOption'
 import { Button } from '@/components/UI/Button'
-import { mdiClockTimeThree, mdiMapMarker } from '@mdi/js'
+import {
+	mdiAccount,
+	mdiBabyFaceOutline,
+	mdiCalendarBlank,
+	mdiCheckboxMarkedCircle,
+	mdiClockTimeThree,
+	mdiHiking,
+	mdiMapMarker,
+} from '@mdi/js'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import { ComponentPropsWithoutRef, useState } from 'react'
-import { Tooltip } from 'react-tooltip'
 
 interface Props extends ComponentPropsWithoutRef<'div'> {
 	tour: components['schemas']['Tour']
@@ -23,15 +30,8 @@ export const Info = ({ className, tour, country }: Props) => {
 		<>
 			<NoSSR>
 				<Buy isVisible={isBuy} onClose={() => setIsBuy(false)} tour={tour} />
-
-				<Tooltip
-					anchorId='next'
-					content='Купить не получится'
-					place='top'
-					className='z-30'
-					noArrow
-				/>
 			</NoSSR>
+
 			<div className={clsx(className)}>
 				<h1 className='text-xl font-semibold mb-2 mt-8'>{tour.name}</h1>
 				<p className='flex mb-3'>
@@ -46,21 +46,44 @@ export const Info = ({ className, tour, country }: Props) => {
 					title={t('duration')}
 					description={`${tour.duration} ${t('hours')}`}
 				/>
-				{[1, 2, 3, 4, 5, 6].map(item => (
+				<ListOption
+					icon={mdiHiking}
+					title={t('liveTour')}
+					description={tour.languages?.split('|').join(', ')}
+				/>
+				{!tour.one_day_trip && (
+					<>
+						<ListOption
+							icon={mdiCheckboxMarkedCircle}
+							title={t('Всегда в наличии')}
+							description={'Цикличный тур'}
+						/>
+					</>
+				)}
+				{tour.date && (
 					<ListOption
-						key={item}
-						icon={mdiClockTimeThree}
-						title='Продолжительность'
-						description='4 часа'
+						icon={mdiCalendarBlank}
+						title={t('По каким дням проходит экскурсия')}
+						description={new Date(tour.date).toISOString().split('T')[0]}
 					/>
-				))}
+				)}
+				<ListOption
+					icon={mdiAccount}
+					title={t('adultPrice')}
+					description={`$ ${tour.adult_price ?? '-'}`}
+				/>
+				<ListOption
+					icon={mdiBabyFaceOutline}
+					title={t('childPrice')}
+					description={`$ ${tour.child_price ?? '-'}`}
+				/>
 				<Button
-					className='mt-6'
+					className='mt-auto mb-6'
 					onClick={() => {
 						setIsBuy(true)
 					}}
 				>
-					Купить сейчас
+					{t('buyNow')}
 				</Button>
 			</div>
 		</>

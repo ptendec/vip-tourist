@@ -42,6 +42,8 @@ export const getServerSideProps: GetServerSideProps = async context => {
 	}
 }
 // TODO: Добавить юридические документы
+// TODO: При авторизации через гугл проверить, имеется ли у него профиль, если да, то получить его, если профиля нет, то создать новую
+
 const Main = () => {
 	const { locale } = useRouter()
 	const {

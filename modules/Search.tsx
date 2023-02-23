@@ -17,17 +17,25 @@ export const Search = () => {
 			<span className='relative h-40 w-full inline-block xs:w-[calc(100%_+_32px)] xs:-ml-4'>
 				<Image fill src='/images/demo.png' alt={''} />
 				<Input
-					type='search'
+					type='text'
 					defaultValue={search}
 					onChange={event => setSearch(event.currentTarget.value)}
 					className='bottom-5 absolute w-full px-4 hidden xs:block'
 					icon={<Icon path={mdiMagnify} size={1} color='#BFBFBF' />}
 					placeholder={`${t('lookCityTourNew')}`}
+					onKeyUp={event => {
+						if (search === '') {
+							return
+						}
+						if (event.code === 'Enter') {
+							push(`/search/${search}`)
+						}
+					}}
 				/>
 			</span>
 			<div className='mt-8 flex flex-row gap-3 relative xs:hidden'>
 				<Input
-					type='search'
+					type='text'
 					defaultValue={search}
 					onChange={event => setSearch(event.currentTarget.value)}
 					className='basis-full'
@@ -50,7 +58,7 @@ export const Search = () => {
 
 						push(`/search/${search}`)
 					}}
-					className='basis-40'
+					className='basis-40 font-medium'
 				>
 					{t('search')}
 				</Button>

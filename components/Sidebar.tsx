@@ -1,23 +1,31 @@
-import { getProfile } from '@/API/profile.service'
+import { editProfile, getProfile } from '@/API/profile.service'
+import { auth } from '@/config/firebase'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
+import { currencyList, langList } from '@/utilities/static'
 import { getNavbarList } from '@/utilities/utilities'
+import { mdiEarth, mdiHiking, mdiLogout, mdiWallet } from '@mdi/js'
 import Icon from '@mdi/react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
+import { signOut } from 'firebase/auth'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef } from 'react'
+import { usePreferencesStore } from 'store/preferences'
 import NoSSR from './Common/NoSSR'
+import { ListBox } from './UI/ListBox'
 
 export const Sidebar = ({
 	className,
 	...rest
 }: ComponentPropsWithoutRef<'div'>) => {
+	const { currency, editPreferences } = usePreferencesStore(state => state)
 	const { t } = useTranslation()
-	const { locale, pathname } = useRouter()
+	const { locale, pathname, push } = useRouter()
 	const { user } = useFirebaseAuth()
+	const { mutate } = useMutation(editProfile)
 	const { data, isLoading, isError } = useQuery(
 		['profile', user?.uid],
 		() =>
@@ -30,6 +38,18 @@ export const Sidebar = ({
 			refetchOnWindowFocus: false,
 		},
 	)
+	console.log(
+		langList
+			.map(item => ({
+				id: item.id,
+				value: t(item.value),
+				name: t(item.name) ?? '-',
+			}))
+			.find(item => item.value === locale),
+	)
+
+	// TODO: При наличии авторизации, спросить уверен ли он, что хочет стать гидом, если подтвердит, то отправлять запрос на изменение поля isTourst: true
+
 	// if (isLoading) return <>Loading...</>
 
 	return (
@@ -47,7 +67,7 @@ export const Sidebar = ({
 							key={link.id}
 							href={link.href}
 							className={clsx(
-								'flex flex-row items-center gap-x-3 group rounded-lg hover:bg-[#F6F6F5] px-7 py-2 transition-all duration-600 ease-out capitalize',
+								'flex flex-row items-center gap-x-3 group rounded-lg hover:bg-[#F6F6F5] px-7 py-2 transition-all duration-600 ease-out capitalize w-full',
 							)}
 						>
 							<Icon
@@ -68,6 +88,68 @@ export const Sidebar = ({
 							</span>
 						</Link>
 					))}
+					<div className='mt-60'>
+						{!user && (
+							<button
+								className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-600 ease-out w-full'
+								onClick={() => {
+									push('/auth/registration')
+								}}
+							>
+								<Icon className={clsx('text-gray')} path={mdiHiking} size={1} />
+								{t('becomeGuide')}
+							</button>
+						)}
+						<ListBox
+							chosenItem={currencyList
+								.map(item => ({
+									id: item.id,
+									value: t(item.value),
+									name: t(item.name) ?? '-',
+								}))
+								.find(item => item.value === currency.value)}
+							icon={mdiWallet}
+							list={currencyList.map(item => ({
+								id: item.id,
+								value: item.value,
+								name: `${item.value} - ${item.name}`,
+							}))}
+							onChange={item => {
+								editPreferences({
+									currency:
+										currencyList.find(element => element.id === item.id) ??
+										currencyList[0],
+								})
+							}}
+						/>
+						<ListBox
+							chosenItem={langList
+								.map(item => ({
+									id: item.id,
+									value: t(item.value),
+									name: t(item.name) ?? '-',
+								}))
+								.find(item => item.value === locale)}
+							icon={mdiEarth}
+							list={langList.map(item => ({
+								id: item.id,
+								value: t(item.value),
+								name: t(item.name) ?? '-',
+							}))}
+							onChange={item => {
+								push(pathname, undefined, { locale: item.value })
+							}}
+						/>
+						{user && (
+							<button
+								className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-600 ease-out w-full mt-12'
+								onClick={() => signOut(auth)}
+							>
+								<Icon className={clsx('text-gray')} path={mdiLogout} size={1} />
+								{t('logout')}
+							</button>
+						)}
+					</div>
 				</div>
 			</div>
 		</NoSSR>

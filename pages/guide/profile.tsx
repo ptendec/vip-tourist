@@ -1,4 +1,5 @@
-import { changeAvatar, editProfile, getProfile } from '@/API/profile.service'
+import { uploadImage } from '@/API/cloudinary.service'
+import { editProfile, getProfile } from '@/API/profile.service'
 import { Sidebar } from '@/components/Sidebar'
 import { Button } from '@/components/UI/Button'
 import Checkbox from '@/components/UI/Checkbox'
@@ -18,7 +19,9 @@ import {
 import Icon from '@mdi/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
+import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -27,6 +30,14 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { Tooltip } from 'react-tooltip'
+
+export const getServerSideProps: GetServerSideProps = async context => {
+	return {
+		props: {
+			...(await serverSideTranslations(context.locale as string, ['common'])),
+		},
+	}
+}
 
 const Main = () => {
 	const {
@@ -42,7 +53,7 @@ const Main = () => {
 	const { locale, pathname } = useRouter()
 	const { user } = useFirebaseAuth()
 	const { mutate: edit } = useMutation(editProfile)
-	const { mutate: upload, isLoading: uploading } = useMutation(changeAvatar)
+	const { mutate: upload, isLoading: uploading } = useMutation(uploadImage)
 	const profileLinks = [
 		{
 			id: 1,
@@ -112,6 +123,39 @@ const Main = () => {
 	}
 
 	const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (!event.currentTarget.files) return
+		const image = event.currentTarget.files[0]
+		const formData = new FormData()
+		formData.append('file', image)
+		formData.append('upload_preset', 'sgdiyf4c')
+		upload(formData, {
+			onSuccess: response => {
+				edit(
+					{
+						id: data?.id,
+						request: {
+							photo_url: response.secure_url,
+						},
+					},
+					{
+						onSuccess: () => {
+							toast.success('Успешно загружено')
+							refetch()
+						},
+						onError: () => {
+							toast.error('Что-то пошло не так, попробуйте позднее')
+						},
+					},
+				)
+			},
+			onError: error => {
+				toast.error('Не удалось загрузить, попробуйте позднее')
+				console.log(error)
+			},
+		})
+	}
+
+	const handleIdUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
 		const image = event.currentTarget.files[0]
 		const formData = new FormData()
@@ -283,7 +327,7 @@ const Main = () => {
 							</div>
 							<hr className='w-full bg-[rgba(60,60,67,0.36);] h-[0.33px] my-8' />
 							<div className='w-full'>
-								<p>Чтобы стать гидом нового тура, вам нужно:</p>
+								<p>{t('guideBecomeDocText')}</p>
 								<p className='flex gap-x-2 mt-6'>
 									<span className='bg-lightDark text-white text-sm w-6 h-6 flex items-center justify-center rounded-full shrink-0'>
 										1
@@ -311,16 +355,26 @@ const Main = () => {
 									Загрузить следующие документы:
 								</p>
 								<div className='flex justify-between'>
-									<p>Чтобы стать гидом нового тура, вам нужно:</p>
-									<Button className='rounded-full w-6 h-6 hover:scale-[1.1]'>
+									<p>{t('guideBecomeDocOne')}</p>
+									<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-600 ease-out active:scale-[0.99] bg-green relative'>
+										<input
+											type='file'
+											className='absolute z-10 w-full h-full hidden'
+											onChange={handleIdUpload}
+										/>
 										<Icon path={mdiPlus} size={0.8} />
-									</Button>
+									</label>
 								</div>
 								<div className='flex justify-between mt-4'>
-									<p>Чтобы стать гидом нового тура, вам нужно:</p>
-									<Button className='rounded-full w-6 h-6 hover:scale-[1.1]'>
+									<p>{t('guideBecomeDocThree')}</p>
+									<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-600 ease-out active:scale-[0.99] bg-green relative'>
+										<input
+											type='file'
+											className='absolute z-10 w-full h-full hidden'
+											onChange={handleIdUpload}
+										/>
 										<Icon path={mdiPlus} size={0.8} />
-									</Button>
+									</label>
 								</div>
 							</div>
 							<Button className='mt-8 capitalize'>{t('save')}</Button>

@@ -19,7 +19,7 @@ const list = [
 		id: 3,
 		icon: mdiBook,
 		label: 'booking',
-		href: '/bookings',
+		href: '/tourist/orders',
 	},
 	{
 		id: 4,

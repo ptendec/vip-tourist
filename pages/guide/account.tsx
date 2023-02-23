@@ -1,9 +1,9 @@
-import { getCities } from '@/API/city.service'
-import { getTours } from '@/API/tour.service'
+import { getMyTours } from '@/API/tour.service'
 import { Sidebar } from '@/components/Sidebar'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { Tag } from '@/components/UI/Tag'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
 import {
 	mdiCheckCircle,
@@ -13,7 +13,7 @@ import {
 	mdiWallet,
 } from '@mdi/js'
 import Icon from '@mdi/react'
-import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
@@ -24,27 +24,19 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactElement } from 'react'
 import { Tooltip } from 'react-tooltip'
-import { json } from 'utilities/utilities'
 
 export const getServerSideProps: GetServerSideProps = async context => {
-	const queryClient = new QueryClient()
-	await queryClient.prefetchQuery(['tours'], () =>
-		getTours({ locale: context.locale as string }),
-	)
-	await queryClient.prefetchQuery(['cities'], () =>
-		getCities({ locale: context.locale as string }),
-	)
 	return {
 		props: {
 			...(await serverSideTranslations(context.locale as string, ['common'])),
-			dehydratedState: json(dehydrate(queryClient)),
 		},
 	}
 }
 
 const Main = () => {
 	const { t } = useTranslation()
-	const { locale, pathname } = useRouter()
+	const { locale, pathname, push } = useRouter()
+	const { user } = useFirebaseAuth()
 
 	const profileLinks = [
 		{
@@ -59,10 +51,14 @@ const Main = () => {
 		},
 	]
 
+	const { data } = useQuery(['my-tours', user?.uid], () =>
+		getMyTours({ id: user?.uid }),
+	)
+
 	return (
 		<>
 			<Head>
-				<title>Проверка</title>
+				<title>Профиль</title>
 			</Head>
 			<Tooltip
 				anchorId='addTour'
@@ -97,7 +93,7 @@ const Main = () => {
 								path={mdiWallet}
 								size={1}
 							/>
-							•••• •••• •••• 8734
+							•••• •••• •••• ••••
 							<Icon
 								className='flex ml-auto '
 								color='#BFBFBF'
@@ -137,29 +133,29 @@ const Main = () => {
 						<Tag isActive={false}>Черновики</Tag>
 					</div>
 					<div className='flex flex-wrap mt-6 justify-between gap-x-[10px] gap-y-3'>
-						{[1, 2, 3, 4].map(element => (
-							<div
-								key={element}
-								className='text-sm flex basis-[calc(50%_-_10px)] border border-[#E9EAE8] p-[10px] rounded-lg'
-							>
-								<span className='relative inline-block basis-20 h-20 shrink-0'>
-									<Image
-										className=''
-										src='/images/demo9.png'
-										alt='Фотография тура'
-										fill
-									/>
-								</span>
-								<div className='ml-[10px]'>
-									<p className='font-semibold'>Lorem Ipsum</p>
-									<span className='text-gray'>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-										do eiusmod tempor incididunt ut labore et dolore magna
-										aliqua. Ut enim ad minim veniam, quis nostrud
+						{data?.length ? (
+							data?.map(tour => (
+								<div
+									key={tour.id}
+									className='text-sm flex basis-[calc(50%_-_10px)] border border-[#E9EAE8] p-[10px] rounded-lg'
+								>
+									<span className='relative inline-block basis-20 h-20 shrink-0'>
+										<Image
+											className=''
+											src={tour.image_urls?.split('|')[0] ?? ''}
+											alt='Фотография тура'
+											fill
+										/>
 									</span>
+									<div className='ml-[10px]'>
+										<p className='font-semibold'>{tour.name}</p>
+										<span className='text-gray'>{tour.description}</span>
+									</div>
 								</div>
-							</div>
-						))}
+							))
+						) : (
+							<p className='font-semibold'>У вас нет созданных туров</p>
+						)}
 					</div>
 					<div className='mt-8'>
 						<p className='font-semibold text-lg flex gap-x-3 items-center'>

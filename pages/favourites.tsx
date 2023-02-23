@@ -40,7 +40,7 @@ const Main = () => {
 				<title>{t('wishlist')} | VipTourist</title>
 			</Head>
 			<div className='flex justify-center w-full'>
-				<Sidebar className='w-80 min-h-screen'></Sidebar>
+				<Sidebar className='basis-64 shrink-0'></Sidebar>
 				<Container className='flex flex-row pt-10 pb-24'>
 					<div className='w-full h-full min-h-screen flex flex-col'>
 						<Breadcrumbs

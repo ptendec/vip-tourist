@@ -45,3 +45,11 @@ export const searchTour = async ({
 		await $host.get(`/tours/?_locale=${locale}&name_contains=${name}`)
 	).data
 }
+
+export const getMyTours = async ({
+	id,
+}: QueryParams): Promise<components['schemas']['Tour'][]> => {
+	return await (
+		await $host.get(`/tours/?profile.uid=${id}`)
+	).data
+}

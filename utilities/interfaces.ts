@@ -43,6 +43,7 @@ export interface ListItem {
 	id: number
 	icon?: string
 	value: string
+	name?: string
 }
 
 export interface Navbar {
@@ -57,4 +58,11 @@ export interface ProfileFields {
 	email: string
 	phone: string
 	socialLink: string
+}
+
+export interface Languages {
+	id: number
+	name: string
+	value: string
+	symbol: string
 }

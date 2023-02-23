@@ -1,4 +1,6 @@
 import { components } from '@/API/types/api.types'
+import { mdiImageRemoveOutline } from '@mdi/js'
+import Icon from '@mdi/react'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { ComponentPropsWithoutRef, useState } from 'react'
@@ -11,7 +13,7 @@ interface Props extends ComponentPropsWithoutRef<'div'> {
 
 export const Photos = ({ className, images }: Props) => {
 	const formedImages = images?.split('|')
-
+	console.log(images?.split('|'))
 	const [isView, setIsView] = useState(false)
 	return (
 		<>
@@ -24,28 +26,88 @@ export const Photos = ({ className, images }: Props) => {
 				/>
 			)}
 			<div
-				className={clsx(className)}
+				className={clsx(className, ' cursor-pointer')}
 				onClick={() => {
 					setIsView(true)
 				}}
 			>
 				<span className='relative w-full h-[200px] inline-block'>
-					<Image sizes='100%' fill src='/images/demo5.png' alt={''} />
+					{images?.split('|')[0] ? (
+						<Image
+							sizes='100%'
+							fill
+							src={images?.split('|')[0]}
+							alt={''}
+							className='rounded-lg'
+						/>
+					) : (
+						<span className='w-full h-full flex bg-lightGray rounded-lg items-center justify-center'>
+							<Icon path={mdiImageRemoveOutline} size={5} color='#BFBFBF' />
+						</span>
+					)}
 				</span>
 				<div className='flex w-full gap-x-5'>
 					<span className='relative basis-1/2 h-[200px] inline-block'>
-						<Image sizes='100%' src='/images/demo6.png' fill alt='' />
+						{images?.split('|')[1] ? (
+							<Image
+								sizes='100%'
+								fill
+								src={images?.split('|')[1]}
+								alt={''}
+								className='rounded-lg'
+							/>
+						) : (
+							<span className='w-full h-full flex bg-lightGray rounded-lg items-center justify-center'>
+								<Icon path={mdiImageRemoveOutline} size={5} color='#BFBFBF' />
+							</span>
+						)}
 					</span>
 					<span className='relative basis-1/2 h-[200px] inline-block'>
-						<Image sizes='100%' src='/images/demo7.png' fill alt='' />
+						{images?.split('|')[2] ? (
+							<Image
+								sizes='100%'
+								fill
+								src={images?.split('|')[2]}
+								alt={''}
+								className='rounded-lg'
+							/>
+						) : (
+							<span className='w-full h-full flex bg-lightGray rounded-lg items-center justify-center'>
+								<Icon path={mdiImageRemoveOutline} size={5} color='#BFBFBF' />
+							</span>
+						)}
 					</span>
 				</div>
 				<div className='flex w-full gap-x-5'>
 					<span className='relative basis-1/2 h-[200px] inline-block'>
-						<Image sizes='100%' src='/images/demo7.png' fill alt='' />
+						{images?.split('|')[3] ? (
+							<Image
+								sizes='100%'
+								fill
+								src={images?.split('|')[3]}
+								alt={''}
+								className='rounded-lg'
+							/>
+						) : (
+							<span className='w-full h-full flex bg-lightGray rounded-lg items-center justify-center'>
+								<Icon path={mdiImageRemoveOutline} size={5} color='#BFBFBF' />
+							</span>
+						)}
 					</span>
 					<span className='relative basis-1/2 h-[200px] inline-block'>
-						<Image sizes='100%' src='/images/demo6.png' fill alt='' />
+						{images?.split('|')[4] ? (
+							<Image
+								sizes='100%'
+								fill
+								src={images?.split('|')[4]}
+								alt={''}
+								className='rounded-lg'
+							/>
+						) : (
+							<span className='w-full h-full flex bg-lightGray rounded-lg items-center justify-center'>
+								<Icon path={mdiImageRemoveOutline} size={5} color='#BFBFBF' />
+							</span>
+						)}
 					</span>
 				</div>
 			</div>

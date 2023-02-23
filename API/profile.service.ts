@@ -33,12 +33,3 @@ export const editProfile = async ({
 		await $host.put(`/profiles/${id}`, request)
 	).data
 }
-
-export const changeAvatar = async (formData: FormData): Promise<any> => {
-	return await (
-		await $host.post(
-			'https://api.cloudinary.com/v1_1/dlexnnoda/image/upload',
-			formData,
-		)
-	).data
-}

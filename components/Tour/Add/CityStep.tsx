@@ -17,7 +17,6 @@ export const CityStep = () => {
 
 	if (isLoading) return <>Loading...</>
 	if (isError) return <>Error!</>
-	console.log(data)
 
 	return (
 		<>
