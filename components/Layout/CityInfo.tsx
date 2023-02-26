@@ -1,17 +1,23 @@
-import { mdiMapMarker, mdiMenu, mdiWhiteBalanceSunny } from '@mdi/js'
+import { components } from '@/API/types/api.types'
+import { getWeather } from '@/API/weather.service'
+import {
+	mdiCalendarBlank,
+	mdiMapMarker,
+	mdiMenu,
+	mdiWhiteBalanceSunny,
+} from '@mdi/js'
 import Icon from '@mdi/react'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { FilterSidebar } from '../FilterSidebar'
-import { mdiCalendarBlank } from '@mdi/js'
-import { components } from '@/API/types/api.types'
 
 interface Props {
 	city: components['schemas']['City']
 }
 
 export const CityInfo = ({ city }: Props) => {
+	const { data } = useQuery(['weather', city.name], () => getWeather(city.name))
 	const [isCategories, setIsCategories] = useState(false)
-
 	return (
 		<>
 			<FilterSidebar
@@ -29,13 +35,18 @@ export const CityInfo = ({ city }: Props) => {
 					</p>
 				</div>
 				<div className='flex items-center'>
-					<Icon
-						path={mdiWhiteBalanceSunny}
-						className='mr-2'
-						size={1}
-						color='#FFCE1F'
-					/>
-					<span className='font-semibold text-xl'>23&deg;C</span>
+					{
+						<Icon
+							path={mdiWhiteBalanceSunny}
+							className='mr-2'
+							size={1}
+							color='#FFCE1F'
+						/>
+					}{' '}
+					<span className='font-semibold text-xl'>
+						{data?.data.main.temp ? Math.round(data?.data.main.temp) : '-'}
+						&deg;C
+					</span>
 				</div>
 			</div>
 			<div className='flex justify-between mt-8'>

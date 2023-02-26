@@ -13,7 +13,6 @@ interface Props extends ComponentPropsWithoutRef<'div'> {
 
 export const Photos = ({ className, images }: Props) => {
 	const formedImages = images?.split('|')
-	console.log(images?.split('|'))
 	const [isView, setIsView] = useState(false)
 	return (
 		<>

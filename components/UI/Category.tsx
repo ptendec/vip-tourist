@@ -1,17 +1,13 @@
-import { useFirstRender } from '@/hooks/useFirstRender'
 import { ListItem } from '@/utilities/interfaces'
-import { Listbox } from '@headlessui/react'
-import { mdiChevronRight } from '@mdi/js'
+import { Listbox, Transition } from '@headlessui/react'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
-import Image from 'next/image'
-import { ComponentPropsWithoutRef, ReactNode, useEffect, useState } from 'react'
+import { ComponentPropsWithoutRef, Fragment, useState } from 'react'
 
 interface Props extends Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> {
-	icon?: ReactNode | string
+	icon?: string
 	list: ListItem[]
 	className?: string
-	width: string
 	label?: string
 	defaultChosen?: boolean
 	onChange: (option: ListItem) => void
@@ -23,27 +19,21 @@ export const Category = ({
 	list,
 	icon,
 	className,
-	width,
 	label,
 	onChange,
 	defaultChosen = false,
 	disabled = false,
 	chosenItem,
 }: Props) => {
-	const firstRender = useFirstRender()
-
 	const [selectedItem, setSelectedItem] = useState<ListItem>(
 		chosenItem ? chosenItem : list[0],
 	)
-
-	useEffect(() => {
-		if (firstRender) chosenItem ? onChange(chosenItem) : onChange(list[0])
-	}, [list])
 
 	return (
 		<div className={clsx('', className)}>
 			<span className='block font-medium text-dark-blue mb-1.5'>{label}</span>
 			<Listbox
+				className={'relative'}
 				disabled={disabled}
 				as={'div'}
 				value={selectedItem}
@@ -54,57 +44,45 @@ export const Category = ({
 			>
 				{({ open }) => (
 					<>
-						<Listbox.Button className='flex flex-row items-center justify-between w-full rounded-lg border border-[#D0D5DD] outline-none px-4 py-3 text-dark text-sm'>
-							<p className='flex flex-row'>
-								{typeof icon === 'string' ? (
-									<Image
-										className='inline-block ml-4'
-										src={icon as string}
-										alt='Icon'
-										fill
-									/>
-								) : (
-									icon
+						<Listbox.Button className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-300 ease-out w-full text-elipsis'>
+							<p className='flex flex-row gap-x-2'>
+								{icon && (
+									<Icon className={clsx('text-gray')} path={icon} size={1} />
 								)}
 								{!defaultChosen && !selectedItem
 									? 'Выбрать'
-									: selectedItem?.value}
+									: selectedItem.name?.split('-')[0]}
 							</p>
-							<Icon
-								path={mdiChevronRight}
-								size={1}
-								className={clsx(
-									'transition-all duration-600 ease-out',
-									open && 'rotate-90',
-								)}
-								color='#BFBFBF'
-							/>
 						</Listbox.Button>
-						<div className='relative'>
+						<Transition
+							as={Fragment}
+							enter='transition ease-out duration-200'
+							enterFrom='opacity-0 translate-y-1'
+							enterTo='opacity-100 translate-y-0'
+							leave='transition ease-in duration-150'
+							leaveFrom='opacity-100 translate-y-0'
+							leaveTo='opacity-0 translate-y-1'
+						>
 							<Listbox.Options
-								className={clsx('absolute rounded-lg shadow-md z-10', width)}
+								className={clsx(
+									'absolute rounded-lg shadow-lg z-10 w-full outline-none bottom-12',
+								)}
 							>
-								{list.map(item => (
+								{list.map((item, index) => (
 									<Listbox.Option
 										key={item.id}
-										className='p-2 flex flex-row bg-white hover:bg-light-green hover:font-semibold cursor-pointer'
+										className={clsx(
+											'py-2.5 px-3 flex flex-row bg-white hover:bg-[#F6F6F5] cursor-pointer transition-all duration-300 ease-out',
+											list.length - 1 === index && 'rounded-b-lg',
+											index === 0 && 'rounded-t-lg',
+										)}
 										value={item}
 									>
-										{typeof icon === 'string' ? (
-											<Image
-												className='inline-block ml-4'
-												src={icon as string}
-												alt='Icon'
-												fill
-											/>
-										) : (
-											icon
-										)}
-										{item.value}
+										{item.name}
 									</Listbox.Option>
 								))}
 							</Listbox.Options>
-						</div>
+						</Transition>
 					</>
 				)}
 			</Listbox>

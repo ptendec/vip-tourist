@@ -1,9 +1,11 @@
+import { createProfile, getProfile } from '@/API/profile.service'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { Input } from '@/components/UI/Input'
 import { Layout } from '@/modules/Layout'
 import { mdiEmail, mdiLock } from '@mdi/js'
 import Icon from '@mdi/react'
+import { useMutation } from '@tanstack/react-query'
 import { auth } from 'config/firebase'
 import {
 	GoogleAuthProvider,
@@ -36,10 +38,11 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		},
 	}
 }
-// TODO: При авторизации через гугл проверить, имеется ли у него профиль, если да, то получить его, если профиля нет, то создать новую
 const Main = () => {
 	const { locale, push } = useRouter()
 	const { t } = useTranslation()
+	const { mutate } = useMutation(createProfile)
+
 	const {
 		register,
 		handleSubmit,
@@ -72,7 +75,33 @@ const Main = () => {
 		const provider = new GoogleAuthProvider()
 		await signInWithPopup(auth, provider)
 			.then(authUser => {
-				console.log('logged_in')
+				getProfile({ locale: locale as string })
+					.then(async response => {
+						response.is_tourist
+							? push('/tourist/profile')
+							: push('/guide/profile')
+					})
+					.catch(error => {
+						mutate(
+							{
+								locale: locale as string,
+								request: {
+									email: authUser.user.email as string,
+									// @ts-expect-error Несоответствие типов
+									uid: authUser.user.uid,
+									is_tourist: true,
+								},
+							},
+							{
+								onSuccess: response => {
+									setIsLoading(false)
+									response.is_tourist
+										? push('/tourist/profile')
+										: push('/guide/profile')
+								},
+							},
+						)
+					})
 			})
 			.catch(() => {
 				console.log('error')

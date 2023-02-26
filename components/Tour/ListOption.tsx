@@ -9,7 +9,12 @@ interface Props {
 export const ListOption = ({ icon, title, description }: Props) => {
 	return (
 		<div className='flex gap-x-2 my-2'>
-			<Icon className='translate-y-[2px]' size={1} path={icon} />
+			<Icon
+				className='translate-y-[2px]'
+				color='#3B3F32'
+				size={1}
+				path={icon}
+			/>
 			<div>
 				<p className='text-dark font-semibold text-sm text-left'>
 					{description ?? '-'}

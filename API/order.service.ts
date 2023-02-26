@@ -22,8 +22,16 @@ export const getOrder = async ({
 
 export const getMyOrders = async ({
 	id,
-}: QueryParams): Promise<components['schemas']['Tour'][]> => {
+}: QueryParams): Promise<components['schemas']['Order'][]> => {
 	return await (
 		await $host.get(`/orders/?profile.uid=${id}`)
+	).data
+}
+
+export const getSoldOrders = async ({
+	id,
+}: QueryParams): Promise<components['schemas']['Order'][]> => {
+	return await (
+		await $host.get(`/orders/?seller.uid=${id}`)
 	).data
 }

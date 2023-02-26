@@ -1,4 +1,4 @@
-import { createProfile } from '@/API/profile.service'
+import { createProfile, getProfile } from '@/API/profile.service'
 import { Button } from '@/components/UI/Button'
 import Checkbox from '@/components/UI/Checkbox'
 import { Container } from '@/components/UI/Container'
@@ -42,10 +42,9 @@ export const getServerSideProps: GetServerSideProps = async context => {
 	}
 }
 // TODO: Добавить юридические документы
-// TODO: При авторизации через гугл проверить, имеется ли у него профиль, если да, то получить его, если профиля нет, то создать новую
 
 const Main = () => {
-	const { locale } = useRouter()
+	const { locale, push } = useRouter()
 	const {
 		register,
 		handleSubmit,
@@ -54,8 +53,8 @@ const Main = () => {
 		watch,
 	} = useForm<AuthorizationFields>()
 	const { t } = useTranslation()
-	const { push } = useRouter()
 	const { mutate } = useMutation(createProfile)
+
 	const [isTourist, setIsTourist] = useState(true)
 	const [isNotify, setIsNotify] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
@@ -98,25 +97,33 @@ const Main = () => {
 		const provider = new GoogleAuthProvider()
 		await signInWithPopup(auth, provider)
 			.then(authUser => {
-				mutate(
-					{
-						locale: locale as string,
-						request: {
-							email: authUser.user.email as string,
-							// @ts-expect-error Несоответствие типов
-							uid: authUser.user.uid,
-							is_tourist: isTourist,
-						},
-					},
-					{
-						onSuccess: response => {
-							setIsLoading(false)
-							response.is_tourist
-								? push('/tourist/profile')
-								: push('/guide/profile')
-						},
-					},
-				)
+				getProfile({ locale: locale as string })
+					.then(async response => {
+						response.is_tourist
+							? push('/tourist/profile')
+							: push('/guide/profile')
+					})
+					.catch(error => {
+						mutate(
+							{
+								locale: locale as string,
+								request: {
+									email: authUser.user.email as string,
+									// @ts-expect-error Несоответствие типов
+									uid: authUser.user.uid,
+									is_tourist: isTourist,
+								},
+							},
+							{
+								onSuccess: response => {
+									setIsLoading(false)
+									response.is_tourist
+										? push('/tourist/profile')
+										: push('/guide/profile')
+								},
+							},
+						)
+					})
 			})
 			.catch(() => {
 				console.log('error')

@@ -19,6 +19,7 @@ const nextConfig = {
 			'res.cloudinary.com',
 			'server.viptourist.club',
 			'ui-avatars.com',
+			'lh3.googleusercontent.com',
 		],
 	},
 	i18n,

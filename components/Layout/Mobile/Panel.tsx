@@ -39,7 +39,7 @@ export const Panel = () => {
 	return (
 		<NoSSR>
 			<div className='h-14 w-full bg-light hidden xs:flex fixed justify-center items-center bottom-0 z-40 border-t border-lightGray shadow-md transition-all duration-200 ease-in-out'>
-				{list.map(({ id, href, icon, label }) => (
+				{list.map(({ id, href, icon, label }, index) => (
 					<PanelLink
 						key={id}
 						icon={icon}

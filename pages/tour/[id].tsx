@@ -34,6 +34,8 @@ export const getServerSideProps: GetServerSideProps = async context => {
 	}
 }
 
+// TODO: У языков отличаются id туров
+
 const Main = () => {
 	const { locale, query } = useRouter()
 	const { t } = useTranslation()

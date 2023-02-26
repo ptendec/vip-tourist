@@ -23,7 +23,7 @@ export const Sidebar = ({
 }: ComponentPropsWithoutRef<'div'>) => {
 	const { currency, editPreferences } = usePreferencesStore(state => state)
 	const { t } = useTranslation()
-	const { locale, pathname, push } = useRouter()
+	const { locale, pathname, push, asPath } = useRouter()
 	const { user } = useFirebaseAuth()
 	const { mutate } = useMutation(editProfile)
 	const { data, isLoading, isError } = useQuery(
@@ -38,15 +38,6 @@ export const Sidebar = ({
 			refetchOnWindowFocus: false,
 		},
 	)
-	console.log(
-		langList
-			.map(item => ({
-				id: item.id,
-				value: t(item.value),
-				name: t(item.name) ?? '-',
-			}))
-			.find(item => item.value === locale),
-	)
 
 	// TODO: При наличии авторизации, спросить уверен ли он, что хочет стать гидом, если подтвердит, то отправлять запрос на изменение поля isTourst: true
 
@@ -55,11 +46,21 @@ export const Sidebar = ({
 	return (
 		<NoSSR>
 			<div
-				className={clsx(className, '2xl:hidden border-r border-[#E9EAE8] px-6')}
+				className={clsx(
+					className,
+					'2xl:hidden border-r border-[#E9EAE8] px-6 pt-10',
+				)}
 				{...rest}
 			>
-				<Link href='/' className='relative inline-block '>
-					<Image src='/images/logo.svg' alt='VipTourist' fill />
+				<Link href='/' className=''>
+					<span className='relative flex justify-center'>
+						<Image
+							src='/images/logo.svg'
+							width={162}
+							height={32}
+							alt='VipTourist'
+						/>
+					</span>
 				</Link>
 				<div className='mt-10'>
 					{getNavbarList(user, data).map(link => (
@@ -67,7 +68,7 @@ export const Sidebar = ({
 							key={link.id}
 							href={link.href}
 							className={clsx(
-								'flex flex-row items-center gap-x-3 group rounded-lg hover:bg-[#F6F6F5] px-7 py-2 transition-all duration-600 ease-out capitalize w-full',
+								'flex flex-row items-center gap-x-3 group rounded-lg hover:bg-[#F6F6F5] px-7 py-2 transition-all duration-300 ease-out capitalize w-full',
 							)}
 						>
 							<Icon
@@ -91,7 +92,7 @@ export const Sidebar = ({
 					<div className='mt-60'>
 						{!user && (
 							<button
-								className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-600 ease-out w-full'
+								className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-300 ease-out w-full'
 								onClick={() => {
 									push('/auth/registration')
 								}}
@@ -101,6 +102,7 @@ export const Sidebar = ({
 							</button>
 						)}
 						<ListBox
+							key={locale}
 							chosenItem={currencyList
 								.map(item => ({
 									id: item.id,
@@ -126,7 +128,7 @@ export const Sidebar = ({
 							chosenItem={langList
 								.map(item => ({
 									id: item.id,
-									value: t(item.value),
+									value: item.value,
 									name: t(item.name) ?? '-',
 								}))
 								.find(item => item.value === locale)}
@@ -137,12 +139,12 @@ export const Sidebar = ({
 								name: t(item.name) ?? '-',
 							}))}
 							onChange={item => {
-								push(pathname, undefined, { locale: item.value })
+								push('/', undefined, { locale: item.value, shallow: false })
 							}}
 						/>
 						{user && (
 							<button
-								className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-600 ease-out w-full mt-12'
+								className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-300 ease-out w-full mt-12'
 								onClick={() => signOut(auth)}
 							>
 								<Icon className={clsx('text-gray')} path={mdiLogout} size={1} />

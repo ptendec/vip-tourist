@@ -5,10 +5,20 @@ import { Container } from '@/components/UI/Container'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
 import { useQuery } from '@tanstack/react-query'
+import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { ReactElement } from 'react'
+
+export const getServerSideProps: GetServerSideProps = async context => {
+	return {
+		props: {
+			...(await serverSideTranslations(context.locale as string, ['common'])),
+		},
+	}
+}
 
 const Main = () => {
 	const { t } = useTranslation()

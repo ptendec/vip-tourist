@@ -1,6 +1,8 @@
+import { getCurrency } from '@/API/currency.service'
 import { components } from '@/API/types/api.types'
 import { mdiCardsHeart, mdiStar } from '@mdi/js'
 import Icon from '@mdi/react'
+import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
@@ -25,11 +27,12 @@ export const Card = ({ tour, className }: Props) => {
 		isTourInFavourite ? removeFavourite(tour.id) : addFavourite(tour.id)
 	}
 
-	// const { data, isLoading } = useQuery(['currency', currency], () =>
-	// getCurrency(currency.value),
-	// )
+	const { data, isLoading } = useQuery(['currency', currency], () =>
+		getCurrency(currency.value),
+	)
 
 	// TODO: Настроить отображение рейтинга
+
 	return (
 		<div
 			className={clsx(
@@ -50,12 +53,9 @@ export const Card = ({ tour, className }: Props) => {
 			</Link>
 			<span className='top-3 absolute left-3 rounded-lg bg-yellow py-1 px-3 font-bold'>
 				<NoSSR>
-					{
-						// isLoading && tour.adult_price && data
-						// ? `${currency.symbol} ${data * tour.adult_price ?? 0}`
-						// : `${currency.symbol} ${tour.price}`
-						tour.price
-					}
+					{tour.price && data?.price
+						? `${currency.symbol} ${data.price * tour.price ?? 0}`
+						: `${currency.symbol} ${tour.price}`}
 				</NoSSR>
 			</span>
 			<NoSSR>

@@ -2,16 +2,28 @@ import { Category } from '@/components/UI/Category'
 import { Input } from '@/components/UI/Input'
 import { Textarea } from '@/components/UI/Textarea'
 import { ListItem } from '@/utilities/interfaces'
+import { isTourExists } from '@/utilities/utilities'
 import { useTranslation } from 'next-i18next'
+import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { useDraftStore } from 'store/draft'
 
 export const DescribeStep = () => {
-	useEffect(() => {
-		return () => {
-			console.log('here')
-		}
-	}, [])
 	const { t } = useTranslation()
+	const { locale, pathname, query } = useRouter()
+	const { addTour, tours, editTour } = useDraftStore(state => state)
+
+	const existingTour = isTourExists(query.id as string, tours)
+
+	useEffect(() => {
+		if (!existingTour) {
+			addTour({
+				id: query.id as string,
+				name: '',
+			})
+		}
+	}, [query.id])
+
 	return (
 		<>
 			<h2 className='font-semibold text-center block mb-5'>
@@ -22,6 +34,13 @@ export const DescribeStep = () => {
 					className='mb-5'
 					label='Название'
 					placeholder={t('enterTourName') as string}
+					defaultValue={existingTour?.name}
+					onChange={event => {
+						editTour(query.id as string, {
+							name: event.currentTarget.value,
+							id: query.id as string,
+						})
+					}}
 				/>
 				<Textarea
 					label={t('desc') as string}
@@ -33,10 +52,10 @@ export const DescribeStep = () => {
 						{
 							id: 1,
 							value: 'Привет',
+							name: 'Привет',
 						},
 					]}
 					label='Категории'
-					width={'w-full'}
 					onChange={function (option: ListItem): void {
 						null
 					}}
@@ -58,10 +77,10 @@ export const DescribeStep = () => {
 						{
 							id: 1,
 							value: 'Привет',
+							name: 'Привет',
 						},
 					]}
 					label='Категории'
-					width={'w-full'}
 					onChange={function (option: ListItem): void {
 						null
 					}}

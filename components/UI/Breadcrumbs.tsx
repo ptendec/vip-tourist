@@ -1,6 +1,7 @@
 import { mdiChevronRight } from '@mdi/js'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef, Fragment } from 'react'
 import { Tooltip } from 'react-tooltip'
@@ -11,6 +12,7 @@ interface Props extends ComponentPropsWithoutRef<'div'> {
 }
 
 export const Breadcrumbs = ({ breadcrumbs, className }: Props) => {
+	const { t } = useTranslation()
 	return (
 		<>
 			<Tooltip
@@ -18,6 +20,7 @@ export const Breadcrumbs = ({ breadcrumbs, className }: Props) => {
 				content='Перейти на главную'
 				place='bottom'
 				noArrow
+				delayShow={200}
 			/>
 
 			<div className={clsx('flex items-center', className)}>
@@ -34,7 +37,7 @@ export const Breadcrumbs = ({ breadcrumbs, className }: Props) => {
 							key={index}
 							href={breadcrumb.href ?? '/'}
 						>
-							{breadcrumb.name}
+							{t(breadcrumb.name ?? '')}
 						</Link>
 						{breadcrumbs.length - 1 !== index && (
 							<Icon

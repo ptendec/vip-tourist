@@ -167,7 +167,54 @@ const Main = () => {
 					{
 						id: data?.id,
 						request: {
-							photo_url: response.secure_url,
+							documents_urls: {
+								// @ts-expect-error Проблема со стороны сервера
+								urls: [response.secure_url],
+							},
+						},
+					},
+					{
+						onSuccess: () => {
+							toast.success('Успешно загружено')
+							refetch()
+						},
+						onError: () => {
+							toast.error('Что-то пошло не так, попробуйте позднее')
+						},
+					},
+				)
+			},
+			onError: error => {
+				toast.error('Не удалось загрузить, попробуйте позднее')
+				console.log(error)
+			},
+		})
+	}
+
+	const hanldeAddressUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (!event.currentTarget.files) return
+		if (
+			!data?.documents_urls?.urls[0] ||
+			// @ts-expect-error Проблема со стороны сервера
+			data?.documents_urls?.urls.length === 0
+		) {
+			toast.error('Сначала загрузите ID')
+			return
+		}
+		const image = event.currentTarget.files[0]
+		const formData = new FormData()
+		formData.append('file', image)
+		formData.append('upload_preset', 'sgdiyf4c')
+		upload(formData, {
+			onSuccess: response => {
+				edit(
+					{
+						id: data?.id,
+						request: {
+							documents_urls: {
+								// @ts-expect-error Проблема со стороны сервера
+								urls: [data.documents_urls.urls[0], response.secure_url],
+							},
 						},
 					},
 					{
@@ -200,9 +247,10 @@ const Main = () => {
 				content='Загрузить фотографию'
 				place='right'
 				noArrow
+				delayShow={200}
 			/>
-			<div className='flex '>
-				<Sidebar className='basis-80 grow-1 srhink-0'></Sidebar>
+			<div className='flex justify-center w-full'>
+				<Sidebar className='basis-64 shrink-0'></Sidebar>
 				<Container className='justify-self-center pt-10 flex flex-col'>
 					<div className='flex gap-x-3'>
 						{profileLinks.map(link => (
@@ -218,11 +266,11 @@ const Main = () => {
 							</Link>
 						))}
 					</div>
-					<div className='w-5/12 self-center flex flex-col items-center pb-10'>
+					<div className='w-5/12 self-center flex flex-col items-center py-10 md:w-full'>
 						<span className='w-32 h-32 relative inline-block'>
 							<label
 								id='addPhoto'
-								className='flex items-center justify-center text-white font-semibold py-3 text-sm outline-none transition-all duration-600 ease-out active:scale-[0.99] z-10 absolute right-0 bottom-0 bg-green p-2 rounded-full hover:scale-[1.05] w-9 h-9 cursor-pointer'
+								className='flex items-center justify-center text-white font-semibold py-3 text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99] z-10 absolute right-0 bottom-0 bg-green p-2 rounded-full hover:scale-[1.05] w-9 h-9 cursor-pointer'
 							>
 								<input
 									disabled={uploading}
@@ -348,34 +396,49 @@ const Main = () => {
 									className='mt-6'
 									placeholder='Instagram, Facebook или Twitter'
 								/>
-								<p className='flex gap-x-2 mt-6 mb-6'>
-									<span className='bg-lightDark text-white text-sm w-6 h-6 flex items-center justify-center rounded-full shrink-0'>
-										2
-									</span>
-									Загрузить следующие документы:
-								</p>
-								<div className='flex justify-between'>
-									<p>{t('guideBecomeDocOne')}</p>
-									<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-600 ease-out active:scale-[0.99] bg-green relative'>
-										<input
-											type='file'
-											className='absolute z-10 w-full h-full hidden'
-											onChange={handleIdUpload}
-										/>
-										<Icon path={mdiPlus} size={0.8} />
-									</label>
-								</div>
-								<div className='flex justify-between mt-4'>
-									<p>{t('guideBecomeDocThree')}</p>
-									<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-600 ease-out active:scale-[0.99] bg-green relative'>
-										<input
-											type='file'
-											className='absolute z-10 w-full h-full hidden'
-											onChange={handleIdUpload}
-										/>
-										<Icon path={mdiPlus} size={0.8} />
-									</label>
-								</div>
+								{
+									// @ts-expect-error Проблема со стороны сервера
+									data?.documents_urls.urls.length === 1 && (
+										<p className='flex gap-x-2 mt-6 mb-6'>
+											<span className='bg-lightDark text-white text-sm w-6 h-6 flex items-center justify-center rounded-full shrink-0'>
+												2
+											</span>
+											Загрузить следующие документы:
+										</p>
+									)
+								}
+								{
+									// @ts-expect-error Проблема со стороны сервера
+									!data?.documents_urls.urls[0] && (
+										<div className='flex justify-between'>
+											<p>{t('guideBecomeDocOne')}</p>
+											<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99] bg-green relative'>
+												<input
+													type='file'
+													className='absolute z-10 w-full h-full hidden'
+													onChange={handleIdUpload}
+												/>
+												<Icon path={mdiPlus} size={0.8} />
+											</label>
+										</div>
+									)
+								}
+								{
+									// @ts-expect-error Проблема со стороны сервера
+									!data.documents_urls.urls[1] && (
+										<div className='flex justify-between mt-4'>
+											<p>{t('guideBecomeDocThree')}</p>
+											<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99] bg-green relative'>
+												<input
+													type='file'
+													className='absolute z-10 w-full h-full hidden'
+													onChange={hanldeAddressUpload}
+												/>
+												<Icon path={mdiPlus} size={0.8} />
+											</label>
+										</div>
+									)
+								}
 							</div>
 							<Button className='mt-8 capitalize'>{t('save')}</Button>
 						</form>

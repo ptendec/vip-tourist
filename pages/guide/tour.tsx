@@ -17,6 +17,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { ReactElement, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
+import { useDraftStore } from 'store/draft'
 import { json } from 'utilities/utilities'
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -61,6 +62,7 @@ const steps = [
 const Main = () => {
 	const { t } = useTranslation()
 	const { locale, pathname, query } = useRouter()
+	const { addTour, tours } = useDraftStore(state => state)
 
 	const [step, setStep] = useState(0)
 
@@ -71,13 +73,14 @@ const Main = () => {
 			</Head>
 			<Tooltip
 				noArrow
+				delayShow={200}
 				content='Сохранить на время'
 				anchorId='save'
 				place='bottom'
 			/>
 
 			<div className='flex min-h-screen'>
-				<Sidebar className='basis-80 grow-1 srhink-0'></Sidebar>
+				<Sidebar className='basis-64 grow-1 shrink-0'></Sidebar>
 				<Container className='justify-self-center pt-10 flex flex-col'>
 					<div className='flex justify-between'>
 						<h1 className='font-semibold text-lg'>Добавить тур</h1>

@@ -1,9 +1,10 @@
-import { $host } from '.'
+import axios from 'axios'
+import { Currency } from './types/currency.types'
 
-export const getCurrency = async (currency: string): Promise<number> => {
+export const getCurrency = async (currency: string): Promise<Currency> => {
 	return await (
-		await $host.get(
-			`https://api.coingate.com/v2/rates/merchant/USD/${currency}`,
+		await axios.get(
+			`https://viptourist.bitman.trade/course?base=USD&quote=${currency}`,
 		)
 	).data
 }

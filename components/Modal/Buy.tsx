@@ -7,6 +7,7 @@ import {
 	mdiCalendarBlank,
 	mdiChevronRight,
 	mdiEarth,
+	mdiHiking,
 	mdiMinus,
 	mdiPlus,
 } from '@mdi/js'
@@ -38,6 +39,7 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 				place='top'
 				className='z-30'
 				noArrow
+				delayShow={200}
 			/>
 			<Modal className='max-w-md p-6' isVisible={isVisible} onClose={onClose}>
 				<p className='font-semibold text-xl text-center mb-5'>{t('billing')}</p>
@@ -47,7 +49,7 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 					description={tour.name}
 				/>
 				<ListOption
-					icon={mdiEarth}
+					icon={mdiHiking}
 					title={t('guide')}
 					description={tour.profile?.name}
 				/>
@@ -75,7 +77,7 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 										path={mdiChevronRight}
 										className={clsx(
 											open && 'rotate-90 ',
-											'transition-all duration-600 ease-out',
+											'transition-all duration-300 ease-out',
 										)}
 										size={1.3}
 										color='#BFBFBF'
