@@ -7,7 +7,12 @@ import {
 	mdiHeart,
 	mdiHome,
 } from '@mdi/js'
-import { AdditionalInfo, Languages, Navbar } from 'utilities/interfaces'
+import {
+	AdditionalInfo,
+	Category,
+	Languages,
+	Navbar,
+} from 'utilities/interfaces'
 import { Breadcrumb } from './interfaces'
 export const SidebarOptions = [
 	{
@@ -37,7 +42,7 @@ export const SidebarOptions = [
 	},
 ]
 
-export const staticCategories = [
+export const staticCategories: Category[] = [
 	{
 		id: 1,
 		value: 'guide',
@@ -296,7 +301,7 @@ export const touristTopNavbar: Navbar[] = [
 	},
 	{
 		id: 3,
-		href: '/tourist/orders',
+		href: '/orders',
 		label: 'booking',
 		icon: mdiBook,
 	},
@@ -308,7 +313,7 @@ export const touristTopNavbar: Navbar[] = [
 	},
 	{
 		id: 5,
-		href: '/tourist/profile',
+		href: '/profile',
 		label: 'profile',
 		icon: mdiAccount,
 	},
@@ -323,7 +328,7 @@ export const guideTopNavbar: Navbar[] = [
 	},
 	{
 		id: 2,
-		href: '/guide/profile',
+		href: '/profile',
 		label: 'profile',
 		icon: mdiAccount,
 	},

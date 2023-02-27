@@ -45,7 +45,7 @@ const Main = () => {
 		{
 			id: 1,
 			name: t('profile'),
-			href: '/guide/profile',
+			href: '/profile',
 		},
 		{
 			id: 2,
@@ -137,7 +137,7 @@ const Main = () => {
 							<Link
 								id='addTour'
 								target='_blank'
-								href={`/guide/tour?state=add&id=${generateUUID()}`}
+								href={`/guide/tour?state=add&id=${generateUUID()}&step=1`}
 							>
 								<Button className='rounded-full w-6 h-6'>
 									<Icon path={mdiPlus} size={0.8} />

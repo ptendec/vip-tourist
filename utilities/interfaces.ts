@@ -66,3 +66,9 @@ export interface Languages {
 	value: string
 	symbol: string
 }
+
+export interface Category {
+	id: number
+	name: string
+	value: string
+}

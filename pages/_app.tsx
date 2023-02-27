@@ -7,6 +7,7 @@ import { usePreserveScroll } from 'hooks/usePreserveScroll'
 import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { ReactElement, ReactNode, useState } from 'react'
+import '../styles/datepicker.css'
 import '../styles/globals.css'
 
 import { AuthUserProvider } from 'context/AuthContext'

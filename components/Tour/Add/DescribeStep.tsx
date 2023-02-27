@@ -1,7 +1,8 @@
-import { Category } from '@/components/UI/Category'
 import { Input } from '@/components/UI/Input'
+import { MultiSelect } from '@/components/UI/MultiSelect'
 import { Textarea } from '@/components/UI/Textarea'
 import { ListItem } from '@/utilities/interfaces'
+import { langList, staticCategories } from '@/utilities/static'
 import { isTourExists } from '@/utilities/utilities'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
@@ -19,7 +20,6 @@ export const DescribeStep = () => {
 		if (!existingTour) {
 			addTour({
 				id: query.id as string,
-				name: '',
 			})
 		}
 	}, [query.id])
@@ -43,28 +43,36 @@ export const DescribeStep = () => {
 					}}
 				/>
 				<Textarea
+					defaultValue={existingTour?.description}
 					label={t('desc') as string}
 					className='mb-5 h-10'
 					placeholder={t('enterTourName') as string}
+					onChange={event => {
+						editTour(query.id as string, {
+							description: event.currentTarget.value,
+							id: query.id as string,
+						})
+					}}
 				/>
-				<Category
-					list={[
-						{
-							id: 1,
-							value: 'Привет',
-							name: 'Привет',
-						},
-					]}
-					label='Категории'
-					onChange={function (option: ListItem): void {
+				<MultiSelect
+					className='mt-2'
+					list={staticCategories}
+					onChange={function (item: ListItem[]): void {
 						null
 					}}
+					label={t('categories')}
 				/>
 				<div className='flex justify-between mt-5'>
 					<Input
 						label='Длительность, ч *'
 						placeholder='4'
 						className='basis-[calc(50%_-_8px)]'
+						onChange={event => {
+							editTour(query.id as string, {
+								duration: event.currentTarget.value,
+								id: query.id as string,
+							})
+						}}
 					/>
 					<Input
 						label='Кол-во мест'
@@ -72,18 +80,13 @@ export const DescribeStep = () => {
 						className='basis-[calc(50%_-_8px)]'
 					/>
 				</div>
-				<Category
-					list={[
-						{
-							id: 1,
-							value: 'Привет',
-							name: 'Привет',
-						},
-					]}
-					label='Категории'
-					onChange={function (option: ListItem): void {
+				<MultiSelect
+					className='mt-2'
+					list={langList}
+					onChange={function (item: ListItem[]): void {
 						null
 					}}
+					label={t('chooseLanguages')}
 				/>
 			</div>
 		</>

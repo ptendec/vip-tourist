@@ -31,7 +31,6 @@ export const Category = ({
 
 	return (
 		<div className={clsx('', className)}>
-			<span className='block font-medium text-dark-blue mb-1.5'>{label}</span>
 			<Listbox
 				className={'relative'}
 				disabled={disabled}
@@ -44,6 +43,10 @@ export const Category = ({
 			>
 				{({ open }) => (
 					<>
+						<Listbox.Label className='block font-medium text-dark-blue mb-1.5'>
+							{label}
+						</Listbox.Label>
+
 						<Listbox.Button className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-300 ease-out w-full text-elipsis'>
 							<p className='flex flex-row gap-x-2'>
 								{icon && (

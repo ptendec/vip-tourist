@@ -1,29 +1,29 @@
 import { components } from '@/API/types/api.types'
 import { getWeather } from '@/API/weather.service'
-import {
-	mdiCalendarBlank,
-	mdiMapMarker,
-	mdiMenu,
-	mdiWhiteBalanceSunny,
-} from '@mdi/js'
+import { isDaysEqual } from '@/utilities/utilities'
+import { mdiCalendarBlank, mdiMapMarker, mdiMenu } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useQuery } from '@tanstack/react-query'
+import { enUS } from 'date-fns/locale'
+import { useRouter } from 'next/dist/client/router'
 import { useState } from 'react'
-import { FilterSidebar } from '../FilterSidebar'
+import DatePicker, { registerLocale } from 'react-datepicker'
+import { Tag } from '../UI/Tag'
+registerLocale('en', enUS)
 
 interface Props {
 	city: components['schemas']['City']
+	showFilter: () => void
 }
 
-export const CityInfo = ({ city }: Props) => {
+export const CityInfo = ({ city, showFilter }: Props) => {
+	const { locale } = useRouter()
+	const [date, setDate] = useState(new Date())
 	const { data } = useQuery(['weather', city.name], () => getWeather(city.name))
-	const [isCategories, setIsCategories] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
+
 	return (
 		<>
-			<FilterSidebar
-				onClose={() => setIsCategories(false)}
-				isVisible={isCategories}
-			/>
 			<div className='flex justify-between'>
 				<div>
 					<h1 className='text-xl font-semibold mb-2'>{city?.name}</h1>
@@ -36,12 +36,12 @@ export const CityInfo = ({ city }: Props) => {
 				</div>
 				<div className='flex items-center'>
 					{
-						<Icon
-							path={mdiWhiteBalanceSunny}
-							className='mr-2'
-							size={1}
-							color='#FFCE1F'
-						/>
+						// <Icon
+						// 	path={mdiWhiteBalanceSunny}
+						// 	className='mr-2'
+						// 	size={1}
+						// 	color='#FFCE1F'
+						// />
 					}{' '}
 					<span className='font-semibold text-xl'>
 						{data?.data.main.temp ? Math.round(data?.data.main.temp) : '-'}
@@ -49,24 +49,55 @@ export const CityInfo = ({ city }: Props) => {
 					</span>
 				</div>
 			</div>
-			<div className='flex justify-between mt-8'>
+			<div className='flex justify-between mt-8 '>
 				<button
-					onClick={() => setIsCategories(prevState => !prevState)}
+					onClick={showFilter}
 					className='relative flex items-center border-gray border bg-white rounded-lg px-4 py-2 text-sm font-semibold basis-auto shrink-0'
 				>
 					<Icon path={mdiMenu} size={1} color='#86A545' className='mr-1' />
 					Категории
 				</button>
-				<div className='flex items-center gap-3'>
-					<button className='rounded-full py-3 px-4 border border-lightGray text-sm font-semibold'>
+				<div className='flex items-center gap-3 hidden'>
+					<Tag
+						isActive={isDaysEqual(date, new Date())}
+						onClick={() => {
+							setDate(new Date(new Date().toISOString().split('T')[0]))
+						}}
+					>
 						Сегодня
-					</button>
-					<button className='rounded-full py-3 px-4 border border-lightGray text-sm font-semibold'>
+					</Tag>
+					<Tag
+						isActive={isDaysEqual(
+							new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+							date,
+						)}
+						onClick={() => {
+							setDate(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+						}}
+					>
 						Завтра
-					</button>
-					<button className='rounded-full py-2 h-[46px] px-8 border border-lightGray text-sm font-semibold'>
+					</Tag>
+
+					<Tag
+						isActive={false}
+						className='relative'
+						onClick={() => setIsOpen(prevState => !prevState)}
+					>
+						<span className='relative hidden'>
+							<DatePicker
+								open={isOpen}
+								onClickOutside={() => setIsOpen(false)}
+								popperPlacement='left'
+								className='hidden'
+								locale={locale}
+								selected={date}
+								onChange={date => {
+									if (date) setDate(date)
+								}}
+							/>
+						</span>
 						<Icon path={mdiCalendarBlank} size={1} />{' '}
-					</button>
+					</Tag>
 				</div>
 			</div>
 		</>

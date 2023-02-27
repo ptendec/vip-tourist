@@ -145,7 +145,10 @@ export const Sidebar = ({
 						{user && (
 							<button
 								className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-300 ease-out w-full mt-12'
-								onClick={() => signOut(auth)}
+								onClick={() => {
+									signOut(auth)
+									push('/')
+								}}
 							>
 								<Icon className={clsx('text-gray')} path={mdiLogout} size={1} />
 								{t('logout')}

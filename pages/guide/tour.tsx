@@ -1,5 +1,3 @@
-import { getCities } from '@/API/city.service'
-import { getTours } from '@/API/tour.service'
 import { Sidebar } from '@/components/Sidebar'
 import { AdditionalStep } from '@/components/Tour/Add/AdditionalStep'
 import { CityStep } from '@/components/Tour/Add/CityStep'
@@ -9,7 +7,6 @@ import { PricingStep } from '@/components/Tour/Add/PricingStep'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { Layout } from '@/modules/Layout'
-import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -18,20 +15,11 @@ import { useRouter } from 'next/router'
 import { ReactElement, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { useDraftStore } from 'store/draft'
-import { json } from 'utilities/utilities'
 
 export const getServerSideProps: GetServerSideProps = async context => {
-	const queryClient = new QueryClient()
-	await queryClient.prefetchQuery(['tours'], () =>
-		getTours({ locale: context.locale as string }),
-	)
-	await queryClient.prefetchQuery(['cities'], () =>
-		getCities({ locale: context.locale as string }),
-	)
 	return {
 		props: {
 			...(await serverSideTranslations(context.locale as string, ['common'])),
-			dehydratedState: json(dehydrate(queryClient)),
 		},
 	}
 }
@@ -69,7 +57,7 @@ const Main = () => {
 	return (
 		<>
 			<Head>
-				<title>Проверка</title>
+				<title>{`${t('tour')} | VipTourist`}</title>
 			</Head>
 			<Tooltip
 				noArrow

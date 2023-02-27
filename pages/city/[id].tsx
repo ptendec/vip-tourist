@@ -1,20 +1,22 @@
 import { getCity } from '@/API/city.service'
-import { getTours } from '@/API/tour.service'
+import { getToursByCity } from '@/API/tour.service'
+import { FilterSidebar } from '@/components/FilterSidebar'
 import { CityInfo } from '@/components/Layout/CityInfo'
 import { Sidebar } from '@/components/Sidebar'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { Cards } from '@/modules/Cards'
 import { Layout } from '@/modules/Layout'
-import { Breadcrumb } from '@/utilities/interfaces'
+import { Breadcrumb, Category } from '@/utilities/interfaces'
+import { json } from '@/utilities/utilities'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { GetServerSideProps } from 'next'
+import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 import Image from 'next/image'
-import { ReactElement } from 'react'
-import { useTranslation } from 'react-i18next'
+import { ReactElement, useEffect, useState } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async context => {
 	const queryClient = new QueryClient()
@@ -25,10 +27,19 @@ export const getServerSideProps: GetServerSideProps = async context => {
 			id: context.params?.id as string,
 		}),
 	)
+
+	await queryClient.prefetchQuery(['toursOfCity', context.params?.id], () =>
+		getToursByCity({
+			locale: context.locale as string,
+			id: context.params?.id as string,
+			categories: [],
+		}),
+	)
+
 	return {
 		props: {
 			...(await serverSideTranslations(context.locale as string, ['common'])),
-			dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+			dehydratedState: json(dehydrate(queryClient)),
 		},
 	}
 }
@@ -43,9 +54,22 @@ const Main = () => {
 	} = useQuery(['city', query.id], () =>
 		getCity({ locale: locale as string, id: query.id as string }),
 	)
-	const { data, isLoading, isError } = useQuery(['tours'], () =>
-		getTours({ locale: locale as string }),
+	const [categories, setCategories] = useState<Category[]>([])
+	const [isFilter, setIsFilter] = useState(false)
+
+	const { data, isLoading, isError, refetch } = useQuery(
+		['toursOfCity', query.id],
+		() =>
+			getToursByCity({
+				locale: locale as string,
+				id: query.id as string,
+				categories,
+			}),
 	)
+	useEffect(() => {
+		refetch()
+	}, [categories])
+
 	if (isLoading || isCityLoading) return <>Loading...</>
 	if (isError || isCityError) return <>Error!</>
 
@@ -69,6 +93,13 @@ const Main = () => {
 				<title>{city.name} | VipTourist</title>
 				<meta name='description' content={city.name} />
 			</Head>
+			<FilterSidebar
+				onClose={() => setIsFilter(false)}
+				isVisible={isFilter}
+				setFilters={categories => {
+					setCategories(categories)
+				}}
+			/>
 			<div className='flex justify-center w-full'>
 				<Sidebar className='basis-64 shrink-0'></Sidebar>
 				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0'>
@@ -76,8 +107,11 @@ const Main = () => {
 					<span className='relative h-40 w-full inline-block my-8'>
 						<Image fill src='/images/demo.png' alt={''}></Image>
 					</span>
-					<CityInfo city={city} />
-					<Cards title={t('popularTours')} tours={city.tours} />
+					<CityInfo
+						showFilter={() => setIsFilter(prevState => !prevState)}
+						city={city}
+					/>
+					<Cards title={t('tours')} tours={data} />
 				</Container>
 			</div>
 		</>

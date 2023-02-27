@@ -1,6 +1,7 @@
 import { components } from '@/API/types/api.types'
 import { DehydratedState } from '@tanstack/react-query'
-import { Navbar, User } from './interfaces'
+import { Draft } from 'store/draft'
+import { Categories, Navbar, User } from './interfaces'
 import { guideTopNavbar, noAuthTopNavbar, touristTopNavbar } from './static'
 
 export const getURLParamsFromObject = () => {
@@ -22,8 +23,8 @@ export const getNavbarList = (
 	}
 }
 
-export const getCategoriesList = (categories: string[]) => {
-	return categories.join('=true&')
+export const getCategoriesList = (categories: Categories[]) => {
+	return categories.map(category => category.value).join('=true&') + '=true'
 }
 
 export const generateUUID = () => {
@@ -49,9 +50,18 @@ export const generateUUID = () => {
 	})
 }
 
-export const isTourExists = (
-	id: string,
-	tours: components['schemas']['Tour'][],
-) => {
+export const isTourExists = (id: string, tours: Draft[]) => {
 	return tours.find(tour => tour?.id === id)
+}
+
+export const isDaysEqual = (date1: Date, date2: Date) => {
+	if (
+		date1.getFullYear() === date2.getFullYear() &&
+		date1.getMonth() === date2.getMonth() &&
+		date1.getDate() === date2.getDate()
+	) {
+		return true
+	} else {
+		return false
+	}
 }

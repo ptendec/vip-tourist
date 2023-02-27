@@ -1,12 +1,28 @@
 import Checkbox from '@/components/UI/Checkbox'
 import { Input } from '@/components/UI/Input'
+import { isTourExists } from '@/utilities/utilities'
 import { mdiAccount, mdiBabyFaceOutline } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useTranslation } from 'next-i18next'
-import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { useDraftStore } from 'store/draft'
 
 export const PricingStep = () => {
 	const { t } = useTranslation()
+	const { locale, pathname, query } = useRouter()
+	const { addTour, tours, editTour } = useDraftStore(state => state)
+
+	const existingTour = isTourExists(query.id as string, tours)
+
+	useEffect(() => {
+		if (!existingTour) {
+			addTour({
+				id: query.id as string,
+				name: '',
+			})
+		}
+	}, [query.id])
 
 	const [isFree, setIsFree] = useState(false)
 
@@ -17,60 +33,59 @@ export const PricingStep = () => {
 			</h2>
 			<p className='text-sm mb-5'>{t('usdTag')}</p>
 			<div>
-				<p className='flex gap-x-2.5 font-semibold text-sm items-center'>
-					<Icon path={mdiAccount} size={1} />
-					{t('adultPrice')}
-				</p>
 				<div className='flex justify-between mt-3'>
 					<Input
-						label={t('withoutComission')}
-						placeholder='4'
+						icon={<Icon path={mdiAccount} size={1} />}
+						label={t('adultPrice')}
+						placeholder='129'
 						className='basis-[calc(50%_-_8px)]'
+						type='number'
+						onChange={event => {
+							editTour(query.id as string, {
+								adult_price: Number(event.currentTarget.value),
+								id: query.id as string,
+							})
+						}}
 					/>
 					<Input
-						label={t('withComission')}
-						placeholder='17'
+						icon={<Icon path={mdiBabyFaceOutline} size={1} />}
+						label={t('childPrice')}
+						placeholder='23'
 						className='basis-[calc(50%_-_8px)]'
+						onChange={event => {
+							editTour(query.id as string, {
+								child_price: Number(event.currentTarget.value),
+								id: query.id as string,
+							})
+						}}
 					/>
 				</div>
-				<p className='flex gap-x-2.5 font-semibold text-sm items-center mt-5'>
-					<Icon path={mdiBabyFaceOutline} size={1} />
-					{t('childPrice')}
-				</p>
-				<div className='flex justify-between mt-3 mb-5'>
-					<Input
-						label={t('withoutComission')}
-						placeholder='4'
-						className='basis-[calc(50%_-_8px)]'
-					/>
-					<Input
-						label={t('withComission')}
-						placeholder='17'
-						className='basis-[calc(50%_-_8px)]'
-					/>
-				</div>
-				<span className='block bg-gray h-[0.33px]' />
-				<label className='flex justify-between items-center text-sm font-semibold my-4'>
-					{t('freeTour')}
-					<Checkbox
-						checked={isFree}
-						onChange={() => setIsFree(prevState => !prevState)}
-					/>
-				</label>
+				<div className='flex justify-between mt-3 mb-5'></div>
+
 				<span className='block bg-gray h-[0.33px]' />
 				<label className='flex justify-between items-center text-sm font-semibold my-4'>
 					{t('transfer')}
 					<Checkbox
-						checked={isFree}
-						onChange={() => setIsFree(prevState => !prevState)}
+						checked={existingTour?.withTransfer ?? false}
+						onChange={event => {
+							editTour(query.id as string, {
+								withTransfer: !existingTour?.withTransfer,
+								id: query.id as string,
+							})
+						}}
 					/>
 				</label>
 				<span className='block bg-gray h-[0.33px]' />
 				<label className='flex justify-between items-center text-sm font-semibold my-4'>
 					{t('Трансфер включен в стоимость')}
 					<Checkbox
-						checked={isFree}
-						onChange={() => setIsFree(prevState => !prevState)}
+						checked={!existingTour?.onlyTransfer ?? false}
+						onChange={event => {
+							editTour(query.id as string, {
+								onlyTransfer: !existingTour?.onlyTransfer,
+								id: query.id as string,
+							})
+						}}
 					/>
 				</label>
 			</div>

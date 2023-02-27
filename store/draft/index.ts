@@ -2,13 +2,16 @@ import { components } from '@/API/types/api.types'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
-type Draft = components['schemas']['NewTour'] & { id: string }
+type Tour = Omit<components['schemas']['NewTour'], 'name'> & { name?: string }
+
+export type Draft = Tour & { id: string }
+
 interface Fields {
 	tours: Draft[]
 }
 interface Actions {
 	addTour: (tour: Draft) => void
-	editTour: (id: string, tour: Draft[]) => void
+	editTour: (id: string, tour: Draft) => void
 	removeTour: (id: string) => void
 }
 

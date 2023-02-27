@@ -22,6 +22,9 @@ const nextConfig = {
 			'lh3.googleusercontent.com',
 		],
 	},
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
 	i18n,
 }
 

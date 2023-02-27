@@ -1,5 +1,6 @@
+import { getCategoriesList } from '@/utilities/utilities'
 import { $host } from 'API'
-import { QueryParams } from './../utilities/interfaces'
+import { Category, QueryParams } from './../utilities/interfaces'
 import { components } from './types/api.types'
 
 export const getTours = async ({
@@ -7,6 +8,19 @@ export const getTours = async ({
 }: QueryParams): Promise<components['schemas']['Tour'][]> => {
 	return await (
 		await $host.get(`/tours?_locale=${locale}`)
+	).data
+}
+
+export const getToursByCity = async ({
+	id,
+	locale,
+	categories,
+}: QueryParams & { categories: Category[] }): Promise<
+	components['schemas']['Tour'][]
+> => {
+	const list = getCategoriesList(categories)
+	return await (
+		await $host.get(`/tours/?city.id=${id}&_locale=${locale}&${list}`)
 	).data
 }
 

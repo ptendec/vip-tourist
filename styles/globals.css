@@ -47,7 +47,7 @@ input[type="checkbox"] {
   .scrollbar::-webkit-scrollbar-track {
     border-radius: 100vh;
     background: #fff;
-    margin: 25px 0;
+    /* margin: 25px 0; */
   }
 
 

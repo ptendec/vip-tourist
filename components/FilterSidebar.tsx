@@ -1,24 +1,30 @@
-import clsx from 'clsx'
 import Checkbox from '@/components/UI/Checkbox'
-import { Fragment, useState } from 'react'
-import Icon from '@mdi/react'
+import { Category } from '@/utilities/interfaces'
 import { mdiClose } from '@mdi/js'
+import Icon from '@mdi/react'
+import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
+import { Fragment, useState } from 'react'
 import { staticCategories } from 'utilities/static'
 import { Button } from './UI/Button'
 
 interface Props {
 	isVisible: boolean
 	onClose: () => void
+	setFilters: (categories: Category[]) => void
 }
 
-export const FilterSidebar = ({ isVisible, onClose }: Props) => {
+export const FilterSidebar = ({ isVisible, onClose, setFilters }: Props) => {
+	const { t } = useTranslation()
 	const [categories, setCategories] = useState(
 		staticCategories.map(category => ({
 			id: category.id,
 			value: category.value,
+			name: category.name,
 			checked: false,
 		})),
 	)
+
 	return (
 		<div
 			className={clsx(
@@ -51,11 +57,19 @@ export const FilterSidebar = ({ isVisible, onClose }: Props) => {
 								})
 							}}
 						/>
-						<span className='ml-3'>{category.value}</span>
+						<span className='ml-3'>{t(category.name)}</span>
 					</label>
 				</Fragment>
 			))}
-			<Button className='py-2'>Применить</Button>
+			<Button
+				className='py-2'
+				onClick={() => {
+					setFilters(categories.filter(category => category.checked))
+					onClose()
+				}}
+			>
+				Применить
+			</Button>
 		</div>
 	)
 }

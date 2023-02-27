@@ -24,6 +24,7 @@ const Main = () => {
 		() => getFavourites({ locale: locale as string, tours: favourites }),
 		{
 			enabled: !!favourites.length,
+			retry: false,
 		},
 	)
 
@@ -48,7 +49,7 @@ const Main = () => {
 							breadcrumbs={favouritesBreadcrumbs}
 						/>
 						<NoSSR>
-							{favourites.length === 0 ? (
+							{favourites.length === 0 || isError ? (
 								<NoFavourites />
 							) : (
 								<Cards tours={data} />

@@ -81,9 +81,7 @@ const Main = () => {
 					{
 						onSuccess: response => {
 							setIsLoading(false)
-							response.is_tourist
-								? push('/tourist/profile')
-								: push('/guide/profile')
+							push('/profile')
 						},
 					},
 				)
@@ -99,9 +97,7 @@ const Main = () => {
 			.then(authUser => {
 				getProfile({ locale: locale as string })
 					.then(async response => {
-						response.is_tourist
-							? push('/tourist/profile')
-							: push('/guide/profile')
+						push('/profile')
 					})
 					.catch(error => {
 						mutate(
@@ -117,9 +113,7 @@ const Main = () => {
 							{
 								onSuccess: response => {
 									setIsLoading(false)
-									response.is_tourist
-										? push('/tourist/profile')
-										: push('/guide/profile')
+									push('/profile')
 								},
 							},
 						)
