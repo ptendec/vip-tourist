@@ -1,21 +1,16 @@
-import { FilterSidebar } from '@/components/FilterSidebar'
 import { Sidebar } from '@/components/Sidebar'
+import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { Layout } from '@/modules/Layout'
 import Head from 'next/head'
-import { ReactElement } from 'react'
-import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
-import { staticBreadcrumbs } from 'utilities/static'
-import { CityInfo } from '@/components/Layout/CityInfo'
 import Image from 'next/image'
-import { Cards } from '@/modules/Cards'
-import { getTours } from '@/API/tour.service'
-import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/router'
-import { useTranslation } from 'react-i18next'
+import { ReactElement } from 'react'
+import { staticBreadcrumbs } from 'utilities/static'
 
 const Main = () => {
 	const { locale } = useRouter()
+	// TODO: Доделать каталог
 
 	return (
 		<>

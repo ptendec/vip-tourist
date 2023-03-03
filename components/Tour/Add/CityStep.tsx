@@ -7,7 +7,7 @@ import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { Fragment, useEffect } from 'react'
 import { useDraftStore } from 'store/draft'
 
 export const CityStep = () => {
@@ -45,7 +45,7 @@ export const CityStep = () => {
 			}{' '}
 			<div className='scrollbar overflow-y-auto h-[400px] p-[10px] mt-5'>
 				{data.map((city, index) => (
-					<>
+					<Fragment key={city.id}>
 						<div
 							key={index}
 							className={clsx(
@@ -77,7 +77,7 @@ export const CityStep = () => {
 							</div>
 						</div>
 						<span className='block bg-gray h-[0.33px]' />
-					</>
+					</Fragment>
 				))}
 			</div>
 		</>

@@ -25,7 +25,7 @@ export const Photos = ({ className, images }: Props) => {
 				/>
 			)}
 			<div
-				className={clsx(className, ' cursor-pointer')}
+				className={clsx(className, 'cursor-pointer lg:hidden')}
 				onClick={() => {
 					setIsView(true)
 				}}

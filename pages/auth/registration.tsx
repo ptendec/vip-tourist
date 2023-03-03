@@ -87,6 +87,8 @@ const Main = () => {
 				)
 			})
 			.catch(error => {
+				console.log(error)
+
 				setIsLoading(false)
 			})
 	}

@@ -40,6 +40,7 @@ export const PricingStep = () => {
 						placeholder='129'
 						className='basis-[calc(50%_-_8px)]'
 						type='number'
+						defaultValue={existingTour?.adult_price}
 						onChange={event => {
 							editTour(query.id as string, {
 								adult_price: Number(event.currentTarget.value),
@@ -52,6 +53,7 @@ export const PricingStep = () => {
 						label={t('childPrice')}
 						placeholder='23'
 						className='basis-[calc(50%_-_8px)]'
+						defaultValue={existingTour?.child_price}
 						onChange={event => {
 							editTour(query.id as string, {
 								child_price: Number(event.currentTarget.value),

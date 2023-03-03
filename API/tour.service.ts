@@ -1,5 +1,6 @@
 import { getCategoriesList } from '@/utilities/utilities'
 import { $host } from 'API'
+import { Tour } from 'store/draft'
 import { Category, QueryParams } from './../utilities/interfaces'
 import { components } from './types/api.types'
 
@@ -65,5 +66,13 @@ export const getMyTours = async ({
 }: QueryParams): Promise<components['schemas']['Tour'][]> => {
 	return await (
 		await $host.get(`/tours/?profile.uid=${id}`)
+	).data
+}
+
+export const createTour = async (
+	request: Tour & { locale?: string },
+): Promise<components['schemas']['Tour']> => {
+	return await (
+		await $host.post(`/tours/?_locale=${request.locale}`, request)
 	).data
 }

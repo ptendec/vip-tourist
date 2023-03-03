@@ -5,6 +5,7 @@ import { mdiCalendarBlank, mdiMapMarker, mdiMenu } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useQuery } from '@tanstack/react-query'
 import { enUS } from 'date-fns/locale'
+import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/dist/client/router'
 import { useState } from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
@@ -18,6 +19,7 @@ interface Props {
 
 export const CityInfo = ({ city, showFilter }: Props) => {
 	const { locale } = useRouter()
+	const { t } = useTranslation()
 	const [date, setDate] = useState(new Date())
 	const { data } = useQuery(['weather', city.name], () => getWeather(city.name))
 	const [isOpen, setIsOpen] = useState(false)
@@ -55,9 +57,9 @@ export const CityInfo = ({ city, showFilter }: Props) => {
 					className='relative flex items-center border-gray border bg-white rounded-lg px-4 py-2 text-sm font-semibold basis-auto shrink-0'
 				>
 					<Icon path={mdiMenu} size={1} color='#86A545' className='mr-1' />
-					Категории
+					{t('categories')}
 				</button>
-				<div className='flex items-center gap-3 hidden'>
+				<div className=' items-center gap-3 hidden'>
 					<Tag
 						isActive={isDaysEqual(date, new Date())}
 						onClick={() => {

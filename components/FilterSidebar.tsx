@@ -33,7 +33,7 @@ export const FilterSidebar = ({ isVisible, onClose, setFilters }: Props) => {
 			)}
 		>
 			<div className='flex flex-row justify-between mb-8'>
-				<p className='text-xl font-semibold '>Категории</p>
+				<p className='text-xl font-semibold capitalize'>{t('categories')}</p>
 				<button onClick={onClose} className=''>
 					<Icon path={mdiClose} size={1} color='#3B3F32' />
 				</button>

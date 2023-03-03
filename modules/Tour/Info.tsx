@@ -19,9 +19,9 @@ import { ComponentPropsWithoutRef, useState } from 'react'
 
 interface Props extends ComponentPropsWithoutRef<'div'> {
 	tour: components['schemas']['Tour']
-	country?: components['schemas']['Country']
+	city?: components['schemas']['City']
 }
-export const Info = ({ className, tour, country }: Props) => {
+export const Info = ({ className, tour, city }: Props) => {
 	const { t } = useTranslation()
 
 	const [isBuy, setIsBuy] = useState(false)
@@ -37,7 +37,7 @@ export const Info = ({ className, tour, country }: Props) => {
 				<p className='flex mb-3'>
 					<Icon size={1} color='#86A545' path={mdiMapMarker} />
 					<span className='text-gray text-md '>
-						{country?.name}, {tour.city?.name}
+						{city?.country?.name}, {city?.name}
 					</span>
 				</p>
 				<p className='mb-6'>{tour.description}</p>

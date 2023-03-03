@@ -30,6 +30,7 @@ export const AdditionalStep = () => {
 				<Input
 					className='mb-5'
 					label={t('prerequisites')}
+					defaultValue={existingTour?.prerequisites}
 					placeholder={t('enterTourName') as string}
 					onChange={event => {
 						editTour(query.id as string, {
@@ -41,6 +42,7 @@ export const AdditionalStep = () => {
 				<Input
 					label={t('enterIncludedNew') as string}
 					className='mb-5'
+					defaultValue={existingTour?.included}
 					placeholder={t('Например, стаканы и холодная вода') as string}
 					onChange={event => {
 						editTour(query.id as string, {
@@ -52,6 +54,7 @@ export const AdditionalStep = () => {
 				<Input
 					label={t('enterNotIncludedNew') as string}
 					className='mb-5'
+					defaultValue={existingTour?.not_included}
 					placeholder={t('Например, трансфер') as string}
 					onChange={event => {
 						editTour(query.id as string, {
@@ -63,6 +66,7 @@ export const AdditionalStep = () => {
 				<Input
 					label={t('prohibs') as string}
 					className='mb-5'
+					defaultValue={existingTour?.prohibitions}
 					placeholder={t('Например, алкоголь и курение  ') as string}
 					onChange={event => {
 						editTour(query.id as string, {
@@ -74,6 +78,7 @@ export const AdditionalStep = () => {
 				<Input
 					label={t('notesAboutFreeTour') as string}
 					className='mb-5'
+					defaultValue={existingTour?.note}
 					placeholder={t('Любая дополнительная информация') as string}
 					onChange={event => {
 						editTour(query.id as string, {

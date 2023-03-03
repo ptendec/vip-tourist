@@ -35,3 +35,15 @@ export const getSoldOrders = async ({
 		await $host.get(`/orders/?seller.uid=${id}`)
 	).data
 }
+
+export const editOrder = async ({
+	locale,
+	request,
+	id,
+}: QueryParams & { request: components['schemas']['NewOrder'] }): Promise<
+	components['schemas']['Order']
+> => {
+	return await (
+		await $host.put(`/orders/${id}`, request)
+	).data
+}

@@ -99,8 +99,8 @@ const Main = () => {
 						)
 					})
 			})
-			.catch(() => {
-				console.log('error')
+			.catch(error => {
+				console.log(error)
 			})
 	}
 

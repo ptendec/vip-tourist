@@ -2,7 +2,13 @@ import { components } from '@/API/types/api.types'
 import { DehydratedState } from '@tanstack/react-query'
 import { Draft } from 'store/draft'
 import { Categories, Navbar, User } from './interfaces'
-import { guideTopNavbar, noAuthTopNavbar, touristTopNavbar } from './static'
+import {
+	guideTopNavbar,
+	langList,
+	noAuthTopNavbar,
+	staticCategories,
+	touristTopNavbar,
+} from './static'
 
 export const getURLParamsFromObject = () => {
 	null
@@ -64,4 +70,23 @@ export const isDaysEqual = (date1: Date, date2: Date) => {
 	} else {
 		return false
 	}
+}
+export const getAddedCategories = (
+	categories?: components['schemas']['NewProfile'],
+) => {
+	if (!categories) {
+		return []
+	}
+	return staticCategories.filter(category =>
+		Object.keys(categories).find(_category => _category == category.value),
+	)
+}
+
+export const getAddedLanguages = (lanugages?: string) => {
+	if (!lanugages) {
+		return []
+	}
+	return langList.filter(language =>
+		lanugages.split('|').find(_language => _language == language.name),
+	)
 }

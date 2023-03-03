@@ -2,7 +2,9 @@ import { components } from '@/API/types/api.types'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
-type Tour = Omit<components['schemas']['NewTour'], 'name'> & { name?: string }
+export type Tour = Omit<components['schemas']['NewTour'], 'name'> & {
+	name?: string
+}
 
 export type Draft = Tour & { id: string }
 
@@ -32,7 +34,7 @@ export const useDraftStore = create<Fields & Actions>()(
 					})),
 				removeTour: id =>
 					set(state => ({
-						tours: state.tours.filter(tour => tour?.id === id),
+						tours: state.tours.filter(tour => tour?.id !== id),
 					})),
 			}),
 			{

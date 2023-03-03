@@ -7,40 +7,8 @@ import {
 	mdiHeart,
 	mdiHome,
 } from '@mdi/js'
-import {
-	AdditionalInfo,
-	Category,
-	Languages,
-	Navbar,
-} from 'utilities/interfaces'
+import { Category, Languages, ListItem, Navbar } from 'utilities/interfaces'
 import { Breadcrumb } from './interfaces'
-export const SidebarOptions = [
-	{
-		id: 1,
-		name: 'Главная',
-		href: '/',
-	},
-	{
-		id: 2,
-		name: 'Избранные',
-		href: '/favourites',
-	},
-	{
-		id: 3,
-		name: 'Заказы',
-		href: '/orders',
-	},
-	{
-		id: 4,
-		name: 'Уведомления',
-		href: '/notifications',
-	},
-	{
-		id: 5,
-		name: 'Профиль',
-		href: '/profile',
-	},
-]
 
 export const staticCategories: Category[] = [
 	{
@@ -232,60 +200,6 @@ export const staticBreadcrumbs: Breadcrumb[] = [
 	},
 ]
 
-export const additionalInfoList: AdditionalInfo[] = [
-	{
-		id: '1',
-		title: 'Что включено',
-		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-	},
-	{
-		id: '2',
-		title: 'Возьмите с собой',
-		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-	},
-	{
-		id: '3',
-		title: 'Важная информация',
-		description:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-	},
-]
-
-const addTourSteps = [
-	{
-		id: 1,
-		name: 'Choose city',
-		t: 'addTour',
-	},
-	{
-		id: 2,
-		name: 'Describe tour',
-		t: 'addTour',
-	},
-	{
-		id: 3,
-		name: 'Additional',
-		t: 'additional',
-	},
-	{
-		id: 4,
-		name: 'Pricing',
-		t: 'addTour',
-	},
-	{
-		id: 5,
-		name: 'Images upload',
-		t: 'photos',
-	},
-	{
-		id: 6,
-		name: 'Preview',
-		t: 'addTour',
-	},
-]
-
 export const touristTopNavbar: Navbar[] = [
 	{
 		id: 1,
@@ -425,7 +339,7 @@ export const currencyList: Languages[] = [
 	},
 ]
 
-export const langList = [
+export const langList: ListItem[] = [
 	{
 		id: 1,
 		name: 'english',

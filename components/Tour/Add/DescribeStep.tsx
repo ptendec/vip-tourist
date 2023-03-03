@@ -1,9 +1,14 @@
+import { Categories } from '@/components/UI/Categories'
 import { Input } from '@/components/UI/Input'
 import { MultiSelect } from '@/components/UI/MultiSelect'
 import { Textarea } from '@/components/UI/Textarea'
 import { ListItem } from '@/utilities/interfaces'
 import { langList, staticCategories } from '@/utilities/static'
-import { isTourExists } from '@/utilities/utilities'
+import {
+	getAddedCategories,
+	getAddedLanguages,
+	isTourExists,
+} from '@/utilities/utilities'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -23,7 +28,8 @@ export const DescribeStep = () => {
 			})
 		}
 	}, [query.id])
-
+	console.log(existingTour?.languages)
+	console.log(getAddedLanguages(existingTour?.languages))
 	return (
 		<>
 			<h2 className='font-semibold text-center block mb-5'>
@@ -43,10 +49,10 @@ export const DescribeStep = () => {
 					}}
 				/>
 				<Textarea
-					defaultValue={existingTour?.description}
+					value={existingTour?.description}
 					label={t('desc') as string}
 					className='mb-5 h-10'
-					placeholder={t('enterTourName') as string}
+					placeholder={t('desc') as string}
 					onChange={event => {
 						editTour(query.id as string, {
 							description: event.currentTarget.value,
@@ -54,16 +60,23 @@ export const DescribeStep = () => {
 						})
 					}}
 				/>
-				<MultiSelect
+				<Categories
 					className='mt-2'
+					chosenItems={getAddedCategories(existingTour)}
 					list={staticCategories}
-					onChange={function (item: ListItem[]): void {
-						null
+					onChange={(items: ListItem[]) => {
+						editTour(query.id as string, {
+							...items.reduce((accumulator, value) => {
+								return { ...accumulator, [value.value]: true }
+							}, {}),
+							id: query.id as string,
+						})
 					}}
 					label={t('categories')}
 				/>
 				<div className='flex justify-between mt-5'>
 					<Input
+						defaultValue={existingTour?.duration}
 						label='Длительность, ч *'
 						placeholder='4'
 						className='basis-[calc(50%_-_8px)]'
@@ -75,16 +88,27 @@ export const DescribeStep = () => {
 						}}
 					/>
 					<Input
+						defaultValue={existingTour?.placesCount}
 						label='Кол-во мест'
 						placeholder='17'
 						className='basis-[calc(50%_-_8px)]'
+						onChange={event => {
+							editTour(query.id as string, {
+								placesCount: Number(event.currentTarget.value),
+								id: query.id as string,
+							})
+						}}
 					/>
 				</div>
 				<MultiSelect
+					chosenItems={getAddedLanguages(existingTour?.languages)}
 					className='mt-2'
 					list={langList}
-					onChange={function (item: ListItem[]): void {
-						null
+					onChange={(items: ListItem[]) => {
+						editTour(query.id as string, {
+							languages: items.map(items => items.name).join('|'),
+							id: query.id as string,
+						})
 					}}
 					label={t('chooseLanguages')}
 				/>
