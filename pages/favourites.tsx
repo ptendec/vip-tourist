@@ -17,7 +17,7 @@ import { favouritesBreadcrumbs } from 'utilities/static'
 const Main = () => {
 	const { locale, query } = useRouter()
 	const { t } = useTranslation()
-	const { favourites } = useFavouritesStore(state => state)
+	const { favourites } = useFavouritesStore()
 
 	const { data, isLoading, isError, refetch } = useQuery(
 		['favourites'],

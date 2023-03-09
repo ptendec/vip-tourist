@@ -12,7 +12,7 @@ export const Cards = ({ tours, title }: Props) => {
 	return (
 		<div>
 			{title && <p className='font-semibold text-lg mb-4 mt-8'>{title}</p>}
-			<div className='flex flex-row flex-wrap overflow-hidden gap-x-5 xs:justify-center'>
+			<div className='flex flex-row flex-wrap overflow-hidden gap-5 xs:justify-center'>
 				{tours?.map(tour => (
 					<Card className='' key={tour.id} tour={tour}></Card>
 				))}

@@ -66,7 +66,6 @@ const Main = () => {
 				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0'>
 					<Search />
 					<Cards title={t('popularTours')} tours={tours} />
-					<Cards title={t('popularTours')} tours={tours} />
 					<Towns cities={cities}></Towns>
 				</Container>
 			</div>

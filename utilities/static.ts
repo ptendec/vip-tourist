@@ -182,24 +182,6 @@ export const staticCategories: Category[] = [
 	},
 ]
 
-export const staticBreadcrumbs: Breadcrumb[] = [
-	{
-		id: 1,
-		href: '/',
-		name: 'Главная',
-	},
-	{
-		id: 2,
-		href: '/city/',
-		name: 'Алматы',
-	},
-	{
-		id: 3,
-		href: '/tour/',
-		name: 'Тур',
-	},
-]
-
 export const touristTopNavbar: Navbar[] = [
 	{
 		id: 1,
@@ -384,5 +366,28 @@ export const langList: ListItem[] = [
 		id: 9,
 		name: 'italian',
 		value: 'it-IT',
+	},
+]
+
+export const sortList: ListItem[] = [
+	{
+		id: 1,
+		name: 'rating',
+		value: 'rating:ASC',
+	},
+	{
+		id: 2,
+		name: 'name',
+		value: 'name:ASC',
+	},
+	{
+		id: 4,
+		name: 'priceAsc',
+		value: 'adult_price:ASC',
+	},
+	{
+		id: 5,
+		name: 'priceDesc',
+		value: 'adult_price:DESC',
 	},
 ]

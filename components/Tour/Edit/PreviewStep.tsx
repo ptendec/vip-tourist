@@ -1,5 +1,4 @@
 import { getCity } from '@/API/city.service'
-import { isTourExists } from '@/utilities/utilities'
 import {
 	mdiAccount,
 	mdiBabyFaceOutline,
@@ -15,7 +14,7 @@ import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useDraftStore } from 'store/draft'
+import { useEditTourStore } from 'store/edit'
 import { Pagination } from 'swiper'
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -25,24 +24,19 @@ import { ListOption } from '../ListOption'
 
 export const PreviewStep = () => {
 	const { t } = useTranslation()
-	const { locale, pathname, query } = useRouter()
-	const { addTour, tours, editTour } = useDraftStore()
-	const existingTour = isTourExists(query.id as string, tours)
-	const formedImages = existingTour?.image_urls?.split('|')
+	const { locale, query } = useRouter()
+	const { addTour, tour } = useEditTourStore()
+	const formedImages = tour?.image_urls?.split('|')
 
-	const {
-		data: city,
-		isLoading: isCityLoading,
-		isError: isCityError,
-	} = useQuery(['city', existingTour?.city], () =>
+	const { data: city } = useQuery(['city', tour?.city], () =>
 		getCity({
 			locale: locale as string,
-			id: existingTour?.city,
+			id: tour?.city,
 		}),
 	)
 
 	useEffect(() => {
-		if (!existingTour) {
+		if (!tour) {
 			addTour({
 				id: query.id as string,
 				name: '',
@@ -92,27 +86,25 @@ export const PreviewStep = () => {
 			</div>
 
 			<div>
-				<h1 className='text-xl font-semibold mb-2 mt-8'>
-					{existingTour?.name}
-				</h1>
+				<h1 className='text-xl font-semibold mb-2 mt-8'>{tour?.name}</h1>
 				<p className='flex mb-3'>
 					<Icon size={1} color='#86A545' path={mdiMapMarker} />
 					<span className='text-gray text-md '>
 						{city?.country?.name}, {city?.name}
 					</span>
 				</p>
-				<p className='mb-6'>{existingTour?.description}</p>
+				<p className='mb-6'>{tour?.description}</p>
 				<ListOption
 					icon={mdiClockTimeThree}
 					title={t('duration')}
-					description={`${existingTour?.duration} ${t('hours')}`}
+					description={`${tour?.duration} ${t('hours')}`}
 				/>
 				<ListOption
 					icon={mdiHiking}
 					title={t('liveTour')}
-					description={existingTour?.languages?.split('|').join(', ')}
+					description={tour?.languages?.split('|').join(', ')}
 				/>
-				{!existingTour?.one_day_trip && (
+				{!tour?.one_day_trip && (
 					<>
 						<ListOption
 							icon={mdiCheckboxMarkedCircle}
@@ -121,24 +113,22 @@ export const PreviewStep = () => {
 						/>
 					</>
 				)}
-				{existingTour?.date && (
+				{tour?.date && (
 					<ListOption
 						icon={mdiCalendarBlank}
 						title={t('По каким дням проходит экскурсия')}
-						description={
-							new Date(existingTour?.date).toISOString().split('T')[0]
-						}
+						description={new Date(tour?.date).toISOString().split('T')[0]}
 					/>
 				)}
 				<ListOption
 					icon={mdiAccount}
 					title={t('adultPrice')}
-					description={`$ ${existingTour?.adult_price ?? '-'}`}
+					description={`$ ${tour?.adult_price ?? '-'}`}
 				/>
 				<ListOption
 					icon={mdiBabyFaceOutline}
 					title={t('childPrice')}
-					description={`$ ${existingTour?.child_price ?? '-'}`}
+					description={`$ ${tour?.child_price ?? '-'}`}
 				/>
 			</div>
 		</>

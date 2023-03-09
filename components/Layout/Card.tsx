@@ -1,9 +1,11 @@
 import { getCurrency } from '@/API/currency.service'
 import { components } from '@/API/types/api.types'
+import { getRating } from '@/utilities/utilities'
 import { mdiCardsHeart, mdiStar } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
+import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { useFavouritesStore } from 'store/favourites'
@@ -18,10 +20,9 @@ interface Props extends ComponentPropsWithoutRef<'div'> {
 }
 
 export const Card = ({ tour, className }: Props) => {
-	const { currency } = usePreferencesStore(state => state)
-	const { favourites, addFavourite, removeFavourite } = useFavouritesStore(
-		state => state,
-	)
+	const { t } = useTranslation()
+	const { currency } = usePreferencesStore()
+	const { favourites, addFavourite, removeFavourite } = useFavouritesStore()
 	const isTourInFavourite = favourites.find(favourite => favourite === tour.id)
 	const addToFavourites = () => {
 		isTourInFavourite ? removeFavourite(tour.id) : addFavourite(tour.id)
@@ -30,8 +31,6 @@ export const Card = ({ tour, className }: Props) => {
 	const { data, isLoading } = useQuery(['currency', currency], () =>
 		getCurrency(currency.value),
 	)
-
-	// TODO: Настроить отображение рейтинга
 
 	return (
 		<div
@@ -53,9 +52,15 @@ export const Card = ({ tour, className }: Props) => {
 			</Link>
 			<span className='top-3 absolute left-3 rounded-lg bg-yellow py-1 px-3 font-bold'>
 				<NoSSR>
-					{tour.price && data?.price
-						? `${currency.symbol} ${data.price * tour.price ?? 0}`
-						: `${currency.symbol} ${tour.price}`}
+					{tour.adult_price
+						? data?.price
+							? `${currency.symbol} ${Math.ceil(
+									data.price * tour.adult_price ?? 0,
+							  )}`
+							: `${currency.symbol} ${tour.adult_price}`
+						: data?.price &&
+						  tour.price &&
+						  `${currency.symbol} ${Math.ceil(data.price * tour.price ?? 0)}`}
 				</NoSSR>
 			</span>
 			<NoSSR>
@@ -76,12 +81,12 @@ export const Card = ({ tour, className }: Props) => {
 					<p className='font-semibold text-sm mb-1'>{tour.name}</p>
 				</Link>
 				<span className='text-gray font-normal mb-2 inline-block'>
-					{tour.duration} дней
+					{tour.duration} {t('hours')}
 				</span>
 				<div className='flex flex-row items-center'>
 					<span className='flex flex-row gap-[2px]'>
-						{[1, 2, 3, 4, 5].map(element => (
-							<Icon key={element} path={mdiStar} size={0.7} color='#FFCE1F' />
+						{getRating(tour.rating ?? 0).map((element, index) => (
+							<Icon key={index} path={mdiStar} size={0.7} color={element} />
 						))}
 					</span>
 					<span className='text-sm text-lightDark ml-2'>

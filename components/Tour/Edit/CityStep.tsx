@@ -1,30 +1,16 @@
 import { getCities } from '@/API/city.service'
-import { isTourExists } from '@/utilities/utilities'
 import { mdiFlagVariantOff } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
-import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { Fragment, useEffect } from 'react'
-import { useDraftStore } from 'store/draft'
+import { Fragment } from 'react'
+import { useEditTourStore } from 'store/edit'
 
 export const CityStep = () => {
-	const { t } = useTranslation()
 	const { locale, pathname, query } = useRouter()
-	const { addTour, tours, editTour } = useDraftStore()
-
-	const existingTour = isTourExists(query.id as string, tours)
-
-	useEffect(() => {
-		if (!existingTour) {
-			addTour({
-				id: query.id as string,
-				name: '',
-			})
-		}
-	}, [query.id])
+	const { tour, editTour } = useEditTourStore()
 
 	const { data, isLoading, isError } = useQuery(['cities'], () =>
 		getCities({ locale: locale as string }),
@@ -50,10 +36,10 @@ export const CityStep = () => {
 							key={index}
 							className={clsx(
 								'text-sm p-3 rounded-lg hover:bg-[#F6F6F5] cursor-pointer transition-all duration-300 ease-out',
-								existingTour?.city === city.id && 'bg-[#F6F6F5] font-semibold',
+								tour?.city === city.id && 'bg-[#F6F6F5] font-semibold',
 							)}
 							onClick={() =>
-								editTour(query.id as string, {
+								editTour({
 									id: query.id as string,
 									city: city.id,
 								})

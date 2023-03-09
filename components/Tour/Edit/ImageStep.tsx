@@ -1,34 +1,22 @@
 import { uploadImage } from '@/API/cloudinary.service'
 import { UploadImage } from '@/components/Icons/Upload'
-import { isTourExists } from '@/utilities/utilities'
 import { mdiLoading, mdiPlus } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
-import { useDraftStore } from 'store/draft'
+import { useEditTourStore } from 'store/edit'
 
 export const ImageStep = () => {
 	const { t } = useTranslation()
 	const { locale, pathname, query } = useRouter()
-	const { addTour, tours, editTour } = useDraftStore()
+	const { addTour, tour, editTour } = useEditTourStore()
 	const { mutate: upload, isLoading: uploading } = useMutation(uploadImage)
 	const [uploadingPreview, setUploadingPreview] = useState(false)
 	const [uploadingTransfer, setUploadingTransfer] = useState(false)
 	const [uploadingGallery, setUploadingGallery] = useState(false)
-
-	const existingTour = isTourExists(query.id as string, tours)
-
-	useEffect(() => {
-		if (!existingTour) {
-			addTour({
-				id: query.id as string,
-				name: '',
-			})
-		}
-	}, [query.id])
 
 	const uploadPreview = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
@@ -39,7 +27,7 @@ export const ImageStep = () => {
 		formData.append('upload_preset', 'sgdiyf4c')
 		upload(formData, {
 			onSuccess: response => {
-				editTour(query.id as string, {
+				editTour({
 					id: query.id as string,
 					mainPhotoUrl: response.secure_url,
 				})
@@ -60,7 +48,7 @@ export const ImageStep = () => {
 		formData.append('upload_preset', 'sgdiyf4c')
 		upload(formData, {
 			onSuccess: response => {
-				editTour(query.id as string, {
+				editTour({
 					id: query.id as string,
 					transferPhotoUrl: response.secure_url,
 				})
@@ -81,11 +69,11 @@ export const ImageStep = () => {
 		formData.append('upload_preset', 'sgdiyf4c')
 		upload(formData, {
 			onSuccess: response => {
-				editTour(query.id as string, {
+				editTour({
 					id: query.id as string,
-					image_urls: !existingTour?.image_urls
+					image_urls: !tour?.image_urls
 						? `${response.secure_url}`
-						: existingTour?.image_urls + `|${response.secure_url}`,
+						: tour?.image_urls + `|${response.secure_url}`,
 				})
 				setUploadingGallery(false)
 			},
@@ -101,23 +89,23 @@ export const ImageStep = () => {
 			<h2 className='font-semibold text-center block mb-5'>{t('photos')}</h2>
 			<div>
 				<div className='w-full flex items-center'>
-					{!existingTour?.mainPhotoUrl &&
-					!existingTour?.transferPhotoUrl &&
-					!existingTour?.image_urls ? (
+					{!tour?.mainPhotoUrl &&
+					!tour?.transferPhotoUrl &&
+					!tour?.image_urls ? (
 						<div className='mx-auto'>
 							<UploadImage />
 						</div>
 					) : (
 						<div className='flex flex-col overflow-x-auto'>
 							<div className='flex flex-row gap-x-3 flex-wrap mb-4  overflow-x-auto'>
-								{existingTour.mainPhotoUrl && (
+								{tour.mainPhotoUrl && (
 									<>
 										<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 											{t('previewImage')}:
 										</span>
 										<img
 											className='rounded-lg'
-											src={existingTour.mainPhotoUrl}
+											src={tour.mainPhotoUrl}
 											width='100px'
 											height='100px'
 											alt=''
@@ -126,14 +114,14 @@ export const ImageStep = () => {
 								)}
 							</div>
 							<div className='flex flex-row gap-x-3 flex-wrap mb-4 overflow-x-auto'>
-								{existingTour.transferPhotoUrl && (
+								{tour.transferPhotoUrl && (
 									<>
 										<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 											{t('Фотографие автомобиля')}:
 										</span>
 										<img
 											className='rounded-lg'
-											src={existingTour.transferPhotoUrl}
+											src={tour.transferPhotoUrl}
 											width='100px'
 											height='100px'
 											alt=''
@@ -142,13 +130,13 @@ export const ImageStep = () => {
 								)}
 							</div>
 							<div className='flex flex-row gap-x-3 flex-wrap mb-4 overflow-x-auto'>
-								{existingTour.image_urls && (
+								{tour.image_urls && (
 									<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 										{t('Фотогалерея')}:
 									</span>
 								)}
-								{existingTour.image_urls &&
-									existingTour.image_urls
+								{tour.image_urls &&
+									tour.image_urls
 										.split('|')
 										.map((image, index) => (
 											<img

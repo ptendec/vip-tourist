@@ -33,14 +33,6 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 
 	return (
 		<>
-			<Tooltip
-				anchorId='purchase'
-				content='Покупка временно недоступна'
-				place='top'
-				className='z-30'
-				noArrow
-				delayShow={200}
-			/>
 			<Modal className='max-w-md p-6' isVisible={isVisible} onClose={onClose}>
 				<p className='font-semibold text-xl text-center mb-5'>{t('billing')}</p>
 				<ListOption
@@ -173,6 +165,14 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 					{t('billingTag')}
 				</span>
 			</Modal>
+			<Tooltip
+				anchorId='purchase'
+				content='Покупка временно недоступна'
+				place='top'
+				className='z-30'
+				noArrow
+				delayShow={200}
+			/>
 		</>
 	)
 }

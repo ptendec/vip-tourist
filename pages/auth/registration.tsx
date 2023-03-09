@@ -4,7 +4,7 @@ import Checkbox from '@/components/UI/Checkbox'
 import { Container } from '@/components/UI/Container'
 import { Input } from '@/components/UI/Input'
 import { Layout } from '@/modules/Layout'
-import { mdiEmail, mdiLock } from '@mdi/js'
+import { mdiChevronLeft, mdiEmail, mdiLock } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useMutation } from '@tanstack/react-query'
 import clsx from 'clsx'
@@ -133,9 +133,17 @@ const Main = () => {
 			</Head>
 			<Container className='flex flex-row items-center justify-center py-10 lg:block mx-auto'>
 				<div className='basis-4/12 lg:basis-full lg:max-w-xl mx-auto'>
-					<h1 className='font-semibold text-xl text-center mb-7'>
-						Регистрация
-					</h1>
+					<div className='flex'>
+						<Link
+							href='/'
+							className='rounded-full p-1.5 shadow-md transition-all duration-700 ease-out hover:-translate-x-[2px] justify-self-start w-8 h-8 flex items-center'
+						>
+							<Icon path={mdiChevronLeft} size={1} color='#3B3F32' />
+						</Link>
+						<h1 className='font-semibold text-xl text-center mb-7 justify-self-center flex-grow'>
+							{t('Registration')}
+						</h1>
+					</div>
 					<Button
 						className='!bg-white !text-dark rounded-lg border border-gray relative px-6'
 						onClick={signInWithGoogle}

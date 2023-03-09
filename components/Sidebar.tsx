@@ -21,7 +21,7 @@ export const Sidebar = ({
 	className,
 	...rest
 }: ComponentPropsWithoutRef<'div'>) => {
-	const { currency, editPreferences } = usePreferencesStore(state => state)
+	const { currency, editPreferences } = usePreferencesStore()
 	const { t } = useTranslation()
 	const { locale, pathname, push, asPath } = useRouter()
 	const { user } = useFirebaseAuth()
@@ -129,14 +129,14 @@ export const Sidebar = ({
 								.map(item => ({
 									id: item.id,
 									value: item.value,
-									name: t(item.name) ?? '-',
+									name: t(item.name ?? '-') ?? '-',
 								}))
 								.find(item => item.value === locale)}
 							icon={mdiEarth}
 							list={langList.map(item => ({
 								id: item.id,
 								value: t(item.value),
-								name: t(item.name) ?? '-',
+								name: t(item.name ?? '-') ?? '-',
 							}))}
 							onChange={item => {
 								push('/', undefined, { locale: item.value, shallow: false })

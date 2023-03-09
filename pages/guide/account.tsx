@@ -10,12 +10,14 @@ import { Layout } from '@/modules/Layout'
 import { generateUUID } from '@/utilities/utilities'
 import {
 	mdiAccount,
+	mdiAlertCircle,
 	mdiCancel,
 	mdiCheckBold,
 	mdiCheckCircle,
 	mdiChevronRight,
 	mdiCurrencyUsd,
 	mdiDotsHorizontal,
+	mdiPencil,
 	mdiPlus,
 	mdiWallet,
 	mdiWindowClose,
@@ -30,7 +32,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Tooltip } from 'react-tooltip'
 import { useDraftStore } from 'store/draft'
@@ -64,19 +66,34 @@ const Main = () => {
 		},
 	]
 
-	const [state, setState] = useState<'active' | 'consideration' | 'draft'>(
+	const [tour, setTour] = useState<'active' | 'consideration' | 'draft'>(
 		'active',
 	)
-	const [order, setOrders] = useState<
+	const [order, setOrder] = useState<
 		'approved' | 'consideration' | 'cancelled'
 	>('approved')
 
-	const { data } = useQuery(['my-tours', user?.uid], () =>
-		getMyTours({ id: user?.uid }),
+	const { data, refetch: refetchTours } = useQuery(
+		['my-tours', user?.uid],
+		() =>
+			getMyTours({
+				id: user?.uid,
+				url: tour === 'consideration' ? '&_approved=false' : '',
+			}),
 	)
-	const { data: orders } = useQuery(['sold', 'orders', user?.uid], () =>
-		getSoldOrders({ id: user?.uid }),
+
+	const { data: orders, refetch: refetchOrders } = useQuery(
+		['sold', 'orders', user?.uid],
+		() => getSoldOrders({ id: user?.uid, status: order }),
 	)
+
+	useEffect(() => {
+		refetchOrders()
+	}, [order])
+
+	useEffect(() => {
+		refetchTours()
+	}, [tour])
 
 	return (
 		<>
@@ -90,7 +107,6 @@ const Main = () => {
 				noArrow
 				delayShow={200}
 			/>
-
 			<div className='flex'>
 				<Sidebar className='basis-64 shrink-0'></Sidebar>
 				<Container className='justify-self-center py-10 '>
@@ -143,11 +159,11 @@ const Main = () => {
 					</div>
 					<div className='mt-8'>
 						<p className='font-semibold text-lg flex gap-x-3 items-center'>
-							Мои туры
+							{t('myTours')}
 							<Link
 								id='addTour'
 								target='_blank'
-								href={`/guide/tour?state=add&id=${generateUUID()}&step=1`}
+								href={`/guide/tour/add?state=add&id=${generateUUID()}&step=1`}
 							>
 								<Button className='rounded-full w-6 h-6'>
 									<Icon path={mdiPlus} size={0.8} />
@@ -156,29 +172,26 @@ const Main = () => {
 						</p>
 					</div>
 					<div className='flex gap-x-3 mt-4 md:overflow-x-auto scrollbar-hide '>
-						<Tag
-							isActive={state === 'active'}
-							onClick={() => setState('active')}
-						>
+						<Tag isActive={tour === 'active'} onClick={() => setTour('active')}>
 							Активные
 						</Tag>
 						<Tag
-							isActive={state === 'consideration'}
-							onClick={() => setState('consideration')}
+							isActive={tour === 'consideration'}
+							onClick={() => setTour('consideration')}
 						>
 							На рассмотрении
 						</Tag>
-						<Tag isActive={state === 'draft'} onClick={() => setState('draft')}>
+						<Tag isActive={tour === 'draft'} onClick={() => setTour('draft')}>
 							Черновики
 						</Tag>
 					</div>
 					<div className='flex flex-wrap mt-6 justify-between gap-x-[10px] gap-y-3'>
-						{state === 'draft' &&
+						{tour === 'draft' &&
 							(tours.length !== 0 ? (
 								tours.map(tour => (
 									<div
 										key={tour.id}
-										className='text-sm flex basis-[calc(50%_-_10px)] sm:basis-full border border-[#E9EAE8] p-[10px] rounded-lg'
+										className='text-sm flex basis-[calc(50%_-_10px)] sm:basis-full border border-[#E9EAE8] p-[10px] rounded-lg relative'
 									>
 										<span className='relative inline-block basis-20 h-20 shrink-0'>
 											<Image
@@ -199,13 +212,39 @@ const Main = () => {
 							) : (
 								<p>У вас нету туров в черновике</p>
 							))}
-						{state === 'consideration' &&
-							(data?.filter(tour => !tour.approved).length !== 0 ? (
-								data?.map(tour => (
+						{tour === 'active' ||
+						(tour === 'consideration' &&
+							data?.filter(tour => tour.active).length !== 0)
+							? data?.map(tour => (
 									<div
 										key={tour.id}
-										className='text-sm flex basis-[calc(50%_-_10px)] sm:basis-full border border-[#E9EAE8] p-[10px] rounded-lg'
+										className='text-sm overflow-hidden group flex basis-[calc(50%_-_10px)] sm:basis-full border border-[#E9EAE8] p-[10px] rounded-lg relative'
 									>
+										<div className='absolute right-0 top-0 w-10'>
+											{tour.remark && (
+												<Popover
+													head={
+														<Button className='bg-transparent '>
+															<Icon
+																className='text'
+																path={mdiAlertCircle}
+																size={1}
+																color='#FFCE1F'
+															/>
+														</Button>
+													}
+													body={<>{tour.remark}</>}
+												/>
+											)}
+										</div>
+										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out '>
+											<Button
+												className='bg-transparent'
+												onClick={() => push(`/guide/tour/edit/?id=${tour.id}`)}
+											>
+												<Icon path={mdiPencil} size={0.7} color='#3B3F32' />
+											</Button>
+										</div>
 										<span className='relative inline-block basis-20 h-20 shrink-0'>
 											<Image
 												className='rounded-lg'
@@ -221,46 +260,33 @@ const Main = () => {
 											</span>
 										</div>
 									</div>
-								))
-							) : (
-								<p>У вас нету туров в рассмотрении</p>
-							))}
-						{state === 'active' &&
-							(data?.filter(tour => tour.active).length !== 0 ? (
-								data?.map(tour => (
-									<div
-										key={tour.id}
-										className='text-sm flex basis-[calc(50%_-_10px)] sm:basis-full border border-[#E9EAE8] p-[10px] rounded-lg'
-									>
-										<span className='relative inline-block basis-20 h-20 shrink-0'>
-											<Image
-												className='rounded-lg'
-												src={tour.mainPhotoUrl ?? ''}
-												alt='Фотография тура'
-												fill
-											/>
-										</span>
-										<div className='ml-[10px]'>
-											<p className='font-semibold '>{tour.name}</p>
-											<span className='text-gray limit'>
-												{tour.description}
-											</span>
-										</div>
-									</div>
-								))
-							) : (
-								<p>У вас нету туров в рассмотрении</p>
-							))}
+							  ))
+							: null}
 					</div>
 					<div className='mt-8'>
 						<p className='font-semibold text-lg flex gap-x-3 items-center'>
-							Мои продажи
+							{t('mySales')}
 						</p>
 					</div>
 					<div className='flex gap-x-3 mt-4 gap-y-3 md:overflow-x-auto scrollbar-hide'>
-						<Tag isActive={true}>Подтвержденные</Tag>
-						<Tag isActive={false}>Неподтвержденные</Tag>
-						<Tag isActive={false}>Отменено</Tag>
+						<Tag
+							isActive={order === 'approved'}
+							onClick={() => setOrder('approved')}
+						>
+							Подтвержденные
+						</Tag>
+						<Tag
+							isActive={order === 'consideration'}
+							onClick={() => setOrder('consideration')}
+						>
+							Неподтвержденные
+						</Tag>
+						<Tag
+							isActive={order === 'cancelled'}
+							onClick={() => setOrder('cancelled')}
+						>
+							Отменено
+						</Tag>
 					</div>
 					<div className='flex flex-wrap mt-6 justify-between gap-y-3'>
 						{orders?.map(order => (
@@ -290,6 +316,7 @@ const Main = () => {
 																id: order.id,
 																request: {
 																	seller_confirmed: true,
+																	canceled: false,
 																},
 															},
 															{
@@ -320,6 +347,7 @@ const Main = () => {
 															{
 																id: order.id,
 																request: {
+																	canceled: true,
 																	seller_confirmed: false,
 																},
 															},
@@ -371,9 +399,11 @@ const Main = () => {
 											order.seller_confirmed ? 'text-green' : 'text-red',
 										)}
 									/>
-									{order.seller_confirmed
-										? 'Вы подтвердили билет'
-										: 'Вы еще не подтвердили билет'}
+									{!order.canceled
+										? order.seller_confirmed
+											? 'Вы подтвердили билет'
+											: 'Вы еще не подтвердили билет'
+										: 'Вы отменили билет'}
 								</p>
 							</div>
 						))}

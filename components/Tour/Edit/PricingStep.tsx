@@ -1,30 +1,15 @@
 import Checkbox from '@/components/UI/Checkbox'
 import { Input } from '@/components/UI/Input'
-import { isTourExists } from '@/utilities/utilities'
 import { mdiAccount, mdiBabyFaceOutline } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { useDraftStore } from 'store/draft'
+import { useEditTourStore } from 'store/edit'
 
 export const PricingStep = () => {
 	const { t } = useTranslation()
-	const { locale, pathname, query } = useRouter()
-	const { addTour, tours, editTour } = useDraftStore()
-
-	const existingTour = isTourExists(query.id as string, tours)
-
-	useEffect(() => {
-		if (!existingTour) {
-			addTour({
-				id: query.id as string,
-				name: '',
-			})
-		}
-	}, [query.id])
-
-	const [isFree, setIsFree] = useState(false)
+	const { query } = useRouter()
+	const { tour, editTour } = useEditTourStore()
 
 	return (
 		<>
@@ -40,9 +25,9 @@ export const PricingStep = () => {
 						placeholder='129'
 						className='basis-[calc(50%_-_8px)]'
 						type='number'
-						defaultValue={existingTour?.adult_price}
+						defaultValue={tour?.adult_price}
 						onChange={event => {
-							editTour(query.id as string, {
+							editTour({
 								adult_price: Number(event.currentTarget.value),
 								id: query.id as string,
 							})
@@ -53,9 +38,9 @@ export const PricingStep = () => {
 						label={t('childPrice')}
 						placeholder='23'
 						className='basis-[calc(50%_-_8px)]'
-						defaultValue={existingTour?.child_price}
+						defaultValue={tour?.child_price}
 						onChange={event => {
-							editTour(query.id as string, {
+							editTour({
 								child_price: Number(event.currentTarget.value),
 								id: query.id as string,
 							})
@@ -68,10 +53,10 @@ export const PricingStep = () => {
 				<label className='flex justify-between items-center text-sm font-semibold my-4'>
 					{t('transfer')}
 					<Checkbox
-						checked={existingTour?.withTransfer ?? false}
+						checked={tour?.withTransfer ?? false}
 						onChange={event => {
-							editTour(query.id as string, {
-								withTransfer: !existingTour?.withTransfer,
+							editTour({
+								withTransfer: !tour?.withTransfer,
 								id: query.id as string,
 							})
 						}}
@@ -81,10 +66,10 @@ export const PricingStep = () => {
 				<label className='flex justify-between items-center text-sm font-semibold my-4'>
 					{t('Трансфер включен в стоимость')}
 					<Checkbox
-						checked={!existingTour?.onlyTransfer ?? false}
+						checked={!tour?.onlyTransfer ?? false}
 						onChange={event => {
-							editTour(query.id as string, {
-								onlyTransfer: !existingTour?.onlyTransfer,
+							editTour({
+								onlyTransfer: !tour?.onlyTransfer,
 								id: query.id as string,
 							})
 						}}

@@ -2,37 +2,18 @@ import { Categories } from '@/components/UI/Categories'
 import { Input } from '@/components/UI/Input'
 import { MultiSelect } from '@/components/UI/MultiSelect'
 import { Textarea } from '@/components/UI/Textarea'
-import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { ListItem } from '@/utilities/interfaces'
 import { langList, staticCategories } from '@/utilities/static'
-import {
-	getAddedCategories,
-	getAddedLanguages,
-	isTourExists,
-} from '@/utilities/utilities'
+import { getAddedCategories, getAddedLanguages } from '@/utilities/utilities'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { useDraftStore } from 'store/draft'
+import { useEditTourStore } from 'store/edit'
 
 export const DescribeStep = () => {
 	const { t } = useTranslation()
-	const { locale, pathname, query } = useRouter()
-	const { user } = useFirebaseAuth()
-	const { addTour, tours, editTour } = useDraftStore()
+	const { query } = useRouter()
+	const { tour, editTour } = useEditTourStore()
 
-	const existingTour = isTourExists(query.id as string, tours)
-
-	useEffect(() => {
-		if (!existingTour) {
-			addTour({
-				id: query.id as string,
-				profile: user?.uid,
-			})
-		}
-	}, [query.id])
-	console.log(existingTour?.languages)
-	console.log(getAddedLanguages(existingTour?.languages))
 	return (
 		<>
 			<h2 className='font-semibold text-center block mb-5'>
@@ -43,21 +24,21 @@ export const DescribeStep = () => {
 					className='mb-5'
 					label='Название'
 					placeholder={t('enterTourName') as string}
-					defaultValue={existingTour?.name}
+					defaultValue={tour?.name}
 					onChange={event => {
-						editTour(query.id as string, {
+						editTour({
 							name: event.currentTarget.value,
 							id: query.id as string,
 						})
 					}}
 				/>
 				<Textarea
-					value={existingTour?.description}
+					value={tour?.description}
 					label={t('desc') as string}
 					className='mb-5 h-10'
 					placeholder={t('desc') as string}
 					onChange={event => {
-						editTour(query.id as string, {
+						editTour({
 							description: event.currentTarget.value,
 							id: query.id as string,
 						})
@@ -65,10 +46,10 @@ export const DescribeStep = () => {
 				/>
 				<Categories
 					className='mt-2'
-					chosenItems={getAddedCategories(existingTour)}
+					chosenItems={getAddedCategories(tour)}
 					list={staticCategories}
 					onChange={(items: ListItem[]) => {
-						editTour(query.id as string, {
+						editTour({
 							...items.reduce((accumulator, value) => {
 								return { ...accumulator, [value.value]: true }
 							}, {}),
@@ -79,24 +60,24 @@ export const DescribeStep = () => {
 				/>
 				<div className='flex justify-between mt-5'>
 					<Input
-						defaultValue={existingTour?.duration}
+						defaultValue={tour?.duration}
 						label='Длительность, ч *'
 						placeholder='4'
 						className='basis-[calc(50%_-_8px)]'
 						onChange={event => {
-							editTour(query.id as string, {
+							editTour({
 								duration: event.currentTarget.value,
 								id: query.id as string,
 							})
 						}}
 					/>
 					<Input
-						defaultValue={existingTour?.placesCount}
+						defaultValue={tour?.placesCount}
 						label='Кол-во мест'
 						placeholder='17'
 						className='basis-[calc(50%_-_8px)]'
 						onChange={event => {
-							editTour(query.id as string, {
+							editTour({
 								placesCount: Number(event.currentTarget.value),
 								id: query.id as string,
 							})
@@ -104,11 +85,11 @@ export const DescribeStep = () => {
 					/>
 				</div>
 				<MultiSelect
-					chosenItems={getAddedLanguages(existingTour?.languages)}
+					chosenItems={getAddedLanguages(tour?.languages)}
 					className='mt-2'
 					list={langList}
 					onChange={(items: ListItem[]) => {
-						editTour(query.id as string, {
+						editTour({
 							languages: items.map(items => items.name).join('|'),
 							id: query.id as string,
 						})

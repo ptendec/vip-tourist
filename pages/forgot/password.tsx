@@ -1,9 +1,11 @@
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { Input } from '@/components/UI/Input'
+import { auth } from '@/config/firebase'
 import { Layout } from '@/modules/Layout'
 import { mdiChevronLeft, mdiEmail } from '@mdi/js'
 import Icon from '@mdi/react'
+import { sendPasswordResetEmail } from 'firebase/auth'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -12,6 +14,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactElement, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { AuthorizationFields } from 'utilities/interfaces'
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -35,13 +38,26 @@ const Main = () => {
 
 	const onSubmit = (data: AuthorizationFields) => {
 		setIsLoading(true)
-		null
+		sendPasswordResetEmail(auth, data.email)
+			.then(() => {
+				toast.success(
+					'Письмо для восстановление пароля отправлен на вашу почту',
+				)
+			})
+			.catch(error => {
+				toast.error(
+					'Произошла ошибка, попробуйте позднее. Убедитесь, что почта корректно написана',
+				)
+			})
+			.finally(() => {
+				setIsLoading(false)
+			})
 	}
 
 	return (
 		<>
 			<Head>
-				<title>Забыл пароль</title>
+				<title>Забыл пароль | VipTourist</title>
 			</Head>
 			<Container className='flex flex-row items-center h-screen justify-around'>
 				<div className='basis-4/12 lg:basis-full'>

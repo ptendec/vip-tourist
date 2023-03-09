@@ -1,3 +1,4 @@
+import { getCurrency } from '@/API/currency.service'
 import { components } from '@/API/types/api.types'
 import NoSSR from '@/components/Common/NoSSR'
 import { Buy } from '@/components/Modal/Buy'
@@ -13,9 +14,11 @@ import {
 	mdiMapMarker,
 } from '@mdi/js'
 import Icon from '@mdi/react'
+import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import { ComponentPropsWithoutRef, useState } from 'react'
+import { usePreferencesStore } from 'store/preferences'
 
 interface Props extends ComponentPropsWithoutRef<'div'> {
 	tour: components['schemas']['Tour']
@@ -23,6 +26,11 @@ interface Props extends ComponentPropsWithoutRef<'div'> {
 }
 export const Info = ({ className, tour, city }: Props) => {
 	const { t } = useTranslation()
+	const { currency } = usePreferencesStore()
+
+	const { data, isLoading } = useQuery(['currency', currency], () =>
+		getCurrency(currency.value),
+	)
 
 	const [isBuy, setIsBuy] = useState(false)
 
@@ -70,12 +78,20 @@ export const Info = ({ className, tour, city }: Props) => {
 				<ListOption
 					icon={mdiAccount}
 					title={t('adultPrice')}
-					description={`$ ${tour.adult_price ?? '-'}`}
+					description={`${currency.symbol}  ${
+						tour.adult_price
+							? Math.ceil((data?.price && data?.price * tour.adult_price) ?? 0)
+							: '-'
+					}`}
 				/>
 				<ListOption
 					icon={mdiBabyFaceOutline}
 					title={t('childPrice')}
-					description={`$ ${tour.child_price ?? '-'}`}
+					description={`${currency.symbol}  ${
+						tour.child_price
+							? Math.ceil((data?.price && data?.price * tour.child_price) ?? 0)
+							: '-'
+					}`}
 				/>
 				<Button
 					className='mt-auto mb-6'

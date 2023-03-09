@@ -3,7 +3,7 @@ import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { Input } from '@/components/UI/Input'
 import { Layout } from '@/modules/Layout'
-import { mdiEmail, mdiLock } from '@mdi/js'
+import { mdiChevronLeft, mdiEmail, mdiLock } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useMutation } from '@tanstack/react-query'
 import { auth } from 'config/firebase'
@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactElement, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import SwiperCore, { Autoplay, Pagination } from 'swiper'
 import 'swiper/css'
 import 'swiper/css/autoplay'
@@ -95,25 +96,41 @@ const Main = () => {
 									setIsLoading(false)
 									push('/profile')
 								},
+								onError: () => {
+									toast.error('Произошла ошибка, попробуйте позднее')
+									setIsLoading(false)
+								},
 							},
 						)
 					})
 			})
 			.catch(error => {
+				setIsLoading(false)
 				console.log(error)
+			})
+			.finally(() => {
+				setIsLoading(false)
 			})
 	}
 
 	return (
 		<>
 			<Head>
-				<title>Авторизация</title>
+				<title>Авторизация | VipTourist</title>
 			</Head>
 			<Container className='flex flex-row items-center h-screen justify-around mx-auto'>
 				<div className='basis-4/12 lg:basis-full'>
-					<h1 className='font-semibold text-xl text-center mb-7'>
-						{t('login')}
-					</h1>
+					<div className='flex'>
+						<Link
+							href='/'
+							className='rounded-full p-1.5 shadow-md transition-all duration-700 ease-out hover:-translate-x-[2px] justify-self-start w-8 h-8 flex items-center'
+						>
+							<Icon path={mdiChevronLeft} size={1} color='#3B3F32' />
+						</Link>
+						<h1 className='font-semibold text-xl text-center mb-7 justify-self-center flex-grow'>
+							{t('login')}
+						</h1>
+					</div>
 					<Button
 						className='!bg-white !text-dark rounded-lg border border-gray relative px-6'
 						onClick={signInWithGoogle}

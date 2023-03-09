@@ -6,29 +6,35 @@ import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
 import { Fragment, useState } from 'react'
 import { staticCategories } from 'utilities/static'
-import { Button } from './UI/Button'
+import { Button } from '../UI/Button'
 
 interface Props {
 	isVisible: boolean
 	onClose: () => void
 	setFilters: (categories: Category[]) => void
+	selected?: Category[]
 }
 
-export const FilterSidebar = ({ isVisible, onClose, setFilters }: Props) => {
+export const FilterSidebar = ({
+	isVisible,
+	onClose,
+	setFilters,
+	selected = [],
+}: Props) => {
 	const { t } = useTranslation()
 	const [categories, setCategories] = useState(
 		staticCategories.map(category => ({
 			id: category.id,
 			value: category.value,
 			name: category.name,
-			checked: false,
+			checked: !!selected.find(item => item.id === category.id),
 		})),
 	)
 
 	return (
 		<div
 			className={clsx(
-				'fixed overflow-y-scroll scrollbar transition-all duration-500 ease-out h-screen right-0 top-0 bg-white p-8 z-10 w-[400px]',
+				'fixed overflow-y-scroll scrollbar transition-all shadow-xl duration-500 ease-out h-screen right-0 top-0 bg-white p-8 z-10 w-[400px]',
 				isVisible ? '' : '-right-[400px] overflow-y-scroll',
 			)}
 		>

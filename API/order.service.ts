@@ -30,9 +30,20 @@ export const getMyOrders = async ({
 
 export const getSoldOrders = async ({
 	id,
-}: QueryParams): Promise<components['schemas']['Order'][]> => {
+	status,
+}: QueryParams & {
+	status?: 'approved' | 'consideration' | 'cancelled'
+}): Promise<components['schemas']['Order'][]> => {
+	let url = ''
+	if (status === 'approved') {
+		url = '_seller_confirmed=true'
+	} else if (status === 'cancelled') {
+		url = '_canceled=true&_seller_confirmed=false'
+	} else if (status === 'consideration') {
+		url = '_seller_confirmed=false&_canceled=false'
+	}
 	return await (
-		await $host.get(`/orders/?seller.uid=${id}`)
+		await $host.get(`/orders/?seller.uid=${id}&${url}`)
 	).data
 }
 

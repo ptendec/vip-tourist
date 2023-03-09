@@ -25,12 +25,23 @@ export const getToursByCity = async ({
 	).data
 }
 
+export const getToursByCityFromCatalogue = async ({
+	locale,
+	categories,
+}: QueryParams & { categories: string }): Promise<
+	components['schemas']['Tour'][]
+> => {
+	return await (
+		await $host.get(`/tours/?_locale=${locale}&${categories}`)
+	).data
+}
+
 export const getTour = async ({
 	locale,
 	id,
 }: QueryParams): Promise<components['schemas']['Tour']> => {
 	return await (
-		await $host.get(`/tours/${id}?_locale=${locale}`)
+		await $host.get(`/tours/${id}`)
 	).data
 }
 
@@ -63,16 +74,27 @@ export const searchTour = async ({
 
 export const getMyTours = async ({
 	id,
-}: QueryParams): Promise<components['schemas']['Tour'][]> => {
+	url,
+}: QueryParams & { url?: string }): Promise<
+	components['schemas']['Tour'][]
+> => {
 	return await (
-		await $host.get(`/tours/?profile.uid=${id}`)
+		await $host.get(`/tours/?profile.uid=${id}${url}`)
 	).data
 }
 
 export const createTour = async (
-	request: Tour & { locale?: string },
+	request: Tour,
 ): Promise<components['schemas']['Tour']> => {
 	return await (
-		await $host.post(`/tours/?_locale=${request.locale}`, request)
+		await $host.post('/tours/', request)
+	).data
+}
+
+export const editTour = async (
+	request: Tour,
+): Promise<components['schemas']['Tour']> => {
+	return await (
+		await $host.post('/tours/', request)
 	).data
 }

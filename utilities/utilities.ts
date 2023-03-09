@@ -30,7 +30,15 @@ export const getNavbarList = (
 }
 
 export const getCategoriesList = (categories: Categories[]) => {
-	return categories.map(category => category.value).join('=true&') + '=true'
+	if (categories.length === 0) return ''
+	return categories
+		.map((category, index) => {
+			if (index === categories.length - 1) {
+				return category.value + '=true'
+			}
+			return category.value
+		})
+		.join('=true&')
 }
 
 export const generateUUID = () => {
@@ -89,4 +97,16 @@ export const getAddedLanguages = (lanugages?: string) => {
 	return langList.filter(language =>
 		lanugages.split('|').find(_language => _language == language.name),
 	)
+}
+
+export const getRating = (rating: number) => {
+	const colors: string[] = []
+	for (let i = 0; i < 5; i++) {
+		if (Math.round(rating) > i) {
+			colors.push('#FFCE1F')
+		} else {
+			colors.push('#BFBFBF')
+		}
+	}
+	return colors
 }

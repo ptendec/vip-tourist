@@ -26,7 +26,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
 	const [queryClient] = useState(() => new QueryClient())
 	const getLayout = Component.getLayout ?? (page => page)
 	usePreserveScroll()
-	// const { addTour, tours } = useDraftStore(state => state)
+	// const { addTour, tours } = useDraftStore()
 	// console.log(tours)
 	return (
 		<QueryClientProvider client={queryClient}>

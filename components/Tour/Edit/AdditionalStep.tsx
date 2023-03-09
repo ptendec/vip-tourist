@@ -1,25 +1,12 @@
 import { Input } from '@/components/UI/Input'
-import { isTourExists } from '@/utilities/utilities'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { useDraftStore } from 'store/draft'
+import { useEditTourStore } from 'store/edit'
 
 export const AdditionalStep = () => {
 	const { t } = useTranslation()
-	const { locale, pathname, query } = useRouter()
-	const { addTour, tours, editTour } = useDraftStore()
-
-	const existingTour = isTourExists(query.id as string, tours)
-
-	useEffect(() => {
-		if (!existingTour) {
-			addTour({
-				id: query.id as string,
-				name: '',
-			})
-		}
-	}, [query.id])
+	const { query } = useRouter()
+	const { addTour, tour, editTour } = useEditTourStore()
 
 	return (
 		<>
@@ -30,10 +17,10 @@ export const AdditionalStep = () => {
 				<Input
 					className='mb-5'
 					label={t('prerequisites')}
-					defaultValue={existingTour?.prerequisites}
+					defaultValue={tour?.prerequisites}
 					placeholder={t('enterTourName') as string}
 					onChange={event => {
-						editTour(query.id as string, {
+						editTour({
 							prerequisites: event.currentTarget.value,
 							id: query.id as string,
 						})
@@ -42,10 +29,10 @@ export const AdditionalStep = () => {
 				<Input
 					label={t('enterIncludedNew') as string}
 					className='mb-5'
-					defaultValue={existingTour?.included}
+					defaultValue={tour?.included}
 					placeholder={t('Например, стаканы и холодная вода') as string}
 					onChange={event => {
-						editTour(query.id as string, {
+						editTour({
 							included: event.currentTarget.value,
 							id: query.id as string,
 						})
@@ -54,10 +41,10 @@ export const AdditionalStep = () => {
 				<Input
 					label={t('enterNotIncludedNew') as string}
 					className='mb-5'
-					defaultValue={existingTour?.not_included}
+					defaultValue={tour?.not_included}
 					placeholder={t('Например, трансфер') as string}
 					onChange={event => {
-						editTour(query.id as string, {
+						editTour({
 							not_included: event.currentTarget.value,
 							id: query.id as string,
 						})
@@ -66,10 +53,10 @@ export const AdditionalStep = () => {
 				<Input
 					label={t('prohibs') as string}
 					className='mb-5'
-					defaultValue={existingTour?.prohibitions}
+					defaultValue={tour?.prohibitions}
 					placeholder={t('Например, алкоголь и курение  ') as string}
 					onChange={event => {
-						editTour(query.id as string, {
+						editTour({
 							prohibitions: event.currentTarget.value,
 							id: query.id as string,
 						})
@@ -78,10 +65,10 @@ export const AdditionalStep = () => {
 				<Input
 					label={t('notesAboutFreeTour') as string}
 					className='mb-5'
-					defaultValue={existingTour?.note}
+					defaultValue={tour?.note}
 					placeholder={t('Любая дополнительная информация') as string}
 					onChange={event => {
-						editTour(query.id as string, {
+						editTour({
 							note: event.currentTarget.value,
 							id: query.id as string,
 						})

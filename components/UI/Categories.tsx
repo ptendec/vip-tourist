@@ -1,3 +1,4 @@
+import { useFirstRender } from '@/hooks/useFirstRender'
 import { ListItem } from '@/utilities/interfaces'
 import { Listbox, Transition } from '@headlessui/react'
 import clsx from 'clsx'
@@ -23,8 +24,9 @@ export const Categories = ({
 
 	const { t } = useTranslation()
 
+	const firstRender = useFirstRender()
 	useEffect(() => {
-		onChange(selectedItems)
+		if (!firstRender) onChange(selectedItems)
 	}, [selectedItems])
 
 	function isSelected(item: ListItem) {

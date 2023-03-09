@@ -1,3 +1,4 @@
+import { getProfile } from '@/API/profile.service'
 import { createTour } from '@/API/tour.service'
 import NoSSR from '@/components/Common/NoSSR'
 import { Sidebar } from '@/components/Sidebar'
@@ -10,9 +11,10 @@ import { PricingStep } from '@/components/Tour/Add/PricingStep'
 import { SendToReview } from '@/components/Tour/Add/SendToReview'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
 import { isTourExists } from '@/utilities/utilities'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
@@ -65,14 +67,31 @@ const steps = [
 
 const Main = () => {
 	const { t } = useTranslation()
+	const { user } = useFirebaseAuth()
 	const { locale, pathname, query, push } = useRouter()
-	const { addTour, tours, removeTour } = useDraftStore(state => state)
+	const { data, isLoading, isError } = useQuery(
+		['profile', user?.uid],
+		() =>
+			getProfile({
+				locale: locale as string,
+				id: user?.uid as string,
+			}),
+		{
+			retry: 0,
+			refetchOnWindowFocus: false,
+		},
+	)
+	const { addTour, tours, removeTour } = useDraftStore()
 	const { mutate, isSuccess } = useMutation(createTour)
 	const existingTour = isTourExists(query.id as string, tours)
 
 	const create = () => {
 		mutate(
-			{ ...existingTour, locale: locale as string },
+			{
+				...existingTour,
+				createdLanguage: locale as string,
+				profile: data?.id,
+			},
 			{
 				onSuccess: () => {
 					setStep(prevStep => ++prevStep)
@@ -186,3 +205,5 @@ Main.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default Main
+
+// TODO: Добавить поле tourUpdated при редактировании тура
