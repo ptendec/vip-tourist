@@ -9,7 +9,7 @@ export const createProfile = async ({
 	components['schemas']['Profile']
 > => {
 	return await (
-		await $host.post(`/profiles/?_locale=${locale}`, request)
+		await $host.post('/profiles/', request)
 	).data
 }
 
@@ -18,7 +18,7 @@ export const getProfile = async ({
 	id,
 }: QueryParams): Promise<components['schemas']['Profile']> => {
 	return await (
-		await $host.get(`/profiles/${id}/?_locale=${locale}`)
+		await $host.get(`/profiles/${id}/`)
 	).data
 }
 
@@ -30,6 +30,6 @@ export const editProfile = async ({
 	components['schemas']['Profile']
 > => {
 	return await (
-		await $host.put(`/profiles/${id}`, request)
+		await $host.put(`/profiles/${id}/`, request)
 	).data
 }
