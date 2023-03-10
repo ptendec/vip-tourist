@@ -32,7 +32,7 @@ export const Breadcrumbs = ({ breadcrumbs, className }: Props) => {
 								breadcrumbs.length - 1 !== index
 									? 'text-gray'
 									: 'text-lightDark',
-								'font-semibold text-xs',
+								'font-semibold text-xs truncate',
 							)}
 							key={index}
 							href={breadcrumb.href ?? '/'}
