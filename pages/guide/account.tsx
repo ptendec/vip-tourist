@@ -163,7 +163,7 @@ const Main = () => {
 							<Link
 								id='addTour'
 								target='_blank'
-								href={`/guide/tour/add?state=add&id=${generateUUID()}&step=1`}
+								href={`/guide/tour/add/?id=${generateUUID()}`}
 							>
 								<Button className='rounded-full w-6 h-6'>
 									<Icon path={mdiPlus} size={0.8} />
@@ -191,8 +191,16 @@ const Main = () => {
 								tours.map(tour => (
 									<div
 										key={tour.id}
-										className='text-sm flex basis-[calc(50%_-_10px)] sm:basis-full border border-[#E9EAE8] p-[10px] rounded-lg relative'
+										className='text-sm flex basis-[calc(50%_-_10px)] sm:basis-full border border-[#E9EAE8] p-[10px] rounded-lg relative overflow-hidden group'
 									>
+										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out '>
+											<Button
+												className='bg-transparent'
+												onClick={() => push(`/guide/tour/edit/?id=${tour.id}`)}
+											>
+												<Icon path={mdiPencil} size={0.7} color='#3B3F32' />
+											</Button>
+										</div>
 										<span className='relative inline-block basis-20 h-20 shrink-0'>
 											<Image
 												className='rounded-lg'
@@ -240,7 +248,7 @@ const Main = () => {
 										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out '>
 											<Button
 												className='bg-transparent'
-												onClick={() => push(`/guide/tour/edit/?id=${tour.id}`)}
+												onClick={() => push(`/guide/tour/add/?id=${tour.id}`)}
 											>
 												<Icon path={mdiPencil} size={0.7} color='#3B3F32' />
 											</Button>
