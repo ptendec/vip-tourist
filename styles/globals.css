@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @import url('./tooltip.css');
-@import url('/font/font.css');
+@import url('/font/fonts.css');
 
 body {
   padding: 0;
