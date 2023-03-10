@@ -3,15 +3,14 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from '@tanstack/react-query'
+import { AuthUserProvider } from 'context/AuthContext'
 import { usePreserveScroll } from 'hooks/usePreserveScroll'
 import { NextPage } from 'next'
+import { appWithTranslation } from 'next-i18next'
 import type { AppProps } from 'next/app'
 import { ReactElement, ReactNode, useState } from 'react'
-import '../styles/datepicker.css'
+import '../public/font/fonts.css'
 import '../styles/globals.css'
-
-import { AuthUserProvider } from 'context/AuthContext'
-import { appWithTranslation } from 'next-i18next'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
