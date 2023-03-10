@@ -29,6 +29,7 @@ export const ImageStep = () => {
 			onSuccess: response => {
 				editTour({
 					id: query.id as string,
+					...tour,
 					mainPhotoUrl: response.secure_url,
 				})
 				setUploadingPreview(false)
@@ -50,6 +51,7 @@ export const ImageStep = () => {
 			onSuccess: response => {
 				editTour({
 					id: query.id as string,
+					...tour,
 					transferPhotoUrl: response.secure_url,
 				})
 				setUploadingTransfer(false)
@@ -71,6 +73,7 @@ export const ImageStep = () => {
 			onSuccess: response => {
 				editTour({
 					id: query.id as string,
+					...tour,
 					image_urls: !tour?.image_urls
 						? `${response.secure_url}`
 						: tour?.image_urls + `|${response.secure_url}`,

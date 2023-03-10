@@ -34,7 +34,7 @@ export const FilterSidebar = ({
 	return (
 		<div
 			className={clsx(
-				'fixed overflow-y-scroll scrollbar transition-all shadow-xl duration-500 ease-out h-screen right-0 top-0 bg-white p-8 z-10 w-[400px]',
+				'fixed overflow-y-scroll scrollbar transition-all shadow-xl xs:w-[320px] xs:pb-[70px] duration-500 ease-out h-screen right-0 top-0 bg-white p-8 z-10 w-[400px]',
 				isVisible ? '' : '-right-[400px] overflow-y-scroll',
 			)}
 		>

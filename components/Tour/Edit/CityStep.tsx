@@ -36,11 +36,17 @@ export const CityStep = () => {
 							key={index}
 							className={clsx(
 								'text-sm p-3 rounded-lg hover:bg-[#F6F6F5] cursor-pointer transition-all duration-300 ease-out',
-								tour?.city === city.id && 'bg-[#F6F6F5] font-semibold',
+								tour?.city == city.id ||
+									(tour?.city ==
+										city.localizations?.find(
+											_locale => _locale.id === tour?.city,
+										)?.id &&
+										'bg-[#F6F6F5] font-semibold'),
 							)}
 							onClick={() =>
 								editTour({
 									id: query.id as string,
+									...tour,
 									city: city.id,
 								})
 							}
