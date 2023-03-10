@@ -21,6 +21,7 @@ export const AdditionalStep = () => {
 					placeholder={t('enterTourName') as string}
 					onChange={event => {
 						editTour({
+							...tour,
 							prerequisites: event.currentTarget.value,
 							id: query.id as string,
 						})
@@ -33,6 +34,7 @@ export const AdditionalStep = () => {
 					placeholder={t('Например, стаканы и холодная вода') as string}
 					onChange={event => {
 						editTour({
+							...tour,
 							included: event.currentTarget.value,
 							id: query.id as string,
 						})
@@ -45,6 +47,7 @@ export const AdditionalStep = () => {
 					placeholder={t('Например, трансфер') as string}
 					onChange={event => {
 						editTour({
+							...tour,
 							not_included: event.currentTarget.value,
 							id: query.id as string,
 						})
@@ -57,6 +60,7 @@ export const AdditionalStep = () => {
 					placeholder={t('Например, алкоголь и курение  ') as string}
 					onChange={event => {
 						editTour({
+							...tour,
 							prohibitions: event.currentTarget.value,
 							id: query.id as string,
 						})
@@ -69,6 +73,7 @@ export const AdditionalStep = () => {
 					placeholder={t('Любая дополнительная информация') as string}
 					onChange={event => {
 						editTour({
+							...tour,
 							note: event.currentTarget.value,
 							id: query.id as string,
 						})

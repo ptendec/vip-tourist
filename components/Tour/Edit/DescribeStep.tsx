@@ -27,7 +27,9 @@ export const DescribeStep = () => {
 					defaultValue={tour?.name}
 					onChange={event => {
 						editTour({
+							...tour,
 							name: event.currentTarget.value,
+
 							id: query.id as string,
 						})
 					}}
@@ -39,7 +41,9 @@ export const DescribeStep = () => {
 					placeholder={t('desc') as string}
 					onChange={event => {
 						editTour({
+							...tour,
 							description: event.currentTarget.value,
+
 							id: query.id as string,
 						})
 					}}
@@ -50,6 +54,7 @@ export const DescribeStep = () => {
 					list={staticCategories}
 					onChange={(items: ListItem[]) => {
 						editTour({
+							...tour,
 							...items.reduce((accumulator, value) => {
 								return { ...accumulator, [value.value]: true }
 							}, {}),
@@ -66,6 +71,7 @@ export const DescribeStep = () => {
 						className='basis-[calc(50%_-_8px)]'
 						onChange={event => {
 							editTour({
+								...tour,
 								duration: event.currentTarget.value,
 								id: query.id as string,
 							})
@@ -78,6 +84,7 @@ export const DescribeStep = () => {
 						className='basis-[calc(50%_-_8px)]'
 						onChange={event => {
 							editTour({
+								...tour,
 								placesCount: Number(event.currentTarget.value),
 								id: query.id as string,
 							})
@@ -90,6 +97,7 @@ export const DescribeStep = () => {
 					list={langList}
 					onChange={(items: ListItem[]) => {
 						editTour({
+							...tour,
 							languages: items.map(items => items.name).join('|'),
 							id: query.id as string,
 						})

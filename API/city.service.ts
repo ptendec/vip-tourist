@@ -15,7 +15,7 @@ export const getCity = async ({
 	id,
 }: QueryParams): Promise<components['schemas']['City']> => {
 	return await (
-		await $host.get(`/cities/${id}/?_locale=${locale}`)
+		await $host.get(`/cities/${id}/`)
 	).data
 }
 

@@ -28,6 +28,7 @@ export const PricingStep = () => {
 						defaultValue={tour?.adult_price}
 						onChange={event => {
 							editTour({
+								...tour,
 								adult_price: Number(event.currentTarget.value),
 								id: query.id as string,
 							})
@@ -41,6 +42,7 @@ export const PricingStep = () => {
 						defaultValue={tour?.child_price}
 						onChange={event => {
 							editTour({
+								...tour,
 								child_price: Number(event.currentTarget.value),
 								id: query.id as string,
 							})
@@ -56,6 +58,7 @@ export const PricingStep = () => {
 						checked={tour?.withTransfer ?? false}
 						onChange={event => {
 							editTour({
+								...tour,
 								withTransfer: !tour?.withTransfer,
 								id: query.id as string,
 							})
@@ -69,6 +72,7 @@ export const PricingStep = () => {
 						checked={!tour?.onlyTransfer ?? false}
 						onChange={event => {
 							editTour({
+								...tour,
 								onlyTransfer: !tour?.onlyTransfer,
 								id: query.id as string,
 							})

@@ -232,6 +232,8 @@ const Main = () => {
 		mutate(
 			{
 				...tour,
+				// @ts-expect-error Не существует подобного поля, меня попросили добавить это
+				tourUpdated: true,
 			},
 			{
 				onSuccess: () => {
@@ -281,6 +283,18 @@ const Main = () => {
 							)}
 						>
 							<h1 className='font-semibold text-lg'>Добавить тур</h1>
+							<div className='flex gap-x-4'>
+								<Button
+									className='bg-[#D84343] text-white h-8 px-3'
+									onClick={() => {
+										toast.success('Изменения отменены')
+										removeTour(query.id as string)
+										push('/guide/account', undefined, { shallow: true })
+									}}
+								>
+									Cancel
+								</Button>
+							</div>
 						</div>
 						<div className='w-5/12 my-8 mx-auto rounded-lg p-6 border-lightGray border lg:w-8/12 md:w-full'>
 							{steps[step]?.component}
