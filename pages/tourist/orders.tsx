@@ -1,4 +1,4 @@
-import { getOrders } from '@/API/order.service'
+import { getMyOrders } from '@/API/order.service'
 import { Sidebar } from '@/components/Sidebar'
 import { NoOrders } from '@/components/Static/Empty/Orders'
 import { Container } from '@/components/UI/Container'
@@ -27,7 +27,7 @@ const Main = () => {
 
 	const { data, isLoading, isError } = useQuery(
 		['orders', user?.uid],
-		() => getOrders({ locale: locale as string, id: user?.uid }),
+		() => getMyOrders({ locale: locale as string, id: user?.uid }),
 		{
 			retry: false,
 		},

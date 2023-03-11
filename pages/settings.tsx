@@ -51,8 +51,6 @@ const Main = () => {
 		},
 	)
 
-	if (isLoading) return <>Loading...</>
-
 	return (
 		<>
 			<Head>
