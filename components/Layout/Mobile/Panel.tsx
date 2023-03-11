@@ -1,6 +1,7 @@
 import NoSSR from '@/components/Common/NoSSR'
 import { mdiAccountCircle, mdiBell, mdiBook, mdiHeart, mdiHome } from '@mdi/js'
 import { PanelLink } from './Link'
+import Image from 'next/image'
 
 const list = [
 	{
@@ -31,7 +32,7 @@ const list = [
 		id: 5,
 		icon: mdiAccountCircle,
 		label: 'profile',
-		href: '/profile',
+		href: '/settings',
 	},
 ]
 
