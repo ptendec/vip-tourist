@@ -103,9 +103,9 @@ const Main = () => {
 			/>
 			<div className='flex justify-center w-full'>
 				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0 '>
-					<Breadcrumbs breadcrumbs={breadcrumbs} />
-					<span className='relative h-40 w-full inline-block my-8'>
+				<Container className='pt-10 xs:pt-0 pb-24 flex flex-col max-w-[1200px] '>
+					<Breadcrumbs className='xs:hidden' breadcrumbs={breadcrumbs} />
+					<span className='relative h-40 w-full inline-block my-8 xs:mt-0 xs:w-[calc(100%_+_32px)] xs:-ml-4'>
 						<Image fill src='/images/demo.png' alt={''}></Image>
 					</span>
 					<CityInfo

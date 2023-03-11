@@ -14,8 +14,9 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { ReactElement, useState } from 'react'
-import { json } from 'utilities/utilities'
+import { ReactElement } from 'react'
+import { usePreferencesStore } from 'store/preferences'
+import { calcDayDifference, json } from 'utilities/utilities'
 
 export const getServerSideProps: GetServerSideProps = async context => {
 	const queryClient = new QueryClient()
@@ -36,6 +37,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 const Main = () => {
 	const { t } = useTranslation()
 	const { locale } = useRouter()
+	const { lastAlert, setAlert } = usePreferencesStore()
 	const {
 		data: tours,
 		isLoading: isToursLoading,
@@ -48,18 +50,23 @@ const Main = () => {
 		isError: isCitiesError,
 	} = useQuery(['cities'], () => getCities({ locale: locale as string }))
 
-	const [isAlert, setIsAlert] = useState(Math.random() < 0.9)
-
 	if (isCitiesLoading || isToursLoading) return <>Loading...</>
 	if (isToursError || isCitiesError) return <>Error!</>
-
 	return (
 		<>
 			<Head>
 				<title>VipTourist</title>
 			</Head>
 			<NoSSR>
-				<Alert isVisible={isAlert} onClose={() => setIsAlert(false)} />
+				<Alert
+					isVisible={
+						!!(
+							lastAlert === undefined ||
+							calcDayDifference(new Date(), new Date(lastAlert)) > 7
+						)
+					}
+					onClose={() => setAlert()}
+				/>
 			</NoSSR>
 			<div className='flex justify-center w-full'>
 				<Sidebar className='basis-64 shrink-0'></Sidebar>

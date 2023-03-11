@@ -1,7 +1,5 @@
 import { searchCity } from '@/API/city.service'
 import { searchTour } from '@/API/tour.service'
-import NoSSR from '@/components/Common/NoSSR'
-import { Alert } from '@/components/Modal/Alert'
 import { Sidebar } from '@/components/Sidebar'
 import { Container } from '@/components/UI/Container'
 import { Cards } from '@/modules/Cards'
@@ -68,9 +66,6 @@ const Main = () => {
 			<Head>
 				<title>VipTourist</title>
 			</Head>
-			<NoSSR>
-				<Alert isVisible={isAlert} onClose={() => setIsAlert(false)} />
-			</NoSSR>
 			<div className='flex justify-center w-full'>
 				<Sidebar className='basis-64 shrink-0'></Sidebar>
 				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0'>

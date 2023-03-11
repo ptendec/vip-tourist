@@ -37,14 +37,6 @@ export const CityInfo = ({ city, showFilter }: Props) => {
 					</p>
 				</div>
 				<div className='flex items-center'>
-					{
-						// <Icon
-						// 	path={mdiWhiteBalanceSunny}
-						// 	className='mr-2'
-						// 	size={1}
-						// 	color='#FFCE1F'
-						// />
-					}{' '}
 					<span className='font-semibold text-xl'>
 						{data?.data.main.temp ? Math.round(data?.data.main.temp) : '-'}
 						&deg;C

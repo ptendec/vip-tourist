@@ -118,9 +118,8 @@ export const Sidebar = ({
 							}))}
 							onChange={item => {
 								editPreferences({
-									currency:
-										currencyList.find(element => element.id === item.id) ??
-										currencyList[0],
+									...(currencyList.find(element => element.id === item.id) ??
+										currencyList[0]),
 								})
 							}}
 						/>

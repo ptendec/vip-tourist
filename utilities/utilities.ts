@@ -110,3 +110,19 @@ export const getRating = (rating: number) => {
 	}
 	return colors
 }
+
+export const calcDayDifference = (startDate: Date, endDate: Date) => {
+	const oneDay = 1000 * 60 * 60 * 24
+
+	const start = Date.UTC(
+		endDate.getFullYear(),
+		endDate.getMonth(),
+		endDate.getDate(),
+	)
+	const end = Date.UTC(
+		startDate.getFullYear(),
+		startDate.getMonth(),
+		startDate.getDate(),
+	)
+	return (start - end) / oneDay
+}

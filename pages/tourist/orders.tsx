@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
 const Main = () => {
 	const { t } = useTranslation()
-	const { locale } = useRouter()
+	const { locale, push } = useRouter()
 	const { user } = useFirebaseAuth()
 
 	const { data, isLoading, isError } = useQuery(

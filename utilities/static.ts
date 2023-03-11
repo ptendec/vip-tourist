@@ -278,7 +278,7 @@ export const favouritesBreadcrumbs: Breadcrumb[] = [
 	{
 		id: 2,
 		name: 'wishlist',
-		href: '/',
+		href: '/favourites',
 	},
 ]
 
