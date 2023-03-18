@@ -15,7 +15,7 @@ export const ImageStep = () => {
 	const { t } = useTranslation()
 	const { locale, pathname, query } = useRouter()
 	const { addTour, tour, editTour } = useEditTourStore()
-	const { mutate: upload, isLoading: uploading } = useMutation(uploadImage)
+	const { mutateAsync: upload, isLoading: uploading } = useMutation(uploadImage)
 	const [uploadingPreview, setUploadingPreview] = useState(false)
 	const [uploadingTransfer, setUploadingTransfer] = useState(false)
 	const [uploadingGallery, setUploadingGallery] = useState(false)
@@ -27,21 +27,23 @@ export const ImageStep = () => {
 		const formData = new FormData()
 		formData.append('file', image)
 		formData.append('upload_preset', 'sgdiyf4c')
-		upload(formData, {
-			onSuccess: response => {
+		upload(formData)
+			.then(response => {
 				editTour({
-					id: query.id as string,
 					...tour,
+					id: tour?.id as string,
 					mainPhotoUrl: response.secure_url,
 				})
-				setUploadingPreview(false)
-			},
-			onError: error => {
+			})
+			.catch(error => {
 				toast.error('Не удалось загрузить, попробуйте позднее')
 				console.log(error)
-			},
-		})
+			})
+			.finally(() => {
+				setUploadingPreview(false)
+			})
 	}
+
 	const uploadTransfer = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
 		setUploadingTransfer(true)
@@ -49,20 +51,21 @@ export const ImageStep = () => {
 		const formData = new FormData()
 		formData.append('file', image)
 		formData.append('upload_preset', 'sgdiyf4c')
-		upload(formData, {
-			onSuccess: response => {
+		upload(formData)
+			.then(response => {
 				editTour({
-					id: query.id as string,
 					...tour,
+					id: tour?.id as string,
 					transferPhotoUrl: response.secure_url,
 				})
-				setUploadingTransfer(false)
-			},
-			onError: error => {
+			})
+			.catch(error => {
 				toast.error('Не удалось загрузить, попробуйте позднее')
 				console.log(error)
-			},
-		})
+			})
+			.finally(() => {
+				setUploadingTransfer(false)
+			})
 	}
 	const uploadImages = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
@@ -71,22 +74,23 @@ export const ImageStep = () => {
 		const formData = new FormData()
 		formData.append('file', image)
 		formData.append('upload_preset', 'sgdiyf4c')
-		upload(formData, {
-			onSuccess: response => {
+		upload(formData)
+			.then(response => {
 				editTour({
-					id: query.id as string,
 					...tour,
+					id: tour?.id as string,
 					image_urls: !tour?.image_urls
 						? `${response.secure_url}`
 						: tour?.image_urls + `|${response.secure_url}`,
 				})
-				setUploadingGallery(false)
-			},
-			onError: error => {
+			})
+			.catch(error => {
 				toast.error('Не удалось загрузить, попробуйте позднее')
 				console.log(error)
-			},
-		})
+			})
+			.finally(() => {
+				setUploadingGallery(false)
+			})
 	}
 
 	return (
@@ -97,7 +101,7 @@ export const ImageStep = () => {
 					{!tour?.mainPhotoUrl &&
 					!tour?.transferPhotoUrl &&
 					!tour?.image_urls ? (
-						<div className='mx-auto'>
+						<div className='mx-auto my-10'>
 							<UploadImage />
 						</div>
 					) : (
@@ -108,13 +112,31 @@ export const ImageStep = () => {
 										<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 											{t('previewImage')}:
 										</span>
-										<img
-											className='rounded-lg'
-											src={tour.mainPhotoUrl}
-											width='100px'
-											height='100px'
-											alt=''
-										/>
+										<span className='inline-block w-[160px] h-[90px] relative group'>
+											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
+												<Button
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													onClick={() => {
+														editTour({
+															...tour,
+															mainPhotoUrl: undefined,
+														})
+													}}
+												>
+													<Icon
+														className='text-white'
+														path={mdiDelete}
+														size={1}
+													/>
+												</Button>
+											</span>
+											<Image
+												fill
+												className='rounded-lg'
+												src={tour.mainPhotoUrl}
+												alt=''
+											/>
+										</span>
 									</>
 								)}
 							</div>
@@ -124,17 +146,35 @@ export const ImageStep = () => {
 										<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 											{t('Фотографие автомобиля')}:
 										</span>
-										<img
-											className='rounded-lg'
-											src={tour.transferPhotoUrl}
-											width='100px'
-											height='100px'
-											alt=''
-										/>
+										<span className='inline-block w-[160px] h-[90px] relative group'>
+											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
+												<Button
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													onClick={() => {
+														editTour({
+															...tour,
+															transferPhotoUrl: undefined,
+														})
+													}}
+												>
+													<Icon
+														className='text-white'
+														path={mdiDelete}
+														size={1}
+													/>
+												</Button>
+											</span>
+											<Image
+												fill
+												className='rounded-lg'
+												src={tour.transferPhotoUrl}
+												alt=''
+											/>
+										</span>
 									</>
 								)}
 							</div>
-							<div className='flex flex-row gap-x-3 flex-wrap mb-4 overflow-x-auto'>
+							<div className='flex flex-row gap-x-3 flex-wrap mb-4 overflow-x-auto w-max scrollbar  '>
 								{tour.image_urls && (
 									<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 										{t('Фотогалерея')}:
@@ -143,7 +183,7 @@ export const ImageStep = () => {
 								{tour.image_urls &&
 									tour.image_urls.split('|').map((image, index) => (
 										<span
-											key={index}
+											key={image}
 											className='inline-block w-[160px] h-[90px] relative scrollbar group'
 										>
 											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>

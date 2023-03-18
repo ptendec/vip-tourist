@@ -14,9 +14,9 @@ import { useDraftStore } from 'store/draft'
 
 export const ImageStep = () => {
 	const { t } = useTranslation()
-	const { locale, pathname, query } = useRouter()
+	const { query } = useRouter()
 	const { addTour, tours, editTour } = useDraftStore()
-	const { mutateAsync: upload, isLoading: uploading } = useMutation(uploadImage)
+	const { mutateAsync: upload } = useMutation(uploadImage)
 	const [uploadingPreview, setUploadingPreview] = useState(false)
 	const [uploadingTransfer, setUploadingTransfer] = useState(false)
 	const [uploadingGallery, setUploadingGallery] = useState(false)
@@ -194,7 +194,7 @@ export const ImageStep = () => {
 									{existingTour.image_urls &&
 										existingTour.image_urls.split('|').map((image, index) => (
 											<span
-												key={index}
+												key={image}
 												className='inline-block w-[160px] h-[90px] relative scrollbar group'
 											>
 												<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
