@@ -66,19 +66,6 @@ export const PricingStep = () => {
 					/>
 				</label>
 				<span className='block bg-gray h-[0.33px]' />
-				<label className='flex justify-between items-center text-sm font-semibold my-4'>
-					{t('Трансфер включен в стоимость')}
-					<Checkbox
-						checked={!tour?.onlyTransfer ?? false}
-						onChange={event => {
-							editTour({
-								...tour,
-								onlyTransfer: !tour?.onlyTransfer,
-								id: query.id as string,
-							})
-						}}
-					/>
-				</label>
 			</div>
 		</>
 	)
