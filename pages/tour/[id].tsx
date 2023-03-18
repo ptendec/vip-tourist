@@ -1,6 +1,6 @@
 import { getCity } from '@/API/city.service'
 import { getTour } from '@/API/tour.service'
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/Layout/Sidebar'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { Layout } from '@/modules/Layout'

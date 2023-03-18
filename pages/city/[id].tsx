@@ -2,7 +2,7 @@ import { getCity } from '@/API/city.service'
 import { getToursByCity } from '@/API/tour.service'
 import { FilterSidebar } from '@/components/Common/FilterSidebar'
 import { CityInfo } from '@/components/Layout/CityInfo'
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/Layout/Sidebar'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { Cards } from '@/modules/Cards'
@@ -108,6 +108,7 @@ const Main = () => {
 					<span className='relative h-40 w-full inline-block my-8 xs:mt-0 xs:w-[calc(100%_+_32px)] xs:-ml-4'>
 						<Image fill src='/images/demo.png' alt={''}></Image>
 					</span>
+
 					<CityInfo
 						showFilter={() => setIsFilter(prevState => !prevState)}
 						city={city}

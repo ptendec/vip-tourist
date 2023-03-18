@@ -1,5 +1,5 @@
 import { getMyOrders } from '@/API/order.service'
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/Layout/Sidebar'
 import { NoOrders } from '@/components/Static/Empty/Orders'
 import { Container } from '@/components/UI/Container'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'

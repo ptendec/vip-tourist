@@ -1,7 +1,7 @@
 import { getProfile } from '@/API/profile.service'
 import { createTour } from '@/API/tour.service'
 import NoSSR from '@/components/Common/NoSSR'
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/Layout/Sidebar'
 import { AdditionalStep } from '@/components/Tour/Add/AdditionalStep'
 import { CityStep } from '@/components/Tour/Add/CityStep'
 import { DescribeStep } from '@/components/Tour/Add/DescribeStep'

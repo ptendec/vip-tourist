@@ -1,7 +1,8 @@
 import { editProfile, getProfile } from '@/API/profile.service'
+import NoSSR from '@/components/Common/NoSSR'
+import { ListBox } from '@/components/UI/ListBox'
 import { auth } from '@/config/firebase'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
-import { currencyList, langList } from '@/utilities/static'
 import { getNavbarList } from '@/utilities/utilities'
 import { mdiEarth, mdiHiking, mdiLogout, mdiWallet } from '@mdi/js'
 import Icon from '@mdi/react'
@@ -12,20 +13,21 @@ import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ComponentPropsWithoutRef } from 'react'
 import { usePreferencesStore } from 'store/preferences'
-import NoSSR from './Common/NoSSR'
-import { ListBox } from './UI/ListBox'
+import { currencyList, langList } from 'utilities/static'
 
-export const Sidebar = ({
-	className,
-	...rest
-}: ComponentPropsWithoutRef<'div'>) => {
+interface Props {
+	isVisible: boolean
+	onClose: () => void
+}
+
+export const Sidebar = ({ isVisible, onClose }: Props) => {
 	const { currency, editPreferences } = usePreferencesStore()
 	const { t } = useTranslation()
 	const { locale, pathname, push, asPath } = useRouter()
 	const { user } = useFirebaseAuth()
 	const { mutate } = useMutation(editProfile)
+
 	const { data, isLoading, isError } = useQuery(
 		['profile', user?.uid],
 		() =>
@@ -39,19 +41,14 @@ export const Sidebar = ({
 		},
 	)
 
-	// TODO: При наличии авторизации, спросить уверен ли он, что хочет стать гидом, если подтвердит, то отправлять запрос на изменение поля isTourst: true
-
-	// if (isLoading) return <>Loading...</>
-
 	return (
-		<NoSSR>
-			<div
-				className={clsx(
-					className,
-					'2xl:hidden border-r border-[#E9EAE8] px-6 pt-10',
-				)}
-				{...rest}
-			>
+		<div
+			className={clsx(
+				'fixed overflow-y-scroll scrollbar transition-all shadow-xl xs:w-[320px] xs:pb-[70px] duration-500 ease-out h-screen left-0 top-0 bg-white p-8 z-20 w-[300px]',
+				isVisible ? '' : '-left-[400px] overflow-y-scroll',
+			)}
+		>
+			<NoSSR>
 				<Link href='/' className=''>
 					<span className='relative flex justify-center'>
 						<Image
@@ -155,7 +152,7 @@ export const Sidebar = ({
 						)}
 					</div>
 				</div>
-			</div>
-		</NoSSR>
+			</NoSSR>
+		</div>
 	)
 }

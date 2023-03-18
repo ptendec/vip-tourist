@@ -1,7 +1,7 @@
 import { editTour as _editTour, getTour } from '@/API/tour.service'
 import { components } from '@/API/types/api.types'
 import NoSSR from '@/components/Common/NoSSR'
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/Layout/Sidebar'
 import { AdditionalStep } from '@/components/Tour/Edit/AdditionalStep'
 import { CityStep } from '@/components/Tour/Edit/CityStep'
 import { DescribeStep } from '@/components/Tour/Edit/DescribeStep'
