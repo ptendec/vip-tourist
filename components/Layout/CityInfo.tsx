@@ -43,7 +43,7 @@ export const CityInfo = ({ city, showFilter }: Props) => {
 					</span>
 				</div>
 			</div>
-			<div className='flex justify-between mt-8 '>
+			<div className='flex justify-between mt-8'>
 				<button
 					onClick={showFilter}
 					className='relative flex items-center border-gray border bg-white rounded-lg px-4 py-2 text-sm font-semibold basis-auto shrink-0'
@@ -51,7 +51,7 @@ export const CityInfo = ({ city, showFilter }: Props) => {
 					<Icon path={mdiMenu} size={1} color='#86A545' className='mr-1' />
 					{t('categories')}
 				</button>
-				<div className=' items-center gap-3 hidden'>
+				<div className='items-center gap-3 hidden'>
 					<Tag
 						isActive={isDaysEqual(date, new Date())}
 						onClick={() => {
@@ -71,7 +71,6 @@ export const CityInfo = ({ city, showFilter }: Props) => {
 					>
 						Завтра
 					</Tag>
-
 					<Tag
 						isActive={false}
 						className='relative'

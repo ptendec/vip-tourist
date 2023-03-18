@@ -1,6 +1,6 @@
 import { editOrder, getSoldOrders } from '@/API/order.service'
 import { getMyTours } from '@/API/tour.service'
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/Layout/Sidebar'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { Popover } from '@/components/UI/Popover'
@@ -160,11 +160,7 @@ const Main = () => {
 					<div className='mt-8'>
 						<p className='font-semibold text-lg flex gap-x-3 items-center'>
 							{t('myTours')}
-							<Link
-								id='addTour'
-								target='_blank'
-								href={`/guide/tour/add/?id=${generateUUID()}`}
-							>
+							<Link id='addTour' href={`/guide/tour/add/?id=${generateUUID()}`}>
 								<Button className='rounded-full w-6 h-6'>
 									<Icon path={mdiPlus} size={0.8} />
 								</Button>
@@ -196,18 +192,21 @@ const Main = () => {
 										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out '>
 											<Button
 												className='bg-transparent'
-												onClick={() => push(`/guide/tour/edit/?id=${tour.id}`)}
+												onClick={() => push(`/guide/tour/add/?id=${tour.id}`)}
 											>
 												<Icon path={mdiPencil} size={0.7} color='#3B3F32' />
 											</Button>
 										</div>
 										<span className='relative inline-block basis-20 h-20 shrink-0'>
-											<Image
-												className='rounded-lg'
-												src={tour.mainPhotoUrl ?? ''}
-												alt='Фотография тура'
-												fill
-											/>
+											{typeof tour.mainPhotoUrl === 'string' &&
+												tour.mainPhotoUrl.length !== 0 && (
+													<Image
+														className='rounded-lg'
+														src={tour.mainPhotoUrl}
+														alt='Фотография тура'
+														fill
+													/>
+												)}
 										</span>
 										<div className='ml-[10px]'>
 											<p className='font-semibold '>{tour.name}</p>
@@ -248,7 +247,7 @@ const Main = () => {
 										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out '>
 											<Button
 												className='bg-transparent'
-												onClick={() => push(`/guide/tour/add/?id=${tour.id}`)}
+												onClick={() => push(`/guide/tour/edit/?id=${tour.id}`)}
 											>
 												<Icon path={mdiPencil} size={0.7} color='#3B3F32' />
 											</Button>

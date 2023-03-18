@@ -1,6 +1,6 @@
 import { uploadImage } from '@/API/cloudinary.service'
 import { editProfile, getProfile } from '@/API/profile.service'
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/Layout/Sidebar'
 import { Button } from '@/components/UI/Button'
 import Checkbox from '@/components/UI/Checkbox'
 import { Container } from '@/components/UI/Container'
@@ -45,8 +45,6 @@ const Main = () => {
 		handleSubmit,
 		formState: { errors },
 		reset,
-		watch,
-		setValue,
 	} = useForm<ProfileFields>()
 
 	const { t } = useTranslation()
@@ -54,6 +52,7 @@ const Main = () => {
 	const { user } = useFirebaseAuth()
 	const { mutate: edit } = useMutation(editProfile)
 	const { mutate: upload, isLoading: uploading } = useMutation(uploadImage)
+
 	const profileLinks = [
 		{
 			id: 1,
@@ -67,7 +66,9 @@ const Main = () => {
 		},
 	]
 
-	const { data, isLoading, isError, refetch } = useQuery(
+	const [isUploading, setIsUploading] = useState(false)
+
+	const { data, isLoading, refetch } = useQuery(
 		['profile', user?.uid],
 		() =>
 			getProfile({
@@ -124,6 +125,8 @@ const Main = () => {
 
 	const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
+		setIsUploading(true)
+		console.log(isUploading)
 		const image = event.currentTarget.files[0]
 		const formData = new FormData()
 		formData.append('file', image)
@@ -144,6 +147,9 @@ const Main = () => {
 						},
 						onError: () => {
 							toast.error('Что-то пошло не так, попробуйте позднее')
+						},
+						onSettled: () => {
+							setIsUploading(false)
 						},
 					},
 				)
@@ -371,17 +377,12 @@ const Main = () => {
 												className='mt-6'
 												placeholder='Instagram, Facebook или Twitter'
 											/>
-											{
-												// @ts-expect-error Проблема со стороны сервера
-												!data?.documents_urls?.urls.length && (
-													<p className='flex gap-x-2 mt-6 mb-6'>
-														<span className='bg-lightDark text-white text-sm w-6 h-6 flex items-center justify-center rounded-full shrink-0'>
-															2
-														</span>
-														Загрузить следующие документы:
-													</p>
-												)
-											}
+											<p className='flex gap-x-2 mt-6 mb-6'>
+												<span className='bg-lightDark text-white text-sm w-6 h-6 flex items-center justify-center rounded-full shrink-0'>
+													2
+												</span>
+												Загрузить следующие документы:
+											</p>
 											<div className='flex justify-between items-center'>
 												<p>
 													{t('guideBecomeDocOne')}
@@ -390,26 +391,35 @@ const Main = () => {
 												</p>
 												<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99] bg-green relative'>
 													<input
+														disabled={isUploading}
 														type='file'
 														className='absolute z-10 w-full h-full hidden'
 														onChange={handleUpload}
 													/>
-													<Icon path={mdiPlus} size={0.8} />
+													{isUploading ? (
+														<Icon
+															path={mdiLoading}
+															size={0.8}
+															className='animate-spin'
+														/>
+													) : (
+														<Icon color='#fff' path={mdiPlus} size={0.8} />
+													)}
 												</label>
 											</div>
 
-											<div className='flex flex-row flex-wrap gap-4 items-center mt-6'>
+											<div className='flex flex-row flex-wrap gap-4 items-center my-6'>
 												{
 													// @ts-expect-error Ошибка со стороны сервера
 													data?.documents_urls?.urls.length != 0 &&
 														// @ts-expect-error Ошибка со стороны сервера
 														data?.documents_urls?.urls.map((image, index) => (
-															<img
+															<Image
 																className='rounded-lg'
 																key={index}
 																src={image}
-																width='100px'
-																height='100px'
+																width={100}
+																height={100}
 																alt=''
 															/>
 														))
@@ -419,7 +429,7 @@ const Main = () => {
 									</>
 								</>
 							)}
-							<Button className='mt-8 capitalize'>{t('save')}</Button>
+							<Button className='capitalize'>{t('save')}</Button>
 						</form>
 					</div>
 				</Container>
