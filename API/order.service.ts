@@ -36,9 +36,9 @@ export const getSoldOrders = async ({
 }): Promise<components['schemas']['Order'][]> => {
 	let url = ''
 	if (status === 'approved') {
-		url = '_seller_confirmed=true'
+		url = '_seller_confirmed=true&_canceled=false'
 	} else if (status === 'cancelled') {
-		url = '_canceled=true&_seller_confirmed=false'
+		url = '_canceled=true=false'
 	} else if (status === 'consideration') {
 		url = '_seller_confirmed=false&_canceled=false'
 	}
