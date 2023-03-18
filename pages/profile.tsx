@@ -79,6 +79,7 @@ const Main = () => {
 			refetchOnWindowFocus: false,
 		},
 	)
+	console.log(data?.documents_urls)
 
 	useEffect(() => {
 		setHasWhatsapp(data?.hasWhatsapp ?? false)
@@ -155,7 +156,7 @@ const Main = () => {
 		})
 	}
 
-	const handleIdUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
 		const image = event.currentTarget.files[0]
 		const formData = new FormData()
@@ -163,13 +164,24 @@ const Main = () => {
 		formData.append('upload_preset', 'sgdiyf4c')
 		upload(formData, {
 			onSuccess: response => {
+				console.log([
+					...(typeof data?.documents_urls?.urls === 'object'
+						? data.documents_urls.urls
+						: []),
+					response.secure_url,
+				])
 				edit(
 					{
 						id: data?.id,
 						request: {
 							documents_urls: {
 								// @ts-expect-error Проблема со стороны сервера
-								urls: [response.secure_url],
+								urls: [
+									...(typeof data?.documents_urls?.urls === 'object'
+										? data.documents_urls.urls
+										: []),
+									response.secure_url,
+								],
 							},
 						},
 					},
@@ -185,51 +197,7 @@ const Main = () => {
 				)
 			},
 			onError: error => {
-				toast.error('Не удалось загрузить, попробуйте позднее')
-				console.log(error)
-			},
-		})
-	}
-
-	const hanldeAddressUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (!event.currentTarget.files) return
-		if (
-			!data?.documents_urls?.urls[0] ||
-			// @ts-expect-error Проблема со стороны сервера
-			data?.documents_urls?.urls.length === 0
-		) {
-			toast.error('Сначала загрузите ID')
-			return
-		}
-		const image = event.currentTarget.files[0]
-		const formData = new FormData()
-		formData.append('file', image)
-		formData.append('upload_preset', 'sgdiyf4c')
-		upload(formData, {
-			onSuccess: response => {
-				edit(
-					{
-						id: data?.id,
-						request: {
-							documents_urls: {
-								// @ts-expect-error Проблема со стороны сервера
-								urls: [data.documents_urls.urls[0], response.secure_url],
-							},
-						},
-					},
-					{
-						onSuccess: () => {
-							toast.success('Успешно загружено')
-							refetch()
-						},
-						onError: () => {
-							toast.error('Что-то пошло не так, попробуйте позднее')
-						},
-					},
-				)
-			},
-			onError: error => {
-				toast.error('Не удалось загрузить, попробуйте позднее')
+				toast.error('Произошла ошибка')
 				console.log(error)
 			},
 		})
@@ -289,6 +257,9 @@ const Main = () => {
 							<span className='w-[128px] h-[128px] relative overflow-hidden flex items-center rounded-full'>
 								<Image
 									alt='User photo'
+									style={{
+										objectFit: 'cover',
+									}}
 									fill
 									className='rounded-full'
 									unoptimized
@@ -412,32 +383,39 @@ const Main = () => {
 													</p>
 												)
 											}
-											{!data?.documents_urls?.urls[0] && (
-												<div className='flex justify-between'>
-													<p>{t('guideBecomeDocOne')}</p>
-													<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99] bg-green relative'>
-														<input
-															type='file'
-															className='absolute z-10 w-full h-full hidden'
-															onChange={handleIdUpload}
-														/>
-														<Icon path={mdiPlus} size={0.8} />
-													</label>
-												</div>
-											)}
-											{!data?.documents_urls?.urls[1] && (
-												<div className='flex justify-between mt-4'>
-													<p>{t('guideBecomeDocThree')}</p>
-													<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99] bg-green relative'>
-														<input
-															type='file'
-															className='absolute z-10 w-full h-full hidden'
-															onChange={hanldeAddressUpload}
-														/>
-														<Icon path={mdiPlus} size={0.8} />
-													</label>
-												</div>
-											)}
+											<div className='flex justify-between items-center'>
+												<p>
+													{t('guideBecomeDocOne')}
+													<br />
+													{t('guideBecomeDocThree')}
+												</p>
+												<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99] bg-green relative'>
+													<input
+														type='file'
+														className='absolute z-10 w-full h-full hidden'
+														onChange={handleUpload}
+													/>
+													<Icon path={mdiPlus} size={0.8} />
+												</label>
+											</div>
+
+											<div className='flex flex-row flex-wrap gap-4 items-center mt-6'>
+												{
+													// @ts-expect-error Ошибка со стороны сервера
+													data?.documents_urls?.urls.length != 0 &&
+														// @ts-expect-error Ошибка со стороны сервера
+														data?.documents_urls?.urls.map((image, index) => (
+															<img
+																className='rounded-lg'
+																key={index}
+																src={image}
+																width='100px'
+																height='100px'
+																alt=''
+															/>
+														))
+												}
+											</div>
 										</div>
 									</>
 								</>
