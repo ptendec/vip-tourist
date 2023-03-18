@@ -1,5 +1,5 @@
 import { editOrder, getSoldOrders } from '@/API/order.service'
-import { getMyTours } from '@/API/tour.service'
+import { deleteTour, getMyTours } from '@/API/tour.service'
 import { Sidebar } from '@/components/Layout/Sidebar'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
@@ -19,6 +19,7 @@ import {
 	mdiDotsHorizontal,
 	mdiPencil,
 	mdiPlus,
+	mdiTrashCan,
 	mdiWallet,
 	mdiWindowClose,
 } from '@mdi/js'
@@ -52,6 +53,8 @@ const Main = () => {
 	const { user } = useFirebaseAuth()
 	const { tours } = useDraftStore()
 	const { mutate } = useMutation(editOrder)
+	const { removeTour } = useDraftStore()
+	const { mutate: _delete } = useMutation(deleteTour)
 
 	const profileLinks = [
 		{
@@ -78,7 +81,7 @@ const Main = () => {
 		() =>
 			getMyTours({
 				id: user?.uid,
-				url: tour === 'consideration' ? '&_approved=false' : '',
+				url: tour === 'consideration' ? '&_approved=false' : '&_approved=true',
 			}),
 	)
 
@@ -86,6 +89,20 @@ const Main = () => {
 		['sold', 'orders', user?.uid],
 		() => getSoldOrders({ id: user?.uid, status: order }),
 	)
+
+	const _deleteTour = (id: string) => {
+		_delete(
+			{ id },
+			{
+				onSuccess: () => {
+					refetchTours()
+				},
+				onError: () => {
+					toast.error('Произошла ошибка')
+				},
+			},
+		)
+	}
 
 	useEffect(() => {
 		refetchOrders()
@@ -189,12 +206,18 @@ const Main = () => {
 										key={tour.id}
 										className='text-sm flex basis-[calc(50%_-_10px)] sm:basis-full border border-[#E9EAE8] p-[10px] rounded-lg relative overflow-hidden group'
 									>
-										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out '>
+										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out  flex flex-row gap-x-4 mr-4'>
 											<Button
 												className='bg-transparent'
 												onClick={() => push(`/guide/tour/add/?id=${tour.id}`)}
 											>
 												<Icon path={mdiPencil} size={0.7} color='#3B3F32' />
+											</Button>
+											<Button
+												className='bg-transparent'
+												onClick={() => removeTour(tour.id)}
+											>
+												<Icon path={mdiTrashCan} size={0.7} color='#3B3F32' />
 											</Button>
 										</div>
 										<span className='relative inline-block basis-20 h-20 shrink-0'>
@@ -244,12 +267,18 @@ const Main = () => {
 												/>
 											)}
 										</div>
-										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out '>
+										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out flex flex-row gap-x-4 mr-4'>
 											<Button
 												className='bg-transparent'
 												onClick={() => push(`/guide/tour/edit/?id=${tour.id}`)}
 											>
 												<Icon path={mdiPencil} size={0.7} color='#3B3F32' />
+											</Button>
+											<Button
+												className='bg-transparent'
+												onClick={() => _deleteTour(tour.id)}
+											>
+												<Icon path={mdiTrashCan} size={0.7} color='#3B3F32' />
 											</Button>
 										</div>
 										<span className='relative inline-block basis-20 h-20 shrink-0'>

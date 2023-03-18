@@ -86,7 +86,9 @@ export const getAddedCategories = (
 		return []
 	}
 	return staticCategories.filter(category =>
-		Object.keys(categories).find(_category => _category == category.value),
+		Object.entries(categories).find(
+			_category => _category[0] == category.value && _category[1] !== false,
+		),
 	)
 }
 

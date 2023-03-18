@@ -22,9 +22,8 @@ import { usePreferencesStore } from 'store/preferences'
 
 interface Props extends ComponentPropsWithoutRef<'div'> {
 	tour: components['schemas']['Tour']
-	city?: components['schemas']['City']
 }
-export const Info = ({ className, tour, city }: Props) => {
+export const Info = ({ className, tour }: Props) => {
 	const { t } = useTranslation()
 	const { currency } = usePreferencesStore()
 
@@ -44,8 +43,8 @@ export const Info = ({ className, tour, city }: Props) => {
 				<h1 className='text-xl font-semibold mb-2 mt-8'>{tour.name}</h1>
 				<p className='flex mb-3'>
 					<Icon size={1} color='#86A545' path={mdiMapMarker} />
-					<span className='text-gray text-md '>
-						{city?.country?.name}, {city?.name}
+					<span className='text-gray text-md'>
+						{tour.city?.country}, {tour.city?.name}
 					</span>
 				</p>
 				<p className='mb-6'>{tour.description}</p>
@@ -75,24 +74,30 @@ export const Info = ({ className, tour, city }: Props) => {
 						description={new Date(tour.date).toISOString().split('T')[0]}
 					/>
 				)}
-				<ListOption
-					icon={mdiAccount}
-					title={t('adultPrice')}
-					description={`${currency.symbol}  ${
-						tour.adult_price
-							? Math.ceil((data?.price && data?.price * tour.adult_price) ?? 0)
-							: '-'
-					}`}
-				/>
-				<ListOption
-					icon={mdiBabyFaceOutline}
-					title={t('childPrice')}
-					description={`${currency.symbol}  ${
-						tour.child_price
-							? Math.ceil((data?.price && data?.price * tour.child_price) ?? 0)
-							: '-'
-					}`}
-				/>
+				<NoSSR>
+					<ListOption
+						icon={mdiAccount}
+						title={t('adultPrice')}
+						description={`${currency.symbol}  ${
+							tour.adult_price
+								? Math.ceil(
+										(data?.price && data?.price * tour.adult_price) ?? 0,
+								  )
+								: '-'
+						}`}
+					/>
+					<ListOption
+						icon={mdiBabyFaceOutline}
+						title={t('childPrice')}
+						description={`${currency.symbol}  ${
+							tour.child_price
+								? Math.ceil(
+										(data?.price && data?.price * tour.child_price) ?? 0,
+								  )
+								: '-'
+						}`}
+					/>
+				</NoSSR>
 				<Button
 					className='mt-auto mb-6'
 					onClick={() => {

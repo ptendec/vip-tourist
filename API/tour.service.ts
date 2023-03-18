@@ -1,6 +1,6 @@
 import { getCategoriesList } from '@/utilities/utilities'
 import { $host } from 'API'
-import { Tour } from 'store/draft'
+import { Draft, Tour } from 'store/draft'
 import { Category, QueryParams } from './../utilities/interfaces'
 import { components } from './types/api.types'
 
@@ -92,9 +92,17 @@ export const createTour = async (
 }
 
 export const editTour = async (
-	request: Tour,
+	request: Draft,
 ): Promise<components['schemas']['Tour']> => {
 	return await (
-		await $host.post('/tours/', request)
+		await $host.put(`/tours/${request.id}`, request)
+	).data
+}
+
+export const deleteTour = async ({
+	id,
+}: QueryParams): Promise<components['schemas']['Tour']> => {
+	return await (
+		await $host.delete(`/tours/${id}`)
 	).data
 }

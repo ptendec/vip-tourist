@@ -1,4 +1,3 @@
-import { getCity } from '@/API/city.service'
 import { getTour } from '@/API/tour.service'
 import { Sidebar } from '@/components/Layout/Sidebar'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
@@ -46,21 +45,6 @@ const Main = () => {
 	} = useQuery(['tour', query?.id], () =>
 		getTour({ locale: locale as string, id: query.id as string }),
 	)
-	const {
-		data: city,
-		isLoading: isCountryLoading,
-		isError: isCountryError,
-	} = useQuery(
-		['city', tour?.city?.country],
-		() =>
-			getCity({
-				locale: locale as string,
-				id: tour?.city?.id as string,
-			}),
-		{
-			enabled: isTourSuccess,
-		},
-	)
 
 	const breadcrumbs: Breadcrumb[] = [
 		{
@@ -80,13 +64,13 @@ const Main = () => {
 		},
 	]
 
-	if (isTourLoading || isCountryLoading) return <>Loading...</>
-	if (isTourError || isCountryError) return <>Error!</>
+	if (isTourLoading) return <>Loading...</>
+	if (isTourError) return <>Error!</>
 
 	return (
 		<>
 			<Head>
-				<title>{tour.name} | VipTourist</title>
+				<title>{`${tour.name} | VipTourist`}</title>
 				<meta name='description' content={tour.description} />
 			</Head>
 			<div className='flex justify-center w-full'>
@@ -94,7 +78,7 @@ const Main = () => {
 				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-5'>
 					<Breadcrumbs breadcrumbs={breadcrumbs} />
 					<div className='flex gap-x-5 lg:flex-col-reverse'>
-						<Info city={city} tour={tour} className='basis-1/2 flex flex-col' />
+						<Info tour={tour} className='basis-1/2 flex flex-col' />
 						<MobilePhotos
 							images={tour.image_urls}
 							className='flex flex-col basis-1/2 gap-5'
