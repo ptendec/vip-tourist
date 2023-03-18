@@ -79,7 +79,6 @@ const Main = () => {
 			refetchOnWindowFocus: false,
 		},
 	)
-	console.log(data?.documents_urls)
 
 	useEffect(() => {
 		setHasWhatsapp(data?.hasWhatsapp ?? false)
