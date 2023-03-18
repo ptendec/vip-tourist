@@ -102,7 +102,7 @@ const Main = () => {
 								</Button>
 							</div>
 						) : (
-							<Button onClick={() => push('/auth/login')}>
+							<Button onClick={() => push('/auth/registration')}>
 								Войти или зарегистрироваться
 							</Button>
 						)}
