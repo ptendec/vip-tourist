@@ -1,9 +1,11 @@
 import { uploadImage } from '@/API/cloudinary.service'
 import { UploadImage } from '@/components/Icons/Upload'
-import { mdiLoading, mdiPlus } from '@mdi/js'
+import { Button } from '@/components/UI/Button'
+import { mdiDelete, mdiLoading, mdiPlus } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'next-i18next'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -139,18 +141,34 @@ export const ImageStep = () => {
 									</span>
 								)}
 								{tour.image_urls &&
-									tour.image_urls
-										.split('|')
-										.map((image, index) => (
-											<img
-												className='rounded-lg'
-												key={index}
-												src={image}
-												width='100px'
-												height='100px'
-												alt=''
-											/>
-										))}
+									tour.image_urls.split('|').map((image, index) => (
+										<span
+											key={index}
+											className='inline-block w-[160px] h-[90px] relative scrollbar group'
+										>
+											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
+												<Button
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													onClick={() => {
+														editTour({
+															...tour,
+															image_urls: tour.image_urls
+																?.split('|')
+																.filter((_image: string) => _image !== image)
+																.join('|'),
+														})
+													}}
+												>
+													<Icon
+														className='text-white'
+														path={mdiDelete}
+														size={1}
+													/>
+												</Button>
+											</span>
+											<Image fill className='rounded-lg' src={image} alt='' />
+										</span>
+									))}
 							</div>
 						</div>
 					)}

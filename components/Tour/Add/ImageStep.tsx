@@ -1,10 +1,12 @@
 import { uploadImage } from '@/API/cloudinary.service'
 import { UploadImage } from '@/components/Icons/Upload'
+import { Button } from '@/components/UI/Button'
 import { isTourExists } from '@/utilities/utilities'
-import { mdiLoading, mdiPlus } from '@mdi/js'
+import { mdiDelete, mdiLoading, mdiPlus } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'next-i18next'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -14,7 +16,7 @@ export const ImageStep = () => {
 	const { t } = useTranslation()
 	const { locale, pathname, query } = useRouter()
 	const { addTour, tours, editTour } = useDraftStore()
-	const { mutate: upload, isLoading: uploading } = useMutation(uploadImage)
+	const { mutateAsync: upload, isLoading: uploading } = useMutation(uploadImage)
 	const [uploadingPreview, setUploadingPreview] = useState(false)
 	const [uploadingTransfer, setUploadingTransfer] = useState(false)
 	const [uploadingGallery, setUploadingGallery] = useState(false)
@@ -37,20 +39,22 @@ export const ImageStep = () => {
 		const formData = new FormData()
 		formData.append('file', image)
 		formData.append('upload_preset', 'sgdiyf4c')
-		upload(formData, {
-			onSuccess: response => {
+		upload(formData)
+			.then(response => {
 				editTour(query.id as string, {
 					id: query.id as string,
 					mainPhotoUrl: response.secure_url,
 				})
-				setUploadingPreview(false)
-			},
-			onError: error => {
+			})
+			.catch(error => {
 				toast.error('Не удалось загрузить, попробуйте позднее')
 				console.log(error)
-			},
-		})
+			})
+			.finally(() => {
+				setUploadingPreview(false)
+			})
 	}
+
 	const uploadTransfer = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
 		setUploadingTransfer(true)
@@ -58,20 +62,22 @@ export const ImageStep = () => {
 		const formData = new FormData()
 		formData.append('file', image)
 		formData.append('upload_preset', 'sgdiyf4c')
-		upload(formData, {
-			onSuccess: response => {
+		upload(formData)
+			.then(response => {
 				editTour(query.id as string, {
 					id: query.id as string,
 					transferPhotoUrl: response.secure_url,
 				})
-				setUploadingTransfer(false)
-			},
-			onError: error => {
+			})
+			.catch(error => {
 				toast.error('Не удалось загрузить, попробуйте позднее')
 				console.log(error)
-			},
-		})
+			})
+			.finally(() => {
+				setUploadingTransfer(false)
+			})
 	}
+
 	const uploadImages = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
 		setUploadingGallery(true)
@@ -79,21 +85,22 @@ export const ImageStep = () => {
 		const formData = new FormData()
 		formData.append('file', image)
 		formData.append('upload_preset', 'sgdiyf4c')
-		upload(formData, {
-			onSuccess: response => {
+		upload(formData)
+			.then(response => {
 				editTour(query.id as string, {
 					id: query.id as string,
 					image_urls: !existingTour?.image_urls
 						? `${response.secure_url}`
 						: existingTour?.image_urls + `|${response.secure_url}`,
 				})
-				setUploadingGallery(false)
-			},
-			onError: error => {
+			})
+			.catch(error => {
 				toast.error('Не удалось загрузить, попробуйте позднее')
 				console.log(error)
-			},
-		})
+			})
+			.finally(() => {
+				setUploadingGallery(false)
+			})
 	}
 
 	return (
@@ -104,62 +111,116 @@ export const ImageStep = () => {
 					{!existingTour?.mainPhotoUrl &&
 					!existingTour?.transferPhotoUrl &&
 					!existingTour?.image_urls ? (
-						<div className='mx-auto'>
+						<div className='mx-auto my-10'>
 							<UploadImage />
 						</div>
 					) : (
 						<div className='flex flex-col overflow-x-auto'>
-							<div className='flex flex-row gap-x-3 flex-wrap mb-4  overflow-x-auto'>
+							<div className='flex flex-col gap-x-3 mb-4  overflow-x-auto'>
 								{existingTour.mainPhotoUrl && (
 									<>
 										<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 											{t('previewImage')}:
 										</span>
-										<img
-											className='rounded-lg'
-											src={existingTour.mainPhotoUrl}
-											width='100px'
-											height='100px'
-											alt=''
-										/>
+										<span className='inline-block w-[160px] h-[90px] relative group'>
+											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
+												<Button
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													onClick={() => {
+														editTour(query.id as string, {
+															id: query.id as string,
+															mainPhotoUrl: undefined,
+														})
+													}}
+												>
+													<Icon
+														className='text-white'
+														path={mdiDelete}
+														size={1}
+													/>
+												</Button>
+											</span>
+											<Image
+												fill
+												className='rounded-lg'
+												src={existingTour.mainPhotoUrl}
+												alt=''
+											/>
+										</span>
 									</>
 								)}
 							</div>
-							<div className='flex flex-row gap-x-3 flex-wrap mb-4 overflow-x-auto'>
+							<div className='flex flex-col gap-x-3 mb-4 overflow-x-auto'>
 								{existingTour.transferPhotoUrl && (
 									<>
 										<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 											{t('Фотографие автомобиля')}:
 										</span>
-										<img
-											className='rounded-lg'
-											src={existingTour.transferPhotoUrl}
-											width='100px'
-											height='100px'
-											alt=''
-										/>
+										<span className='inline-block w-[160px] h-[90px] relative group'>
+											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
+												<Button
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													onClick={() => {
+														editTour(query.id as string, {
+															id: query.id as string,
+															transferPhotoUrl: undefined,
+														})
+													}}
+												>
+													<Icon
+														className='text-white'
+														path={mdiDelete}
+														size={1}
+													/>
+												</Button>
+											</span>
+											<Image
+												fill
+												className='rounded-lg'
+												src={existingTour.transferPhotoUrl}
+												alt=''
+											/>
+										</span>
 									</>
 								)}
 							</div>
-							<div className='flex flex-row gap-x-3 flex-wrap mb-4 overflow-x-auto'>
+							<div className='flex flex-col gap-x-3 mb-4'>
 								{existingTour.image_urls && (
 									<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 										{t('Фотогалерея')}:
 									</span>
 								)}
-								{existingTour.image_urls &&
-									existingTour.image_urls
-										.split('|')
-										.map((image, index) => (
-											<img
-												className='rounded-lg'
+								<div className='flex flex-row gap-x-4 overflow-y-auto w-fit'>
+									{existingTour.image_urls &&
+										existingTour.image_urls.split('|').map((image, index) => (
+											<span
 												key={index}
-												src={image}
-												width='100px'
-												height='100px'
-												alt=''
-											/>
+												className='inline-block w-[160px] h-[90px] relative scrollbar group'
+											>
+												<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
+													<Button
+														className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+														onClick={() => {
+															editTour(query.id as string, {
+																id: query.id as string,
+																image_urls: existingTour.image_urls
+																	?.split('|')
+																	.filter((_image: string) => _image !== image)
+																	.join('|'),
+															})
+														}}
+													>
+														<Icon
+															className='text-white'
+															path={mdiDelete}
+															size={1}
+														/>
+													</Button>
+												</span>
+												<Image fill className='rounded-lg' src={image} alt='' />
+											</span>
 										))}
+								</div>
 							</div>
 						</div>
 					)}

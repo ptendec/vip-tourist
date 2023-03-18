@@ -13,9 +13,9 @@ export const Header = () => {
 	return (
 		<>
 			<Sidebar isVisible={isVisible} onClose={() => setIsVisible(false)} />
-			<header className='2xl:flex xs:hidden hidden h-20 bg-white w-full fixed top-0 z-10 items-center'>
+			<header className='2xl:flex xs:hidden hidden h-20 bg-white w-full fixed top-0 z-10 items-center shadow-lg'>
 				<Container className='mx-auto flex flex-row justify-between'>
-					<Link href='/' className=''>
+					<Link href='/' className='flex items-center'>
 						<span className='relative flex justify-center'>
 							<Image
 								src='/images/logo.svg'
