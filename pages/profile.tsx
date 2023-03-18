@@ -11,6 +11,7 @@ import { ProfileFields } from '@/utilities/interfaces'
 import {
 	mdiAccount,
 	mdiCamera,
+	mdiDelete,
 	mdiEmail,
 	mdiLoading,
 	mdiPhone,
@@ -118,6 +119,9 @@ const Main = () => {
 				},
 				onError: () => {
 					toast.error('Что-то пошло не так, попробуйте позднее')
+				},
+				onSettled: () => {
+					refetch()
 				},
 			},
 		)
@@ -408,20 +412,60 @@ const Main = () => {
 												</label>
 											</div>
 
-											<div className='flex flex-row flex-wrap gap-4 items-center my-6'>
+											<div className='flex flex-row flex-wrap gap-4 items-center mt-6'>
 												{
 													// @ts-expect-error Ошибка со стороны сервера
 													data?.documents_urls?.urls.length != 0 &&
 														// @ts-expect-error Ошибка со стороны сервера
 														data?.documents_urls?.urls.map((image, index) => (
-															<Image
-																className='rounded-lg'
-																key={index}
-																src={image}
-																width={100}
-																height={100}
-																alt=''
-															/>
+															<span
+																className='relative inline-block group'
+																key={image}
+															>
+																<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
+																	<Button
+																		type='button'
+																		className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+																		onClick={() => {
+																			edit(
+																				{
+																					id: data.id,
+																					request: {
+																						documents_urls: {
+																							// @ts-expect-error Ошибка от сервера
+																							urls: data.documents_urls.urls?.filter(
+																								(_image: string) =>
+																									image !== _image,
+																							),
+																						},
+																					},
+																				},
+																				{
+																					onSuccess: () => {
+																						refetch()
+																					},
+																					onError: () => {
+																						toast.error('Произошла ошибка')
+																					},
+																				},
+																			)
+																		}}
+																	>
+																		<Icon
+																			className='text-white'
+																			path={mdiDelete}
+																			size={1}
+																		/>
+																	</Button>
+																</span>
+																<Image
+																	className='rounded-lg'
+																	src={image}
+																	width={100}
+																	height={100}
+																	alt=''
+																/>
+															</span>
 														))
 												}
 											</div>
@@ -429,7 +473,7 @@ const Main = () => {
 									</>
 								</>
 							)}
-							<Button className='capitalize'>{t('save')}</Button>
+							<Button className='capitalize mt-8'>{t('save')}</Button>
 						</form>
 					</div>
 				</Container>
