@@ -8,7 +8,6 @@ import { DescribeStep } from '@/components/Tour/Add/DescribeStep'
 import { ImageStep } from '@/components/Tour/Add/ImageStep'
 import { PreviewStep } from '@/components/Tour/Add/PreviewStep'
 import { PricingStep } from '@/components/Tour/Add/PricingStep'
-import { SendToReview } from '@/components/Tour/Add/SendToReview'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
@@ -59,10 +58,6 @@ const steps = [
 		id: 6,
 		component: <PreviewStep />,
 	},
-	{
-		id: 7,
-		component: <SendToReview />,
-	},
 ]
 
 const Main = () => {
@@ -93,10 +88,11 @@ const Main = () => {
 				profile: data?.id,
 			},
 			{
-				onSuccess: () => {
-					setStep(prevStep => ++prevStep)
-					toast.success('Отправлено на проверку')
-					removeTour(query.id as string)
+				onSuccess: result => {
+					push(`/sendToVerification/?id=${result.id}`)
+					setTimeout(() => {
+						removeTour(query.id as string)
+					}, 3000)
 				},
 				onError: () => {
 					toast.error(
@@ -126,12 +122,7 @@ const Main = () => {
 				<div className='flex min-h-screen'>
 					<Sidebar className='basis-64 grow-1 shrink-0'></Sidebar>
 					<Container className='justify-self-center pt-10 flex flex-col '>
-						<div
-							className={clsx(
-								'flex justify-between',
-								step === steps.length - 1 && 'hidden',
-							)}
-						>
+						<div className={clsx('flex justify-between')}>
 							<h1 className='font-semibold text-lg'>Добавить тур</h1>
 							<div className='flex gap-x-4'>
 								<Button
@@ -163,7 +154,7 @@ const Main = () => {
 						<div
 							className={clsx(
 								'w-full flex mt-auto items-center h-[72px] border-t border-lightGray',
-								step === steps.length - 1 && 'hidden',
+								step === steps.length && 'hidden',
 							)}
 						>
 							<Button
@@ -181,7 +172,7 @@ const Main = () => {
 
 							<Button
 								onClick={() => {
-									if (step === steps.length - 2) {
+									if (step === steps.length - 1) {
 										console.log('create')
 										return create()
 									}
@@ -190,7 +181,7 @@ const Main = () => {
 								disabled={step === steps.length ? true : false}
 								className='w-max px-10 truncate sm:px-3'
 							>
-								{step === steps.length - 2 ? t('sendToVerify') : t('next')}
+								{step === steps.length - 1 ? t('sendToVerify') : t('next')}
 							</Button>
 						</div>
 					</Container>
@@ -205,5 +196,3 @@ Main.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default Main
-
-// TODO: Добавить поле tourUpdated при редактировании тура

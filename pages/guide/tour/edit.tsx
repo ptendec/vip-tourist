@@ -8,12 +8,16 @@ import { DescribeStep } from '@/components/Tour/Edit/DescribeStep'
 import { ImageStep } from '@/components/Tour/Edit/ImageStep'
 import { PreviewStep } from '@/components/Tour/Edit/PreviewStep'
 import { PricingStep } from '@/components/Tour/Edit/PricingStep'
-import { SendToReview } from '@/components/Tour/Edit/SendToReview'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
-import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { json } from '@/utilities/utilities'
+import {
+	dehydrate,
+	QueryClient,
+	useMutation,
+	useQuery,
+} from '@tanstack/react-query'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
@@ -26,8 +30,16 @@ import { Tooltip } from 'react-tooltip'
 import { useEditTourStore } from 'store/edit'
 
 export const getServerSideProps: GetServerSideProps = async context => {
+	const queryClient = new QueryClient()
+	await queryClient.prefetchQuery(['tour', context.params?.id], () =>
+		getTour({
+			locale: context.locale as string,
+			id: context.params?.id as string,
+		}),
+	)
 	return {
 		props: {
+			dehydratedState: json(dehydrate(queryClient)),
 			...(await serverSideTranslations(context.locale as string, ['common'])),
 		},
 	}
@@ -58,24 +70,19 @@ const steps = [
 		id: 6,
 		component: <PreviewStep />,
 	},
-	{
-		id: 7,
-		component: <SendToReview />,
-	},
 ]
 
 const Main = () => {
 	const { t } = useTranslation()
-	const { user } = useFirebaseAuth()
-	const { locale, pathname, query, push } = useRouter()
-	const { addTour, tour, editTour, removeTour } = useEditTourStore()
+	const { query, push } = useRouter()
+	const { addTour, tour, removeTour } = useEditTourStore()
 
 	const { data } = useQuery(['tour', query.id], () =>
 		getTour({
 			id: query.id as string,
 		}),
 	)
-	const { mutate, isSuccess } = useMutation(_editTour)
+	const { mutate } = useMutation(_editTour)
 
 	useEffect(() => {
 		if (!data) {
@@ -154,7 +161,8 @@ const Main = () => {
 			startTime,
 			weekDays,
 		} = data as components['schemas']['Tour']
-		if (!tour && data)
+		console.log((tour?.id || tour?.id != query.id) && data)
+		if (tour?.id != query.id && data)
 			addTour({
 				city: city?.id,
 				id,
@@ -236,13 +244,11 @@ const Main = () => {
 				tourUpdated: true,
 			},
 			{
-				onSuccess: () => {
-					setStep(prevStep => ++prevStep)
-					toast.success('Отправлено на проверку')
+				onSuccess: result => {
+					push(`/sendToVerification/?id=${result.id}`)
 					setTimeout(() => {
-						push('/guide/account')
 						removeTour(query.id as string)
-					}, 4000)
+					}, 3000)
 				},
 				onError: () => {
 					toast.error(
@@ -252,10 +258,6 @@ const Main = () => {
 			},
 		)
 	}
-
-	useEffect(() => {
-		console.log(tour)
-	}, [tour])
 
 	const [step, setStep] = useState(0)
 
@@ -276,12 +278,7 @@ const Main = () => {
 				<div className='flex min-h-screen'>
 					<Sidebar className='basis-64 grow-1 shrink-0'></Sidebar>
 					<Container className='justify-self-center pt-10 flex flex-col '>
-						<div
-							className={clsx(
-								'flex justify-between',
-								step === steps.length - 1 && 'hidden',
-							)}
-						>
+						<div className={clsx('flex justify-between')}>
 							<h1 className='font-semibold text-lg'>Добавить тур</h1>
 							<div className='flex gap-x-4'>
 								<Button
@@ -303,7 +300,6 @@ const Main = () => {
 						<div
 							className={clsx(
 								'w-full flex mt-auto items-center h-[72px] border-t border-lightGray',
-								step === steps.length - 1 && 'hidden',
 							)}
 						>
 							<Button
@@ -321,7 +317,7 @@ const Main = () => {
 
 							<Button
 								onClick={() => {
-									if (step === steps.length - 2) {
+									if (step === steps.length - 1) {
 										return edit()
 									}
 									setStep(prevStep => ++prevStep)
@@ -329,7 +325,7 @@ const Main = () => {
 								disabled={step === steps.length ? true : false}
 								className='w-max px-10 truncate sm:px-3'
 							>
-								{step === steps.length - 2 ? t('sendToVerify') : t('next')}
+								{step === steps.length - 1 ? t('sendToVerify') : t('next')}
 							</Button>
 						</div>
 					</Container>
@@ -344,5 +340,3 @@ Main.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default Main
-
-// TODO: Добавить поле tourUpdated при редактировании тура
