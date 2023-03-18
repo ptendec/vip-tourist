@@ -1,7 +1,7 @@
 import { getTour } from '@/API/tour.service'
 import NoSSR from '@/components/Common/NoSSR'
+import { SendToVerification } from '@/components/Common/SentToVerification'
 import { Sidebar } from '@/components/Layout/Sidebar'
-import { SendToReview } from '@/components/Tour/Add/SendToReview'
 import { Container } from '@/components/UI/Container'
 import { Layout } from '@/modules/Layout'
 import { useQuery } from '@tanstack/react-query'
@@ -44,7 +44,7 @@ const Main = () => {
 					<Sidebar className='basis-64 grow-1 shrink-0'></Sidebar>
 					<Container className='justify-self-center pt-10 flex flex-col '>
 						<div className='w-5/12 my-8 mx-auto rounded-lg p-6 border-lightGray border lg:w-8/12 md:w-full'>
-							<SendToReview tour={tour} />
+							<SendToVerification tour={tour} />
 						</div>
 					</Container>
 				</div>
