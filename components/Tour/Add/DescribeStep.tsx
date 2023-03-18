@@ -77,6 +77,11 @@ export const DescribeStep = () => {
 					}}
 					label={t('categories')}
 				/>
+				<span className='capitalize text-xs font-medium'>
+					{getAddedCategories(existingTour)
+						.map(category => t(category.name))
+						.join(', ')}
+				</span>
 				<div className='flex justify-between mt-5'>
 					<Input
 						defaultValue={existingTour?.duration}
@@ -115,6 +120,9 @@ export const DescribeStep = () => {
 					}}
 					label={t('chooseLanguages')}
 				/>
+				<span className='capitalize text-xs font-medium'>
+					{existingTour?.languages?.split('|').join(', ')}
+				</span>
 			</div>
 		</>
 	)

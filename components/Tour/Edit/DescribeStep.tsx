@@ -29,7 +29,6 @@ export const DescribeStep = () => {
 						editTour({
 							...tour,
 							name: event.currentTarget.value,
-
 							id: query.id as string,
 						})
 					}}
@@ -48,21 +47,28 @@ export const DescribeStep = () => {
 						})
 					}}
 				/>
-				<Categories
-					className='mt-2'
-					chosenItems={getAddedCategories(tour)}
-					list={staticCategories}
-					onChange={(items: ListItem[]) => {
-						editTour({
-							...tour,
-							...items.reduce((accumulator, value) => {
-								return { ...accumulator, [value.value]: true }
-							}, {}),
-							id: query.id as string,
-						})
-					}}
-					label={t('categories')}
-				/>
+				{tour && (
+					<Categories
+						className='mt-2'
+						chosenItems={getAddedCategories(tour)}
+						list={staticCategories}
+						onChange={(items: ListItem[]) => {
+							editTour({
+								...tour,
+								...items.reduce((accumulator, value) => {
+									return { ...accumulator, [value.value]: true }
+								}, {}),
+								id: query.id as string,
+							})
+						}}
+						label={t('categories')}
+					/>
+				)}
+				<span className='text-xs font-medium'>
+					{getAddedCategories(tour)
+						.map(category => t(category.name))
+						.join(', ')}
+				</span>
 				<div className='flex justify-between mt-5'>
 					<Input
 						defaultValue={tour?.duration}
@@ -91,19 +97,26 @@ export const DescribeStep = () => {
 						}}
 					/>
 				</div>
-				<MultiSelect
-					chosenItems={getAddedLanguages(tour?.languages)}
-					className='mt-2'
-					list={langList}
-					onChange={(items: ListItem[]) => {
-						editTour({
-							...tour,
-							languages: items.map(items => items.name).join('|'),
-							id: query.id as string,
-						})
-					}}
-					label={t('chooseLanguages')}
-				/>
+				{tour && (
+					<>
+						<MultiSelect
+							chosenItems={getAddedLanguages(tour?.languages)}
+							className='mt-2'
+							list={langList}
+							onChange={(items: ListItem[]) => {
+								editTour({
+									...tour,
+									languages: items.map(items => items.name).join('|'),
+									id: query.id as string,
+								})
+							}}
+							label={t('chooseLanguages')}
+						/>
+						<span className='capitalize text-xs font-medium'>
+							{tour?.languages?.split('|').join(', ')}
+						</span>
+					</>
+				)}
 			</div>
 		</>
 	)
