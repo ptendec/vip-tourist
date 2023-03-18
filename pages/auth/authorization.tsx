@@ -76,7 +76,7 @@ const Main = () => {
 		const provider = new GoogleAuthProvider()
 		await signInWithPopup(auth, provider)
 			.then(authUser => {
-				getProfile({ locale: locale as string })
+				getProfile({ locale: locale as string, id: auth.currentUser?.uid })
 					.then(async response => {
 						push('/profile')
 					})
