@@ -105,8 +105,13 @@ const Main = () => {
 				<Sidebar className='basis-64 shrink-0'></Sidebar>
 				<Container className='pt-10 xs:pt-0 pb-24 flex flex-col max-w-[1200px] '>
 					<Breadcrumbs className='xs:hidden' breadcrumbs={breadcrumbs} />
-					<span className='relative h-40 w-full inline-block my-8 xs:mt-0 xs:w-[calc(100%_+_32px)] xs:-ml-4'>
-						<Image fill src='/images/demo.png' alt={''}></Image>
+					<span className='relative h-40 w-full inline-block my-8 xs:mt-0 xs:w-[calc(100%_+_32px)] xs:-ml-4 rounded-lg'>
+						<Image
+							className='rounded-lg'
+							fill
+							src={`${process.env.NEXT_PUBLIC_API_URL}${city.image.url}`}
+							alt={''}
+						></Image>
 					</span>
 
 					<CityInfo

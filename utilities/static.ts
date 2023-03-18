@@ -264,7 +264,7 @@ export const noAuthTopNavbar: Navbar[] = [
 	{
 		id: 4,
 		href: '/auth/authorization',
-		label: 'login',
+		label: 'logIn',
 		icon: mdiAccountKey,
 	},
 ]
