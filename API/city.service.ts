@@ -20,12 +20,11 @@ export const getCity = async ({
 }
 
 export const searchCity = async ({
-	locale,
 	name,
 }: QueryParams & { name: string }): Promise<
 	components['schemas']['City'][]
 > => {
 	return await (
-		await $host.get(`/cities/?_locale=${locale}&name_contains=${name}`)
+		await $host.get(`/cities/?name_contains=${name}`)
 	).data
 }

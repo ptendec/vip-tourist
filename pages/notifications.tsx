@@ -1,6 +1,6 @@
 import { getNotifications } from '@/API/notification.service'
 import NoSSR from '@/components/Common/NoSSR'
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/Layout/Sidebar'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'

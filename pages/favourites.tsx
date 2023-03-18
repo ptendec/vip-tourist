@@ -1,6 +1,6 @@
 import { getFavourites } from '@/API/tour.service'
 import NoSSR from '@/components/Common/NoSSR'
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/Layout/Sidebar'
 import { NoFavourites } from '@/components/Static/Empty/Favourites'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
