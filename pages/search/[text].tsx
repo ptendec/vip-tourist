@@ -1,5 +1,6 @@
 import { searchCity } from '@/API/city.service'
 import { searchTour } from '@/API/tour.service'
+import { Footer } from '@/components/Layout/Footer'
 import { Sidebar } from '@/components/Layout/Sidebar'
 import { Container } from '@/components/UI/Container'
 import { Cards } from '@/modules/Cards'
