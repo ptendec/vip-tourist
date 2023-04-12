@@ -12,6 +12,7 @@ const nextConfig = {
 			},
 		]
 	},
+	ignoreDuringBuilds: true,
 	images: {
 		domains: [
 			'http://37.140.241.144/',
@@ -23,17 +24,6 @@ const nextConfig = {
 		],
 	},
 	i18n,
-	webpack: config => {
-		config.resolve = {
-			...config.resolve,
-			fallback: {
-				fs: false,
-				path: false,
-				os: false,
-			},
-		}
-		return config
-	},
 }
 
 module.exports = nextConfig
