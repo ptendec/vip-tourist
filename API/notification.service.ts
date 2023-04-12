@@ -6,7 +6,7 @@ export const getNotifications = async ({
 	locale,
 	uid,
 }: QueryParams & { uid: string }): Promise<
-	components['schemas']['Notification']
+	components['schemas']['Notification'][]
 > => {
 	return await (
 		await $notificationsHost.get(

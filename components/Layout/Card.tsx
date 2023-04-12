@@ -46,7 +46,7 @@ export const Card = ({ tour, className }: Props) => {
 					src={tour.mainPhotoUrl as string}
 					alt={tour.name}
 					// fill
-					className='w-full h-32 relative inline-block rounded-t-lg'
+					className='w-full h-32 relative inline-block rounded-t-lg object-cover'
 				/>
 				{/* </span> */}
 			</Link>

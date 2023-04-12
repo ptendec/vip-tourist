@@ -14,8 +14,7 @@ import {
 import Icon from '@mdi/react'
 import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
-import { Fragment, useState } from 'react'
-import { toast } from 'react-hot-toast'
+import { Fragment, useEffect, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { ListOption } from '../Tour/ListOption'
 
@@ -27,9 +26,17 @@ interface Props {
 // TODO: Привести в порядок даты
 
 export const Buy = ({ isVisible, onClose, tour }: Props) => {
+	const { t } = useTranslation()
+	const [error, setError] = useState(false)
 	const [adults, setAdults] = useState(1)
 	const [children, setChildren] = useState(0)
-	const { t } = useTranslation()
+	useEffect(() => {
+		console.log(tour.adult_price)
+		console.log(children * (tour?.child_price ?? 1))
+		console.log(
+			(tour.adult_price ?? 1) * adults + (tour.child_price ?? 1) * children,
+		)
+	}, [adults, children])
 
 	return (
 		<>
@@ -145,8 +152,8 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 					<span className='font-semibold'>К оплате:</span>
 					<span className='font-bold'>
 						${' '}
-						{(tour?.adult_price ?? 0 * adults) +
-							(tour?.child_price ?? 0 * children)}
+						{(tour.adult_price ?? 1) * adults +
+							(tour.child_price ?? 1) * children}
 					</span>
 				</p>
 				<span className='text-[10px] leading-normal text-lightDark inline-block'>
@@ -156,11 +163,22 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 					id='purchase'
 					className='outline-none mt-6'
 					onClick={() => {
-						toast.error('Покупка временно недоступна')
+						setError(true)
 					}}
 				>
 					Далее
 				</Button>
+				{error && (
+					<>
+						<span className='text-[10px] leading-tight inline-block text-red mt-2'>
+							{t('freshTag1')}
+						</span>
+						<span className='mb-2 text-[10px] leading-tight inline-block text-red'>
+							{t('freshTag2')}
+						</span>
+					</>
+				)}
+
 				<span className='text-lightDark text-[10px] leading-tight inline-block mt-2.5'>
 					{t('billingTag')}
 				</span>

@@ -1,8 +1,11 @@
+import { getCity } from '@/API/city.service'
 import { getTour } from '@/API/tour.service'
-import { Sidebar } from '@/components/Layout/Sidebar'
+import { components } from '@/API/types/api.types'
+import { Footer } from '@/components/Layout/Footer'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { AdditionalInfo } from '@/modules/Tour/AdditionalInfo'
 import { Info } from '@/modules/Tour/Info'
 import { MobilePhotos } from '@/modules/Tour/MobilePhotos'
@@ -16,7 +19,8 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next/types'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
+import { useRecentStore } from 'store/recent'
 
 export const getServerSideProps: GetServerSideProps = async context => {
 	const queryClient = new QueryClient()
@@ -24,6 +28,18 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		getTour({
 			locale: context.locale as string,
 			id: context.params?.id as string,
+		}),
+	)
+	queryClient.getQueryData(['tour', context.params?.id])
+	await queryClient.prefetchQuery(['city', context.params?.id], () =>
+		getCity({
+			locale: context.locale as string,
+			id: (
+				queryClient.getQueryData([
+					'tour',
+					context.params?.id,
+				]) as components['schemas']['Tour']
+			)?.city?.id,
 		}),
 	)
 	return {
@@ -37,6 +53,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 const Main = () => {
 	const { locale, query } = useRouter()
 	const { t } = useTranslation()
+	const { addRecent, recents } = useRecentStore()
 	const {
 		data: tour,
 		isLoading: isTourLoading,
@@ -45,6 +62,25 @@ const Main = () => {
 	} = useQuery(['tour', query?.id], () =>
 		getTour({ locale: locale as string, id: query.id as string }),
 	)
+
+	const {
+		data: city,
+		isLoading: isCityLoading,
+		isError: isCityError,
+	} = useQuery(
+		['city', tour?.city?.id],
+		() => getCity({ locale: locale as string, id: tour?.city?.id as string }),
+
+		{
+			enabled: isTourSuccess,
+		},
+	)
+
+	useEffect(() => {
+		if (!tour) return
+		if (recents.find(recent => recent === tour.id)) return
+		addRecent(tour.id)
+	}, [tour])
 
 	const breadcrumbs: Breadcrumb[] = [
 		{
@@ -64,8 +100,8 @@ const Main = () => {
 		},
 	]
 
-	if (isTourLoading) return <>Loading...</>
-	if (isTourError) return <>Error!</>
+	if (isTourLoading || isCityLoading) return <>Loading...</>
+	if (isTourError || isCityError) return <>Error!</>
 
 	return (
 		<>
@@ -73,12 +109,11 @@ const Main = () => {
 				<title>{`${tour.name} | VipTourist`}</title>
 				<meta name='description' content={tour.description} />
 			</Head>
-			<div className='flex justify-center w-full'>
-				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-5'>
+			<Wrapper>
+				<Container className='pt-10 pb-24 flex flex-col xs:pt-5 mx-auto'>
 					<Breadcrumbs breadcrumbs={breadcrumbs} />
 					<div className='flex gap-x-5 lg:flex-col-reverse'>
-						<Info tour={tour} className='basis-1/2 flex flex-col' />
+						<Info city={city} tour={tour} className='basis-1/2 flex flex-col' />
 						<MobilePhotos
 							images={tour.image_urls}
 							className='flex flex-col basis-1/2 gap-5'
@@ -90,8 +125,9 @@ const Main = () => {
 					</div>
 					<AdditionalInfo tour={tour} />
 					<Reviews reviews={tour.reviews} />
+					<Footer />
 				</Container>
-			</div>
+			</Wrapper>
 		</>
 	)
 }

@@ -41,7 +41,7 @@ const Main = () => {
 			</Head>
 			<div className='flex justify-center w-full'>
 				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0 min-h-screen'>
+				<Container className='pt-10 pb-24 flex flex-col xs:pt-0 min-h-screen'>
 					{isError ? (
 						<NoOrders />
 					) : (

@@ -1,12 +1,12 @@
 import { uploadImage } from '@/API/cloudinary.service'
 import { editProfile, getProfile } from '@/API/profile.service'
-import { Sidebar } from '@/components/Layout/Sidebar'
 import { Button } from '@/components/UI/Button'
 import Checkbox from '@/components/UI/Checkbox'
 import { Container } from '@/components/UI/Container'
 import { Input } from '@/components/UI/Input'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { ProfileFields } from '@/utilities/interfaces'
 import {
 	mdiAccount,
@@ -100,6 +100,14 @@ const Main = () => {
 	const [hasTelegram, setHasTelegram] = useState(data?.hasTelegram ?? false)
 
 	const onSubmit = (fields: ProfileFields) => {
+		if (data?.photo_url) {
+			toast.error('Загрузите фотографию пользователя')
+			return
+		}
+		if (!hasWhatsapp && !hasTelegram && !hasViber) {
+			toast.error('Выберите хотя бы один способ связи')
+			return
+		}
 		edit(
 			{
 				id: data?.id,
@@ -111,14 +119,16 @@ const Main = () => {
 					email: fields.email,
 					phone_number: fields.phone,
 					socialLink: fields.socialLink,
+					// @ts-expect-error Ошибка от сервера
+					profileUpdated: true,
 				},
 			},
 			{
 				onSuccess: () => {
-					toast.success('Успешно изменено')
+					toast.success(t('success'))
 				},
 				onError: () => {
-					toast.error('Что-то пошло не так, попробуйте позднее')
+					toast.error(t('errorOccuredTryAgain'))
 				},
 				onSettled: () => {
 					refetch()
@@ -130,7 +140,6 @@ const Main = () => {
 	const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
 		setIsUploading(true)
-		console.log(isUploading)
 		const image = event.currentTarget.files[0]
 		const formData = new FormData()
 		formData.append('file', image)
@@ -146,11 +155,11 @@ const Main = () => {
 					},
 					{
 						onSuccess: () => {
-							toast.success('Успешно загружено')
+							toast.success(t('success'))
 							refetch()
 						},
 						onError: () => {
-							toast.error('Что-то пошло не так, попробуйте позднее')
+							toast.error(t('errorOccuredTryAgain'))
 						},
 						onSettled: () => {
 							setIsUploading(false)
@@ -159,7 +168,7 @@ const Main = () => {
 				)
 			},
 			onError: error => {
-				toast.error('Не удалось загрузить, попробуйте позднее')
+				toast.error(t('errorOccuredTryAgain'))
 				console.log(error)
 			},
 		})
@@ -196,17 +205,17 @@ const Main = () => {
 					},
 					{
 						onSuccess: () => {
-							toast.success('Успешно загружено')
+							toast.success(t('docsSentSuccess'))
 							refetch()
 						},
 						onError: () => {
-							toast.error('Что-то пошло не так, попробуйте позднее')
+							toast.error(t('errorOccuredTryAgain'))
 						},
 					},
 				)
 			},
 			onError: error => {
-				toast.error('Произошла ошибка')
+				toast.error(t('errorOccuredTryAgain'))
 				console.log(error)
 			},
 		})
@@ -226,9 +235,8 @@ const Main = () => {
 				noArrow
 				delayShow={200}
 			/>
-			<div className='flex justify-center w-full'>
-				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='justify-self-center pt-10 flex flex-col'>
+			<Wrapper>
+				<Container className='pt-10 flex flex-col mx-auto'>
 					<div className='flex gap-x-3'>
 						{!data?.is_tourist &&
 							profileLinks.map(link => (
@@ -365,8 +373,7 @@ const Main = () => {
 												<span className='bg-lightDark text-white text-sm w-6 h-6 flex items-center justify-center rounded-full shrink-0'>
 													1
 												</span>
-												Указать ссылку на профиль в одной из социальных сетей (с
-												информацией о ваших турах):
+												{t('provideLink')}
 											</p>
 											<Input
 												error={errors.socialLink?.message}
@@ -385,7 +392,7 @@ const Main = () => {
 												<span className='bg-lightDark text-white text-sm w-6 h-6 flex items-center justify-center rounded-full shrink-0'>
 													2
 												</span>
-												Загрузить следующие документы:
+												{t('uploadDoc')}:
 											</p>
 											<div className='flex justify-between items-center'>
 												<p>
@@ -442,10 +449,13 @@ const Main = () => {
 																				},
 																				{
 																					onSuccess: () => {
+																						toast.success(t('success'))
 																						refetch()
 																					},
 																					onError: () => {
-																						toast.error('Произошла ошибка')
+																						toast.error(
+																							t('errorOccuredTryAgain'),
+																						)
 																					},
 																				},
 																			)
@@ -477,7 +487,7 @@ const Main = () => {
 						</form>
 					</div>
 				</Container>
-			</div>
+			</Wrapper>
 		</>
 	)
 }

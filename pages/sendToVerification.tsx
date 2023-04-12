@@ -1,6 +1,7 @@
 import { getTour } from '@/API/tour.service'
 import NoSSR from '@/components/Common/NoSSR'
 import { SendToVerification } from '@/components/Common/SentToVerification'
+import { Footer } from '@/components/Layout/Footer'
 import { Sidebar } from '@/components/Layout/Sidebar'
 import { Container } from '@/components/UI/Container'
 import { Layout } from '@/modules/Layout'
@@ -46,6 +47,7 @@ const Main = () => {
 						<div className='w-5/12 my-8 mx-auto rounded-lg p-6 border-lightGray border lg:w-8/12 md:w-full'>
 							<SendToVerification tour={tour} />
 						</div>
+						<Footer />
 					</Container>
 				</div>
 			</NoSSR>

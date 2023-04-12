@@ -1,7 +1,6 @@
 import { editTour as _editTour, getTour } from '@/API/tour.service'
 import { components } from '@/API/types/api.types'
 import NoSSR from '@/components/Common/NoSSR'
-import { Sidebar } from '@/components/Layout/Sidebar'
 import { AdditionalStep } from '@/components/Tour/Edit/AdditionalStep'
 import { CityStep } from '@/components/Tour/Edit/CityStep'
 import { DescribeStep } from '@/components/Tour/Edit/DescribeStep'
@@ -11,10 +10,11 @@ import { PricingStep } from '@/components/Tour/Edit/PricingStep'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { json } from '@/utilities/utilities'
 import {
-	dehydrate,
 	QueryClient,
+	dehydrate,
 	useMutation,
 	useQuery,
 } from '@tanstack/react-query'
@@ -251,9 +251,7 @@ const Main = () => {
 					}, 3000)
 				},
 				onError: () => {
-					toast.error(
-						'Произошла ошибка, попробуйте позднее. Тур сохранен в черновиках',
-					)
+					toast.error(t('errorOccuredTryAgain'))
 				},
 			},
 		)
@@ -275,9 +273,8 @@ const Main = () => {
 					anchorId='save'
 					place='bottom'
 				/>
-				<div className='flex min-h-screen'>
-					<Sidebar className='basis-64 grow-1 shrink-0'></Sidebar>
-					<Container className='justify-self-center pt-10 flex flex-col '>
+				<Wrapper>
+					<Container className='justify-self-center pt-10 flex flex-col mx-auto'>
 						<div className={clsx('flex justify-between')}>
 							<h1 className='font-semibold text-lg'>Добавить тур</h1>
 							<div className='flex gap-x-4'>
@@ -329,7 +326,7 @@ const Main = () => {
 							</Button>
 						</div>
 					</Container>
-				</div>
+				</Wrapper>
 			</NoSSR>
 		</>
 	)

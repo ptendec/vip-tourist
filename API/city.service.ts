@@ -4,9 +4,12 @@ import { components } from './types/api.types'
 
 export const getCities = async ({
 	locale,
-}: QueryParams): Promise<components['schemas']['City'][]> => {
+	query,
+}: QueryParams & { query?: string }): Promise<
+	components['schemas']['City'][]
+> => {
 	return await (
-		await $host.get(`/cities?_locale=${locale}`)
+		await $host.get(`/cities?_locale=${locale}&${query ? query : ''}`)
 	).data
 }
 

@@ -1,23 +1,21 @@
 import { getCity } from '@/API/city.service'
-import { getToursByCity } from '@/API/tour.service'
-import { FilterSidebar } from '@/components/Common/FilterSidebar'
+import { getToursByCity, getToursByCityFromCatalogue } from '@/API/tour.service'
 import { CityInfo } from '@/components/Layout/CityInfo'
-import { Sidebar } from '@/components/Layout/Sidebar'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { Cards } from '@/modules/Cards'
 import { Layout } from '@/modules/Layout'
-import { Breadcrumb, Category } from '@/utilities/interfaces'
-import { getCategoriesList, json } from '@/utilities/utilities'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { Wrapper } from '@/modules/Layout/Wrapper'
+import { Breadcrumb } from '@/utilities/interfaces'
+import { json } from '@/utilities/utilities'
+import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async context => {
 	const queryClient = new QueryClient()
@@ -47,29 +45,31 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
 const Main = () => {
 	const { t } = useTranslation()
-	const { locale, query } = useRouter()
+	const { locale, query, push, asPath } = useRouter()
 	const {
 		data: city,
 		isLoading: isCityLoading,
 		isError: isCityError,
-	} = useQuery(['city', query.id], () =>
-		getCity({ locale: locale as string, id: query.id as string }),
+	} = useQuery(['city', query['city.id']], () =>
+		getCity({ locale: locale as string, id: query['city.id'] as string }),
 	)
-	const [categories, setCategories] = useState<Category[]>([])
-	const [isFilter, setIsFilter] = useState(false)
+	console.log(asPath.replace('/city/[id]', ''))
 
 	const { data, isLoading, isError, refetch } = useQuery(
-		['toursOfCity', query.id],
+		['toursOfCity', query['city.id']],
 		() =>
-			getToursByCity({
+			getToursByCityFromCatalogue({
 				locale: locale as string,
-				id: query.id as string,
-				categories,
+				id: query['city.id'] as string,
+				categories: new URLSearchParams(
+					query as Record<string, string>,
+				).toString(),
 			}),
 	)
+
 	useEffect(() => {
 		refetch()
-	}, [categories])
+	}, [query])
 
 	if (isLoading || isCityLoading) return <>Loading...</>
 	if (isError || isCityError) return <>Error!</>
@@ -94,41 +94,24 @@ const Main = () => {
 				<title>{`${city.name} | VipTourist`}</title>
 				<meta name='description' content={city.name} />
 			</Head>
-			<FilterSidebar
-				onClose={() => setIsFilter(false)}
-				isVisible={isFilter}
-				setFilters={categories => {
-					setCategories(categories)
-				}}
-			/>
-			<div className='flex justify-center w-full'>
-				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='pt-10 xs:pt-0 pb-24 flex flex-col max-w-[1200px] '>
+			<Wrapper>
+				<Container className='pt-10 xs:pt-0 pb-24 mx-auto'>
 					<Breadcrumbs className='xs:hidden' breadcrumbs={breadcrumbs} />
 					<span className='relative h-40 w-full inline-block my-8 xs:mt-0 xs:w-[calc(100%_+_32px)] xs:-ml-4 rounded-lg'>
 						<Image
-							className='rounded-lg'
+							style={{
+								objectFit: 'cover',
+							}}
+							className='rounded-lg xs:rounded-none'
 							fill
 							src={`${process.env.NEXT_PUBLIC_API_URL}${city.image.url}`}
-							alt={''}
+							alt={'Image of city'}
 						></Image>
 					</span>
-
-					<CityInfo
-						showFilter={() => setIsFilter(prevState => !prevState)}
-						city={city}
-					/>
-					<Link
-						href={`/catalogue/?${getCategoriesList(categories)}&city.id=${
-							city.id
-						}`}
-						className='text-green font-semibold text-sm ml-auto inline-block relative top-14'
-					>
-						{t('showAll')}
-					</Link>
+					<CityInfo city={city} />
 					<Cards title={t('tours')} tours={data} />
 				</Container>
-			</div>
+			</Wrapper>
 		</>
 	)
 }

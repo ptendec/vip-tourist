@@ -6,9 +6,12 @@ import { components } from './types/api.types'
 
 export const getTours = async ({
 	locale,
-}: QueryParams): Promise<components['schemas']['Tour'][]> => {
+	query,
+}: QueryParams & { query?: string }): Promise<
+	components['schemas']['Tour'][]
+> => {
 	return await (
-		await $host.get(`/tours?_locale=${locale}`)
+		await $host.get(`/tours?_locale=${locale}&${query ? query : ''}`)
 	).data
 }
 

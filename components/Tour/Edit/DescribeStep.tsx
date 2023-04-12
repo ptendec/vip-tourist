@@ -113,7 +113,10 @@ export const DescribeStep = () => {
 							label={t('chooseLanguages')}
 						/>
 						<span className='capitalize text-xs font-medium'>
-							{tour?.languages?.split('|').join(', ')}
+							{tour?.languages
+								?.split('|')
+								.map(text => t(text))
+								.join(', ')}
 						</span>
 					</>
 				)}

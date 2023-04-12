@@ -12,8 +12,5 @@ module.exports = {
 			'ar-AE',
 		],
 		defaultLocale: 'en',
-		fallbackLng: {
-			default: ['en'],
-		},
 	},
 }

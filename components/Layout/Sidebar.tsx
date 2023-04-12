@@ -26,6 +26,7 @@ export const Sidebar = ({
 	const { locale, pathname, push, asPath } = useRouter()
 	const { user } = useFirebaseAuth()
 	const { mutate } = useMutation(editProfile)
+	console.log(!!user?.uid)
 	const { data, isLoading, isError } = useQuery(
 		['profile', user?.uid],
 		() =>
@@ -34,6 +35,7 @@ export const Sidebar = ({
 				id: user?.uid as string,
 			}),
 		{
+			enabled: !!user?.uid,
 			retry: 0,
 			refetchOnWindowFocus: false,
 		},

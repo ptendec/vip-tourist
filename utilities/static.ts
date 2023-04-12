@@ -4,8 +4,10 @@ import {
 	mdiAccountPlus,
 	mdiBell,
 	mdiBook,
+	mdiCityVariant,
 	mdiHeart,
 	mdiHome,
+	mdiTicketAccount,
 } from '@mdi/js'
 import { Category, Languages, ListItem, Navbar } from 'utilities/interfaces'
 import { Breadcrumb } from './interfaces'
@@ -191,24 +193,30 @@ export const touristTopNavbar: Navbar[] = [
 	},
 	{
 		id: 2,
+		href: '/cities',
+		label: 'cities',
+		icon: mdiCityVariant,
+	},
+	{
+		id: 3,
 		href: '/favourites',
 		label: 'wishlist',
 		icon: mdiHeart,
 	},
 	{
-		id: 3,
+		id: 4,
 		href: '/orders',
 		label: 'booking',
 		icon: mdiBook,
 	},
 	{
-		id: 4,
+		id: 5,
 		href: '/notifications',
 		label: 'notifications',
 		icon: mdiBell,
 	},
 	{
-		id: 5,
+		id: 6,
 		href: '/profile',
 		label: 'profile',
 		icon: mdiAccount,
@@ -224,21 +232,39 @@ export const guideTopNavbar: Navbar[] = [
 	},
 	{
 		id: 2,
+		href: '/cities',
+		label: 'cities',
+		icon: mdiCityVariant,
+	},
+	{
+		id: 3,
 		href: '/profile',
 		label: 'profile',
 		icon: mdiAccount,
 	},
 	{
-		id: 3,
+		id: 4,
 		href: '/notifications',
 		label: 'notifications',
 		icon: mdiBell,
 	},
 	{
-		id: 4,
+		id: 5,
 		href: '/favourites',
 		label: 'wishlist',
 		icon: mdiHeart,
+	},
+	{
+		id: 6,
+		href: '/guide/account',
+		label: 'myTours',
+		icon: mdiAccount,
+	},
+	{
+		id: 7,
+		href: '/guide/account',
+		label: 'booking',
+		icon: mdiTicketAccount,
 	},
 ]
 
@@ -251,18 +277,24 @@ export const noAuthTopNavbar: Navbar[] = [
 	},
 	{
 		id: 2,
+		href: '/cities',
+		label: 'cities',
+		icon: mdiCityVariant,
+	},
+	{
+		id: 3,
 		href: '/favourites',
 		label: 'wishlist',
 		icon: mdiHeart,
 	},
 	{
-		id: 3,
+		id: 4,
 		href: '/auth/registration',
 		label: 'signUp',
 		icon: mdiAccountPlus,
 	},
 	{
-		id: 4,
+		id: 5,
 		href: '/auth/authorization',
 		label: 'logIn',
 		icon: mdiAccountKey,

@@ -22,8 +22,10 @@ import { usePreferencesStore } from 'store/preferences'
 
 interface Props extends ComponentPropsWithoutRef<'div'> {
 	tour: components['schemas']['Tour']
+	city: components['schemas']['City']
 }
-export const Info = ({ className, tour }: Props) => {
+
+export const Info = ({ className, tour, city }: Props) => {
 	const { t } = useTranslation()
 	const { currency } = usePreferencesStore()
 
@@ -44,7 +46,7 @@ export const Info = ({ className, tour }: Props) => {
 				<p className='flex mb-3'>
 					<Icon size={1} color='#86A545' path={mdiMapMarker} />
 					<span className='text-gray text-md'>
-						{tour.city?.country}, {tour.city?.name}
+						{city.country?.name}, {tour.city?.name}
 					</span>
 				</p>
 				<p className='mb-6'>{tour.description}</p>
@@ -56,7 +58,10 @@ export const Info = ({ className, tour }: Props) => {
 				<ListOption
 					icon={mdiHiking}
 					title={t('liveTour')}
-					description={tour.languages?.split('|').join(', ')}
+					description={tour.languages
+						?.split('|')
+						.map(text => t(text))
+						.join(', ')}
 				/>
 				{!tour.one_day_trip && (
 					<>

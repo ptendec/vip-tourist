@@ -1,12 +1,12 @@
 import { editOrder, getSoldOrders } from '@/API/order.service'
 import { deleteTour, getMyTours } from '@/API/tour.service'
-import { Sidebar } from '@/components/Layout/Sidebar'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { Popover } from '@/components/UI/Popover'
 import { Tag } from '@/components/UI/Tag'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { generateUUID } from '@/utilities/utilities'
 import {
 	mdiAccount,
@@ -75,6 +75,7 @@ const Main = () => {
 	const [order, setOrder] = useState<
 		'approved' | 'consideration' | 'cancelled'
 	>('approved')
+	const [error, setError] = useState(false)
 
 	const { data, refetch: refetchTours } = useQuery(
 		['my-tours', user?.uid],
@@ -98,7 +99,7 @@ const Main = () => {
 					refetchTours()
 				},
 				onError: () => {
-					toast.error('Произошла ошибка')
+					toast.error(t('errorOccuredTryAgain'))
 				},
 			},
 		)
@@ -124,8 +125,7 @@ const Main = () => {
 				noArrow
 				delayShow={200}
 			/>
-			<div className='flex'>
-				<Sidebar className='basis-64 shrink-0'></Sidebar>
+			<Wrapper>
 				<Container className='justify-self-center py-10 '>
 					<div className='flex gap-x-3'>
 						{profileLinks.map(link => (
@@ -158,7 +158,10 @@ const Main = () => {
 								size={1}
 							/>
 						</button>
-						<button className='rounded-lg border-gray border flex px-5 py-3 w-full font-semibold text-sm items-center mt-4'>
+						<button
+							className='rounded-lg border-gray border flex px-5 py-3 w-full font-semibold text-sm items-center mt-4'
+							onClick={() => setError(true)}
+						>
 							<Icon
 								color='#BFBFBF'
 								className='mr-2'
@@ -173,6 +176,16 @@ const Main = () => {
 								size={1}
 							/>
 						</button>
+						{error && (
+							<>
+								<span className='text-[10px] leading-tight inline-block text-red mt-2'>
+									{t('freshTag1')}
+								</span>
+								<span className='mb-2 text-[10px] leading-tight inline-block text-red'>
+									{t('freshTag2')}
+								</span>
+							</>
+						)}
 					</div>
 					<div className='mt-8'>
 						<p className='font-semibold text-lg flex gap-x-3 items-center'>
@@ -185,16 +198,40 @@ const Main = () => {
 						</p>
 					</div>
 					<div className='flex gap-x-3 mt-4 md:overflow-x-auto scrollbar-hide '>
-						<Tag isActive={tour === 'active'} onClick={() => setTour('active')}>
+						<Tag
+							className='relative'
+							isActive={tour === 'active'}
+							onClick={() => setTour('active')}
+						>
+							{tour === 'active' && (
+								<span className='absolute -top-2 right-0 bg-yellow rounded-full px-2'>
+									{data?.length ?? '-'}
+								</span>
+							)}
 							Активные
 						</Tag>
 						<Tag
+							className='relative'
 							isActive={tour === 'consideration'}
 							onClick={() => setTour('consideration')}
 						>
+							{tour === 'consideration' && (
+								<span className='absolute -top-2 right-0 bg-yellow rounded-full px-2'>
+									{data?.length ?? '-'}
+								</span>
+							)}
 							На рассмотрении
 						</Tag>
-						<Tag isActive={tour === 'draft'} onClick={() => setTour('draft')}>
+						<Tag
+							className='relative'
+							isActive={tour === 'draft'}
+							onClick={() => setTour('draft')}
+						>
+							{tour === 'draft' && (
+								<span className='absolute -top-2 right-0 bg-yellow rounded-full px-2'>
+									{tours.length ?? '-'}
+								</span>
+							)}
 							Черновики
 						</Tag>
 					</div>
@@ -357,13 +394,11 @@ const Main = () => {
 															},
 															{
 																onSuccess: () => {
-																	toast.success('Изменения успешно внесены')
+																	toast.success(t('success'))
 																	queryClient.refetchQueries(['sold', 'orders'])
 																},
 																onError: () => {
-																	toast.error(
-																		'Произошла ошибка, попробуйте позднее',
-																	)
+																	toast.error(t('errorOccuredTryAgain'))
 																},
 															},
 														)
@@ -389,13 +424,12 @@ const Main = () => {
 															},
 															{
 																onSuccess: () => {
+																	toast.success(t('success'))
 																	toast.success('Изменения успешно внесены')
 																	queryClient.refetchQueries(['sold', 'orders'])
 																},
 																onError: () => {
-																	toast.error(
-																		'Произошла ошибка, попробуйте позднее',
-																	)
+																	toast.error(t('errorOccuredTryAgain'))
 																},
 															},
 														)
@@ -445,7 +479,7 @@ const Main = () => {
 						))}
 					</div>
 				</Container>
-			</div>
+			</Wrapper>
 		</>
 	)
 }

@@ -46,6 +46,7 @@ const Main = () => {
 				id: user?.uid as string,
 			}),
 		{
+			enabled: !!user?.uid,
 			retry: 0,
 			refetchOnWindowFocus: false,
 		},

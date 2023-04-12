@@ -1,5 +1,6 @@
 import { getFavourites } from '@/API/tour.service'
 import NoSSR from '@/components/Common/NoSSR'
+import { Footer } from '@/components/Layout/Footer'
 import { Sidebar } from '@/components/Layout/Sidebar'
 import { NoFavourites } from '@/components/Static/Empty/Favourites'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
@@ -48,11 +49,11 @@ const Main = () => {
 		<>
 			<Head>
 				<meta name='robots' content='noindex' />
-				<title>{t('wishlist')} | VipTourist</title>
+				<title>{`${t('wishlist')} | VipTourist`}</title>
 			</Head>
 			<div className='flex justify-center w-full'>
 				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='flex flex-row pt-10 pb-24'>
+				<Container className='flex flex-col pt-10 pb-24'>
 					<div className='w-full h-full min-h-screen flex flex-col'>
 						<Breadcrumbs
 							className='self-start mb-8'
@@ -66,6 +67,7 @@ const Main = () => {
 							)}
 						</NoSSR>
 					</div>
+					<Footer />
 				</Container>
 			</div>
 		</>

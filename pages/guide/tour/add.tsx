@@ -1,7 +1,7 @@
 import { getProfile } from '@/API/profile.service'
 import { createTour } from '@/API/tour.service'
 import NoSSR from '@/components/Common/NoSSR'
-import { Sidebar } from '@/components/Layout/Sidebar'
+import { Footer } from '@/components/Layout/Footer'
 import { AdditionalStep } from '@/components/Tour/Add/AdditionalStep'
 import { CityStep } from '@/components/Tour/Add/CityStep'
 import { DescribeStep } from '@/components/Tour/Add/DescribeStep'
@@ -12,6 +12,7 @@ import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { isTourExists } from '@/utilities/utilities'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
@@ -95,9 +96,7 @@ const Main = () => {
 					}, 3000)
 				},
 				onError: () => {
-					toast.error(
-						'Произошла ошибка, попробуйте позднее. Тур сохранен в черновиках',
-					)
+					toast.error(t('errorOccuredTryAgain'))
 				},
 			},
 		)
@@ -119,9 +118,8 @@ const Main = () => {
 					anchorId='save'
 					place='bottom'
 				/>
-				<div className='flex min-h-screen'>
-					<Sidebar className='basis-64 grow-1 shrink-0'></Sidebar>
-					<Container className='justify-self-center pt-10 flex flex-col '>
+				<Wrapper>
+					<Container className='justify-self-center pt-10 flex flex-col mx-auto'>
 						<div className={clsx('flex justify-between')}>
 							<h1 className='font-semibold text-lg'>Добавить тур</h1>
 							<div className='flex gap-x-4'>
@@ -169,7 +167,6 @@ const Main = () => {
 							<span className='block mx-auto font-bold text-sm uppercase'>
 								{t('step')} {step + 1} {t('izz')} {steps.length}
 							</span>
-
 							<Button
 								onClick={() => {
 									if (step === steps.length - 1) {
@@ -184,8 +181,9 @@ const Main = () => {
 								{step === steps.length - 1 ? t('sendToVerify') : t('next')}
 							</Button>
 						</div>
+						<Footer />
 					</Container>
-				</div>
+				</Wrapper>
 			</NoSSR>
 		</>
 	)

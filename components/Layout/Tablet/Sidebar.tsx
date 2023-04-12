@@ -36,6 +36,7 @@ export const Sidebar = ({ isVisible, onClose }: Props) => {
 				id: user?.uid as string,
 			}),
 		{
+			enabled: !!user?.uid,
 			retry: 0,
 			refetchOnWindowFocus: false,
 		},
@@ -44,7 +45,7 @@ export const Sidebar = ({ isVisible, onClose }: Props) => {
 	return (
 		<div
 			className={clsx(
-				'fixed overflow-y-scroll scrollbar transition-all shadow-xl xs:w-[320px] xs:pb-[70px] duration-500 ease-out h-screen left-0 top-0 bg-white p-8 z-20 w-[300px]',
+				'fixed overflow-y-scroll scrollbar transition-all shadow-xl xs:w-[320px] xs:pb-[70px] duration-500 ease-out h-screen left-0 top-0 bg-white p-8 pr-0 z-20 w-[300px]',
 				isVisible ? '' : '-left-[400px] overflow-y-scroll',
 			)}
 		>

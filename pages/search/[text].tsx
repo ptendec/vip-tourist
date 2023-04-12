@@ -72,6 +72,7 @@ const Main = () => {
 					<Search />
 					<Cards title={t('tours')} tours={tours} />
 					<Towns cities={cities}></Towns>
+					<Footer />
 				</Container>
 			</div>
 		</>
