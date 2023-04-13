@@ -4,7 +4,6 @@ import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Container } from '../UI/Container'
@@ -16,7 +15,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
 	)
 	return {
 		props: {
-			...(await serverSideTranslations(context.locale as string, ['common'])),
 			dehydratedState: json(dehydrate(queryClient)),
 		},
 	}
@@ -46,7 +44,7 @@ export const Footer = ({ className }: Props) => {
 				className,
 			)}
 		>
-			<Container className=''>
+			<Container>
 				<p className='font-medium capitalize mb-3'>{t('cities')}</p>
 				<div className='flex flex-row flex-wrap gap-x-4 gap-y-2'>
 					{cities?.map(city => (
