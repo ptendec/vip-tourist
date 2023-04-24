@@ -120,7 +120,7 @@ const Main = () => {
 			</Head>
 			<Tooltip
 				anchorId='addTour'
-				content='Добавить тур'
+				content={`${t('addTour')}`}
 				place='bottom'
 				noArrow
 				delayShow={200}
@@ -190,7 +190,10 @@ const Main = () => {
 					<div className='mt-8'>
 						<p className='font-semibold text-lg flex gap-x-3 items-center'>
 							{t('myTours')}
-							<Link id='addTour' href={`/guide/tour/add/?id=${generateUUID()}`}>
+							<Link
+								id='addTour'
+								href={`/guide/tour/add/describe/?id=${generateUUID()}&step=1`}
+							>
 								<Button className='rounded-full w-6 h-6'>
 									<Icon path={mdiPlus} size={0.8} />
 								</Button>
@@ -246,7 +249,9 @@ const Main = () => {
 										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out  flex flex-row gap-x-4 mr-4'>
 											<Button
 												className='bg-transparent'
-												onClick={() => push(`/guide/tour/add/?id=${tour.id}`)}
+												onClick={() =>
+													push(`/guide/tour/add/describe/?id=${tour.id}`)
+												}
 											>
 												<Icon path={mdiPencil} size={0.7} color='#3B3F32' />
 											</Button>
@@ -307,7 +312,9 @@ const Main = () => {
 										<div className='absolute right-2 -bottom-12 group-hover:bottom-2 w-10 transition-all duration-300 ease-out flex flex-row gap-x-4 mr-4'>
 											<Button
 												className='bg-transparent'
-												onClick={() => push(`/guide/tour/edit/?id=${tour.id}`)}
+												onClick={() =>
+													push(`/guide/tour/edit/describe/?id=${tour.id}`)
+												}
 											>
 												<Icon path={mdiPencil} size={0.7} color='#3B3F32' />
 											</Button>
@@ -382,7 +389,7 @@ const Main = () => {
 										body={
 											<div>
 												<Button
-													className='bg-transparent text-dark hover:bg-[#F6F6F5] px-2 py-2'
+													className='bg-transparent !text-dark hover:bg-[#F6F6F5] px-2 py-2'
 													onClick={() => {
 														mutate(
 															{
@@ -412,7 +419,7 @@ const Main = () => {
 													Подтвердить
 												</Button>
 												<Button
-													className='bg-transparent text-dark hover:bg-[#F6F6F5] px-2 py-2'
+													className='bg-transparent !text-dark hover:bg-[#F6F6F5] px-2 py-2'
 													onClick={() => {
 														mutate(
 															{
@@ -436,7 +443,7 @@ const Main = () => {
 													}}
 												>
 													<Icon
-														className='mr-3 text-[#D84343]'
+														className='mr-3 !text-[#D84343]'
 														path={mdiWindowClose}
 														size={1}
 													/>

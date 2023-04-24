@@ -1,10 +1,9 @@
 import { getTour } from '@/API/tour.service'
 import NoSSR from '@/components/Common/NoSSR'
 import { SendToVerification } from '@/components/Common/SentToVerification'
-import { Footer } from '@/components/Layout/Footer'
-import { Sidebar } from '@/components/Layout/Sidebar'
 import { Container } from '@/components/UI/Container'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { useQuery } from '@tanstack/react-query'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
@@ -41,15 +40,13 @@ const Main = () => {
 				<title>{`${t('tour')} | VipTourist`}</title>
 			</Head>
 			<NoSSR>
-				<div className='flex min-h-screen'>
-					<Sidebar className='basis-64 grow-1 shrink-0'></Sidebar>
-					<Container className='justify-self-center pt-10 flex flex-col '>
+				<Wrapper>
+					<Container className='pt-10 flex flex-col mx-auto'>
 						<div className='w-5/12 my-8 mx-auto rounded-lg p-6 border-lightGray border lg:w-8/12 md:w-full'>
 							<SendToVerification tour={tour} />
 						</div>
-						<Footer />
 					</Container>
-				</div>
+				</Wrapper>
 			</NoSSR>
 		</>
 	)

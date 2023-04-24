@@ -19,14 +19,11 @@ export const Alert = ({ isVisible, onClose }: Props) => {
 				color='#D84343'
 				size={1.8}
 			/>
-			<p className='font-semibold text-xl text-center mb-4'>Внимание</p>
+			<p className='font-semibold text-xl text-center mb-4'>{t('alert')}</p>
 			<span className='mb-3 text-sm inline-block'>{t('freshTag1')}</span>
-			<span className='mb-5 text-sm inline-block'>
-				После наполнения будет запущена возможность оплаты и покупки туров. По
-				запуску возможности оплаты мы обязательно Вас уведомим!
-			</span>
+			<span className='mb-5 text-sm inline-block'>{t('freshTag2')}</span>
 			<Button className='outline-none' onClick={onClose}>
-				Понятно
+				{t('ok')}
 			</Button>
 		</Modal>
 	)

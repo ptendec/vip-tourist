@@ -1,29 +1,18 @@
 import { getFavourites } from '@/API/tour.service'
 import NoSSR from '@/components/Common/NoSSR'
-import { Footer } from '@/components/Layout/Footer'
-import { Sidebar } from '@/components/Layout/Sidebar'
 import { NoFavourites } from '@/components/Static/Empty/Favourites'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { Cards } from '@/modules/Cards'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { useQuery } from '@tanstack/react-query'
-import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 import { ReactElement, useEffect } from 'react'
 import { useFavouritesStore } from 'store/favourites'
 import { favouritesBreadcrumbs } from 'utilities/static'
-
-export const getServerSideProps: GetServerSideProps = async context => {
-	return {
-		props: {
-			...(await serverSideTranslations(context.locale as string, ['common'])),
-		},
-	}
-}
 
 const Main = () => {
 	const { locale, query } = useRouter()
@@ -51,9 +40,8 @@ const Main = () => {
 				<meta name='robots' content='noindex' />
 				<title>{`${t('wishlist')} | VipTourist`}</title>
 			</Head>
-			<div className='flex justify-center w-full'>
-				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='flex flex-col pt-10 pb-24'>
+			<Wrapper>
+				<Container className='flex flex-col pt-10 pb-24 mx-auto'>
 					<div className='w-full h-full min-h-screen flex flex-col'>
 						<Breadcrumbs
 							className='self-start mb-8'
@@ -67,9 +55,8 @@ const Main = () => {
 							)}
 						</NoSSR>
 					</div>
-					<Footer />
 				</Container>
-			</div>
+			</Wrapper>
 		</>
 	)
 }

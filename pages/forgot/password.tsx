@@ -61,7 +61,7 @@ const Main = () => {
 				<title>{`${t('resetPassword')} | VipTourist`} </title>
 			</Head>
 			<Wrapper>
-				<Container className='mx-auto self-center'>
+				<Container className='mx-auto min-h-screen flex items-center'>
 					<div className='w-4/12 lg:w-full mx-auto'>
 						<div className='flex'>
 							<Link
@@ -77,7 +77,7 @@ const Main = () => {
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<Input
 								{...register('email', {
-									required: 'Заполните поле',
+									required: t('fieldShouldntBe') ?? '',
 									pattern: {
 										value:
 											/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -96,7 +96,7 @@ const Main = () => {
 								disabled={isLoading}
 								className='mt-7'
 							>
-								{t('signUp')}
+								{t('resetPassword')}
 							</Button>
 							<div className='flex gap-x-3 mt-5 '>
 								<div>

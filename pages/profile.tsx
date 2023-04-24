@@ -295,7 +295,7 @@ const Main = () => {
 								<Input
 									error={errors.fullName?.message}
 									{...register('fullName', {
-										required: 'Заполните поле',
+										required: `${t('fieldShouldntBe')}`,
 									})}
 									className='mb-5'
 									label={'Имя фамилия'}
@@ -308,7 +308,7 @@ const Main = () => {
 								<Input
 									error={errors.email?.message}
 									{...register('email', {
-										required: 'Заполните поле',
+										required: `${t('fieldShouldntBe')}`,
 										pattern: {
 											value:
 												/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -326,7 +326,7 @@ const Main = () => {
 									className=''
 									error={errors.phone?.message}
 									{...register('phone', {
-										required: 'Заполните поле',
+										required: `${t('fieldShouldntBe')}`,
 										pattern: {
 											value:
 												/^\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$/,
@@ -432,7 +432,7 @@ const Main = () => {
 																<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
 																	<Button
 																		type='button'
-																		className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+																		className=' bg-red rounded-lg px-2 !py-2 cursor-pointer !w-fit'
 																		onClick={() => {
 																			edit(
 																				{

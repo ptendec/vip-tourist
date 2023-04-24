@@ -13,6 +13,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef } from 'react'
+import toast from 'react-hot-toast'
 import { usePreferencesStore } from 'store/preferences'
 import NoSSR from '../Common/NoSSR'
 import { ListBox } from '../UI/ListBox'
@@ -26,7 +27,6 @@ export const Sidebar = ({
 	const { locale, pathname, push, asPath } = useRouter()
 	const { user } = useFirebaseAuth()
 	const { mutate } = useMutation(editProfile)
-	console.log(!!user?.uid)
 	const { data, isLoading, isError } = useQuery(
 		['profile', user?.uid],
 		() =>
@@ -116,7 +116,7 @@ export const Sidebar = ({
 							list={currencyList.map(item => ({
 								id: item.id,
 								value: item.value,
-								name: `${item.value} - ${item.name}`,
+								name: t(item.name) ?? '-',
 							}))}
 							onChange={item => {
 								editPreferences({
@@ -147,8 +147,10 @@ export const Sidebar = ({
 							<button
 								className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-300 ease-out w-full mt-12'
 								onClick={() => {
-									signOut(auth)
-									push('/')
+									signOut(auth).then(() => {
+										toast.success(t('success'))
+										push('/')
+									})
 								}}
 							>
 								<Icon className={clsx('text-gray')} path={mdiLogout} size={1} />

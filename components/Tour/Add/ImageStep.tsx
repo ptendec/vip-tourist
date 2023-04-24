@@ -47,7 +47,7 @@ export const ImageStep = () => {
 				})
 			})
 			.catch(error => {
-				toast.error('Не удалось загрузить, попробуйте позднее')
+				toast.error(t('errorOccuredTryAgain'))
 				console.log(error)
 			})
 			.finally(() => {
@@ -70,7 +70,7 @@ export const ImageStep = () => {
 				})
 			})
 			.catch(error => {
-				toast.error('Не удалось загрузить, попробуйте позднее')
+				toast.error(t('errorOccuredTryAgain'))
 				console.log(error)
 			})
 			.finally(() => {
@@ -78,29 +78,37 @@ export const ImageStep = () => {
 			})
 	}
 
-	const uploadImages = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const uploadImages = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!event.currentTarget.files) return
-		setUploadingGallery(true)
-		const image = event.currentTarget.files[0]
-		const formData = new FormData()
-		formData.append('file', image)
-		formData.append('upload_preset', 'sgdiyf4c')
-		upload(formData)
-			.then(response => {
-				editTour(query.id as string, {
-					id: query.id as string,
-					image_urls: !existingTour?.image_urls
-						? `${response.secure_url}`
-						: existingTour?.image_urls + `|${response.secure_url}`,
+		if (event.currentTarget.files.length > 10) return toast.error(t('Limit'))
+		const images = event.currentTarget.files
+		const uploaded: string[] = []
+		const promises = []
+		for (let i = 0; i < event.currentTarget.files.length; i++) {
+			setUploadingGallery(true)
+			const formData = new FormData()
+			formData.append('file', images[i])
+			formData.append('upload_preset', 'sgdiyf4c')
+			const promise = upload(formData)
+				.then(response => {
+					uploaded.push(response.secure_url)
 				})
+				.catch(error => {
+					toast.error(t('errorOccuredTryAgain'))
+					console.log(error)
+				})
+				.finally(() => {
+					// setUploadingGallery(false)
+				})
+			promises.push(promise)
+		}
+		Promise.all(promises).then(() => {
+			setUploadingGallery(false)
+			editTour(query.id as string, {
+				id: query.id as string,
+				image_urls: uploaded.join('|'),
 			})
-			.catch(error => {
-				toast.error('Не удалось загрузить, попробуйте позднее')
-				console.log(error)
-			})
-			.finally(() => {
-				setUploadingGallery(false)
-			})
+		})
 	}
 
 	return (
@@ -115,17 +123,17 @@ export const ImageStep = () => {
 							<UploadImage />
 						</div>
 					) : (
-						<div className='flex flex-col overflow-x-auto'>
+						<div className='w-full'>
 							<div className='flex flex-col gap-x-3 mb-4  overflow-x-auto'>
 								{existingTour.mainPhotoUrl && (
 									<>
 										<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 											{t('previewImage')}:
 										</span>
-										<span className='inline-block w-[160px] h-[90px] relative group'>
+										<span className='inline-block w-[calc(50%_-_24px)] h-[120px] relative group'>
 											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
 												<Button
-													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer !w-fit'
 													onClick={() => {
 														editTour(query.id as string, {
 															id: query.id as string,
@@ -150,16 +158,16 @@ export const ImageStep = () => {
 									</>
 								)}
 							</div>
-							<div className='flex flex-col gap-x-3 mb-4 overflow-x-auto'>
+							<div className='flex flex-col gap-x-3 mb-4'>
 								{existingTour.transferPhotoUrl && (
 									<>
 										<span className='inline-block mb-2 text-sm font-semibold basis-full'>
 											{t('Фотографие автомобиля')}:
 										</span>
-										<span className='inline-block w-[160px] h-[90px] relative group'>
+										<span className='inline-block w-[calc(50%_-_24px)] h-[120px] relative group'>
 											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
 												<Button
-													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer !w-fit'
 													onClick={() => {
 														editTour(query.id as string, {
 															id: query.id as string,
@@ -187,19 +195,19 @@ export const ImageStep = () => {
 							<div className='flex flex-col gap-x-3 mb-4'>
 								{existingTour.image_urls && (
 									<span className='inline-block mb-2 text-sm font-semibold basis-full'>
-										{t('Фотогалерея')}:
+										{t('mainPhotos')}:
 									</span>
 								)}
-								<div className='flex flex-row gap-x-4 overflow-y-auto w-fit'>
+								<div className='flex flex-row gap-4 flex-wrap w-full'>
 									{existingTour.image_urls &&
 										existingTour.image_urls.split('|').map((image, index) => (
 											<span
 												key={image}
-												className='inline-block w-[160px] h-[90px] relative scrollbar group'
+												className='inline-block w-[calc(50%_-_24px)] h-[120px] relative scrollbar group'
 											>
 												<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
 													<Button
-														className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+														className='bg-red rounded-lg px-2 !py-2 cursor-pointer !w-fit'
 														onClick={() => {
 															editTour(query.id as string, {
 																id: query.id as string,
@@ -242,13 +250,14 @@ export const ImageStep = () => {
 					</label>
 				</div>
 				<div className='flex justify-between mt-4'>
-					<p>{t('Фотогалерея')}</p>
+					<p>{t('mainPhotos')}</p>
 					<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99] bg-green relative'>
 						<input
 							type='file'
 							className='absolute z-10 w-full h-full hidden'
 							onChange={uploadImages}
 							disabled={uploadingGallery}
+							multiple
 						/>
 						{uploadingGallery ? (
 							<Icon path={mdiLoading} size={0.8} className='animate-spin' />
@@ -258,7 +267,7 @@ export const ImageStep = () => {
 					</label>
 				</div>
 				<div className='flex justify-between mt-4'>
-					<p>{t('Фотография автомобиля')}</p>
+					<p>{t('transfer')}</p>
 					<label className='flex items-center justify-center cursor-pointer rounded-full w-6 h-6 hover:scale-[1.1] shrink-0 text-white font-semibold py-3 text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99] bg-green relative'>
 						<input
 							type='file'

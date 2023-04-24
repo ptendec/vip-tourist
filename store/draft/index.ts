@@ -4,6 +4,7 @@ import { devtools, persist } from 'zustand/middleware'
 
 export type Tour = Omit<components['schemas']['NewTour'], 'name'> & {
 	name?: string
+	[key: string]: boolean | number | string | undefined | string[]
 }
 
 export type Draft = Tour & { id: string }

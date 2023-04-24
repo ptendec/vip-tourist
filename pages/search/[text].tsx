@@ -1,10 +1,9 @@
 import { searchCity } from '@/API/city.service'
 import { searchTour } from '@/API/tour.service'
-import { Footer } from '@/components/Layout/Footer'
-import { Sidebar } from '@/components/Layout/Sidebar'
 import { Container } from '@/components/UI/Container'
 import { Cards } from '@/modules/Cards'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { Search } from '@/modules/Search'
 import { Towns } from '@/modules/Towns'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
@@ -13,7 +12,7 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { ReactElement, useState } from 'react'
+import { ReactElement } from 'react'
 import { json } from 'utilities/utilities'
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -57,25 +56,21 @@ const Main = () => {
 		searchCity({ locale: locale as string, name: query.text as string }),
 	)
 
-	const [isAlert, setIsAlert] = useState(Math.random() < 0.9)
-
 	if (isCitiesLoading || isToursLoading) return <>Loading...</>
 	if (isToursError || isCitiesError) return <>Error!</>
 
 	return (
 		<>
 			<Head>
-				<title>VipTourist</title>
+				<title>{`${query.text} | VipTourist`}</title>
 			</Head>
-			<div className='flex justify-center w-full'>
-				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='pt-10 pb-24 flex flex-col max-w-[1200px] xs:pt-0'>
+			<Wrapper>
+				<Container className='pt-10 pb-24 flex flex-col mx-auto xs:pt-0'>
 					<Search />
 					<Cards title={t('tours')} tours={tours} />
 					<Towns cities={cities}></Towns>
-					<Footer />
 				</Container>
-			</div>
+			</Wrapper>
 		</>
 	)
 }

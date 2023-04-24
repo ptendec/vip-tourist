@@ -3,7 +3,6 @@ import { getToursByCityFromCatalogue } from '@/API/tour.service'
 import { FilterSidebar } from '@/components/Common/FilterSidebar'
 import { Sort } from '@/components/Common/Sort'
 import { NOT_FOUND } from '@/components/Icons/Tours'
-import { Footer } from '@/components/Layout/Footer'
 import { Sidebar } from '@/components/Layout/Sidebar'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Button } from '@/components/UI/Button'
@@ -113,7 +112,6 @@ const Main = () => {
 				isVisible={isSort}
 				set={state => {
 					const { _sort, ...rest } = query
-					console.log(state)
 					push(
 						{
 							pathname: '/catalogue',
@@ -164,7 +162,6 @@ const Main = () => {
 					) : (
 						<Cards title={t('tours')} tours={data} />
 					)}
-					<Footer />
 				</Container>
 			</div>
 		</>

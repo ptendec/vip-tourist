@@ -36,7 +36,7 @@ export const ImageStep = () => {
 				})
 			})
 			.catch(error => {
-				toast.error('Не удалось загрузить, попробуйте позднее')
+				toast.error(t('errorOccuredTryAgain'))
 				console.log(error)
 			})
 			.finally(() => {
@@ -60,7 +60,7 @@ export const ImageStep = () => {
 				})
 			})
 			.catch(error => {
-				toast.error('Не удалось загрузить, попробуйте позднее')
+				toast.error(t('errorOccuredTryAgain'))
 				console.log(error)
 			})
 			.finally(() => {
@@ -85,7 +85,7 @@ export const ImageStep = () => {
 				})
 			})
 			.catch(error => {
-				toast.error('Не удалось загрузить, попробуйте позднее')
+				toast.error(t('errorOccuredTryAgain'))
 				console.log(error)
 			})
 			.finally(() => {
@@ -115,7 +115,7 @@ export const ImageStep = () => {
 										<span className='inline-block w-[160px] h-[90px] relative group'>
 											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
 												<Button
-													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer !w-fit'
 													onClick={() => {
 														editTour({
 															...tour,
@@ -149,7 +149,7 @@ export const ImageStep = () => {
 										<span className='inline-block w-[160px] h-[90px] relative group'>
 											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
 												<Button
-													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer !w-fit'
 													onClick={() => {
 														editTour({
 															...tour,
@@ -188,7 +188,7 @@ export const ImageStep = () => {
 										>
 											<span className='absolute h-full bg-dark/[.4] w-full z-10 flex items-center justify-center rounded-lg  group-hover:visible group-hover:opacity-100 opacity-0 invisible'>
 												<Button
-													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer w-fit'
+													className=' bg-red rounded-lg px-2 !py-2 cursor-pointer !w-fit'
 													onClick={() => {
 														editTour({
 															...tour,

@@ -154,7 +154,7 @@ const Main = () => {
 							<form className='flex flex-col' onSubmit={handleSubmit(onSubmit)}>
 								<Input
 									{...register('email', {
-										required: 'Заполните поле',
+										required: t('fieldShouldntBe'),
 										pattern: {
 											value:
 												/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -169,7 +169,7 @@ const Main = () => {
 								/>
 								<Input
 									{...register('password', {
-										required: 'Заполните поле',
+										required: t('fieldShouldntBe'),
 										validate: value => {
 											if (value.length < 8) {
 												return 'Пароль должен быть не менее 8 символов'

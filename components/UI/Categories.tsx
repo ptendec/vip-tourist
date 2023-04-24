@@ -60,7 +60,9 @@ export const Categories = ({
 				as='div'
 				value={selectedItems}
 				// @ts-expect-error Несответствие типов
-				onChange={(element: ListItem) => handleSelect(element)}
+				onChange={(element: ListItem) => {
+					handleSelect(element)
+				}}
 				open={isOpen}
 				className='relative'
 			>
@@ -97,6 +99,9 @@ export const Categories = ({
 									const selected = isSelected(item)
 									return (
 										<Listbox.Option
+											onClick={event => {
+												event.stopPropagation()
+											}}
 											key={item.id}
 											value={item}
 											className={clsx(

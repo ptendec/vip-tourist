@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const URL = 'https://server.viptourist.club'
+const URL = 'http://37.140.241.144:1337/'
 const NotificationsURL = 'https://notification.viptourist.club/'
 const otherAPIURL = 'https://viptourist.bitman.pro'
 

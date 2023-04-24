@@ -25,8 +25,11 @@ export const SendToVerification = ({ tour }: Props) => {
 						<Image
 							className='rounded-lg'
 							src={tour?.mainPhotoUrl ?? ''}
-							alt='Фотография тура'
+							alt='Tour image'
 							fill
+							style={{
+								objectFit: 'cover',
+							}}
 						/>
 					</span>
 					<div className='ml-[10px]'>

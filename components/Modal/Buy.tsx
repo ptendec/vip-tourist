@@ -101,7 +101,7 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 											</p>
 											<div className='flex gap-x-4'>
 												<Button
-													className='shrink-0 rounded-full w-6 h-6'
+													className='shrink-0 !rounded-full !w-6 !h-6'
 													disabled={adults === 1}
 													onClick={() => setAdults(prevValue => --prevValue)}
 												>
@@ -109,7 +109,7 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 												</Button>
 												{adults}
 												<Button
-													className='shrink-0 rounded-full w-6 h-6 '
+													className='shrink-0 !rounded-full !w-6 !h-6 '
 													disabled={adults === 10}
 													onClick={() => setAdults(prevValue => ++prevValue)}
 												>
@@ -126,7 +126,7 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 											</p>
 											<div className='flex gap-x-4'>
 												<Button
-													className='shrink-0 rounded-full w-6 h-6'
+													className='shrink-0 !rounded-full !w-6 !h-6'
 													disabled={children === 0}
 													onClick={() => setChildren(prevValue => --prevValue)}
 												>
@@ -134,7 +134,7 @@ export const Buy = ({ isVisible, onClose, tour }: Props) => {
 												</Button>
 												{children}
 												<Button
-													className='shrink-0 rounded-full w-6 h-6'
+													className='shrink-0 !rounded-full !w-6 !h-6'
 													disabled={children === 10}
 													onClick={() => setChildren(prevValue => ++prevValue)}
 												>

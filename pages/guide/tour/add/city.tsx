@@ -1,5 +1,4 @@
-import { getProfile } from '@/API/profile.service'
-import { createTour } from '@/API/tour.service'
+import { searchCity } from '@/API/city.service'
 import NoSSR from '@/components/Common/NoSSR'
 import { AdditionalStep } from '@/components/Tour/Add/AdditionalStep'
 import { CityStep } from '@/components/Tour/Add/CityStep'
@@ -9,17 +8,23 @@ import { PreviewStep } from '@/components/Tour/Add/PreviewStep'
 import { PricingStep } from '@/components/Tour/Add/PricingStep'
 import { Button } from '@/components/UI/Button'
 import { Container } from '@/components/UI/Container'
+import { Input } from '@/components/UI/Input'
+import { useDebounce } from '@/hooks/useDebounce'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
 import { Wrapper } from '@/modules/Layout/Wrapper'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { getNotAddedCategories } from '@/utilities/utilities'
+import { mdiFlagVariantOff, mdiMagnify } from '@mdi/js'
+import Icon from '@mdi/react'
+import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { ReactElement, useEffect, useState } from 'react'
+import { Fragment, ReactElement, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Tooltip } from 'react-tooltip'
 import { Tour, useDraftStore } from 'store/draft'
@@ -62,24 +67,35 @@ const steps = [
 const Main = () => {
 	const { t } = useTranslation()
 	const { user } = useFirebaseAuth()
-	const { locale, pathname, query, push, asPath } = useRouter()
-	const { data, isLoading, isError } = useQuery(
-		['profile', user?.uid],
-		() =>
-			getProfile({
-				locale: locale as string,
-				id: user?.uid as string,
-			}),
-		{
-			retry: 0,
-			refetchOnWindowFocus: false,
-		},
-	)
-	const { addTour, tours, removeTour } = useDraftStore()
-	const { mutate } = useMutation(createTour)
+	const { query, push } = useRouter()
+	const { addTour, tours, removeTour, editTour } = useDraftStore()
+
 	const [existingTour, setExistingTour] = useState<Tour | undefined>(
 		tours.find(tour => tour.id === (query.id as string)),
 	)
+	const [searchTerm, setSearchTerm] = useState('')
+	const debouncedSearchTerm: string = useDebounce<string>(searchTerm, 500)
+
+	const { data, isLoading, isError, refetch } = useQuery(
+		['search', 'city'],
+		() =>
+			searchCity({
+				name: searchTerm,
+			}),
+	)
+
+	useEffect(() => {
+		refetch()
+	}, [debouncedSearchTerm])
+
+	useEffect(() => {
+		if (!existingTour) {
+			addTour({
+				id: query.id as string,
+				name: '',
+			})
+		}
+	}, [query.id])
 
 	useEffect(() => {
 		if (!existingTour) {
@@ -95,31 +111,16 @@ const Main = () => {
 	}, [tours.find(tour => tour.id === (query.id as string))])
 
 	useEffect(() => {
-		setStep(query.step ? Number(query.step) : 1)
-	}, [query.step])
-
-	const create = () => {
-		mutate(
-			{
+		if (existingTour)
+			editTour(query.id as string, {
 				...existingTour,
-				createdLanguage: locale as string,
-				profile: data?.id,
-			},
-			{
-				onSuccess: result => {
-					push(`/sendToVerification/?id=${result.id}`)
-					setTimeout(() => {
-						removeTour(query.id as string)
-					}, 3000)
-				},
-				onError: () => {
-					toast.error(t('errorOccuredTryAgain'))
-				},
-			},
-		)
-	}
+				...getNotAddedCategories(existingTour),
+				id: query.id as string,
+			})
+	}, [])
 
-	const [step, setStep] = useState(0)
+	if (isLoading) return <>Loading...</>
+	if (isError) return <>Error!</>
 
 	return (
 		<>
@@ -162,57 +163,94 @@ const Main = () => {
 							</div>
 						</div>
 						<div className='w-5/12 my-8 mx-auto rounded-lg p-6 border-lightGray border lg:w-8/12 md:w-full'>
-							{steps[step - 1]?.component}
+							<h2 className='font-semibold text-center block mb-5'>
+								{t('selectCity')}
+							</h2>
+							<Input
+								onChange={event => setSearchTerm(event.currentTarget.value)}
+								icon={<Icon path={mdiMagnify} size={1} color='#BFBFBF' />}
+								placeholder={t('findCity') as string}
+							/>
+
+							<div className='scrollbar overflow-y-auto h-[400px] p-[10px] mt-5'>
+								{data.map((city, index) => (
+									<Fragment key={city.id}>
+										<div
+											key={index}
+											className={clsx(
+												'text-sm p-3 rounded-lg hover:bg-[#F6F6F5] cursor-pointer transition-all duration-300 ease-out',
+												existingTour?.city === city.id &&
+													'bg-[#F6F6F5] font-semibold',
+											)}
+											onClick={() =>
+												editTour(query.id as string, {
+													id: query.id as string,
+													city: city.id,
+												})
+											}
+										>
+											<div className='flex items-center gap-x-3'>
+												{/* @ts-expect-error Типы */}
+												{city.country?.flag.url ? (
+													<Image
+														className='rounded-sm'
+														//@ts-expect-error Типы
+														src={`${process.env.NEXT_PUBLIC_API_URL}${city.country?.flag.url}`}
+														width={22.67}
+														height={17}
+														alt='flag'
+													/>
+												) : (
+													<Icon path={mdiFlagVariantOff} size={1} />
+												)}
+												{city.name}
+											</div>
+										</div>
+										<span className='block bg-gray h-[0.33px]' />
+									</Fragment>
+								))}
+							</div>
 						</div>
 						<div
 							className={clsx(
 								'w-full flex mt-auto items-center h-[72px] border-t border-lightGray',
-								step === steps.length && 'hidden',
 							)}
 						>
 							<Button
+								className='w-max px-10 sm:px-3'
+								type='button'
 								onClick={() => {
-									setStep(prevStep => --prevStep)
 									push(
 										{
-											pathname: pathname,
-											query: { ...query, step: step - 1 },
+											pathname: 'describe',
+											query: { id: query.id },
 										},
 										undefined,
-										{
-											shallow: true,
-										},
+										{ shallow: true },
 									)
 								}}
-								disabled={step === 1 ? true : false}
-								className='w-max px-10 sm:px-3'
 							>
 								{t('back')}
 							</Button>
 							<span className='block mx-auto font-bold text-sm uppercase'>
-								{t('step')} {step} {t('izz')} {steps.length}
+								{t('step')} 2 {t('izz')} {steps.length}
 							</span>
 							<Button
+								type='submit'
+								disabled={!existingTour?.city}
 								onClick={() => {
-									if (step === steps.length - 1) {
-										return create()
-									}
-									setStep(prevStep => ++prevStep)
 									push(
 										{
-											pathname: pathname,
-											query: { ...query, step: step + 1 },
+											pathname: 'additional',
+											query: { id: query.id },
 										},
 										undefined,
-										{
-											shallow: true,
-										},
+										{ shallow: true },
 									)
 								}}
-								disabled={step === steps.length ? true : false}
 								className='w-max px-10 truncate sm:px-3'
 							>
-								{step === steps.length - 1 ? t('sendToVerify') : t('next')}
+								{t('next')}
 							</Button>
 						</div>
 					</Container>

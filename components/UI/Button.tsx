@@ -18,7 +18,7 @@ export const Button = ({
 		disabled={disabled}
 		{...rest}
 		className={clsx(
-			'flex items-center justify-center  text-white font-semibold rounded-lg py-3 w-full text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99]',
+			'flex items-center justify-center text-white font-semibold rounded-lg py-3 w-full text-sm outline-none transition-all duration-300 ease-out active:scale-[0.99]',
 			disabled ? 'bg-gray' : 'bg-green',
 			className,
 		)}

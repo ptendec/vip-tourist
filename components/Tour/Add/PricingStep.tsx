@@ -24,8 +24,6 @@ export const PricingStep = () => {
 		}
 	}, [query.id])
 
-	const [isFree, setIsFree] = useState(false)
-
 	return (
 		<>
 			<h2 className='font-semibold text-center block mb-5'>

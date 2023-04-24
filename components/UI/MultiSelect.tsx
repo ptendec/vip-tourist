@@ -19,12 +19,12 @@ export const MultiSelect = ({
 	chosenItems = [],
 	className,
 }: Props) => {
+	const { t } = useTranslation()
+	const firstRender = useFirstRender()
+
 	const [isOpen, setIsOpen] = useState(false)
 	const [selectedItems, setSelectedItems] = useState<ListItem[]>(chosenItems)
 
-	const { t } = useTranslation()
-
-	const firstRender = useFirstRender()
 	useEffect(() => {
 		if (!firstRender) onChange(selectedItems)
 	}, [selectedItems])
@@ -45,6 +45,7 @@ export const MultiSelect = ({
 		} else {
 			handleDeselect(item)
 		}
+		setIsOpen(true)
 	}
 
 	function handleDeselect(item: ListItem) {
@@ -53,15 +54,18 @@ export const MultiSelect = ({
 		)
 		setSelectedItems(selectedItemsUpdated)
 	}
+	useEffect(() => {
+		console.log(open)
+	}, [open])
 
 	return (
 		<div className={clsx(className, 'w-full')}>
 			<Listbox
 				as='div'
+				open={true}
 				value={selectedItems}
 				// @ts-expect-error Несответствие типов
 				onChange={(element: ListItem) => handleSelect(element)}
-				open={isOpen}
 				className='relative'
 			>
 				{() => (
@@ -70,8 +74,9 @@ export const MultiSelect = ({
 							{label}
 						</Listbox.Label>
 						<Listbox.Button
+							// @ts-expect-error Несответствие типов
+							open={true}
 							className='block border-gray border bg-white py-3 px-5 w-full rounded-lg outline-0 placeholder:text-sm text-sm text-left'
-							onClick={() => setIsOpen(!isOpen)}
 						>
 							<span className='truncate'>
 								{selectedItems.length === 0

@@ -44,52 +44,5 @@ export const CityStep = () => {
 	if (isLoading) return <>Loading...</>
 	if (isError) return <>Error!</>
 
-	return (
-		<>
-			<h2 className='font-semibold text-center block mb-5'>Укажите город</h2>
-			<Input
-				onChange={event => setSearchTerm(event.currentTarget.value)}
-				icon={<Icon path={mdiMagnify} size={1} color='#BFBFBF' />}
-				placeholder={t('findCity') as string}
-			/>
-
-			<div className='scrollbar overflow-y-auto h-[400px] p-[10px] mt-5'>
-				{data.map((city, index) => (
-					<Fragment key={city.id}>
-						<div
-							key={index}
-							className={clsx(
-								'text-sm p-3 rounded-lg hover:bg-[#F6F6F5] cursor-pointer transition-all duration-300 ease-out',
-								existingTour?.city === city.id && 'bg-[#F6F6F5] font-semibold',
-							)}
-							onClick={() =>
-								editTour(query.id as string, {
-									id: query.id as string,
-									city: city.id,
-								})
-							}
-						>
-							<div className='flex items-center gap-x-3'>
-								{/* @ts-expect-error Типы */}
-								{city.country?.flag.url ? (
-									<Image
-										className='rounded-sm'
-										//@ts-expect-error Типы
-										src={`${process.env.NEXT_PUBLIC_API_URL}${city.country?.flag.url}`}
-										width={22.67}
-										height={17}
-										alt='flag'
-									/>
-								) : (
-									<Icon path={mdiFlagVariantOff} size={1} />
-								)}
-								{city.name}
-							</div>
-						</div>
-						<span className='block bg-gray h-[0.33px]' />
-					</Fragment>
-				))}
-			</div>
-		</>
-	)
+	return <></>
 }

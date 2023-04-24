@@ -13,9 +13,10 @@ import { useEditTourStore } from 'store/edit'
 
 export const CityStep = () => {
 	const { t } = useTranslation()
-	const { locale, pathname, query } = useRouter()
+	const { query } = useRouter()
 	const [searchTerm, setSearchTerm] = useState('')
 	const debouncedSearchTerm: string = useDebounce<string>(searchTerm, 500)
+	const { tour, editTour } = useEditTourStore()
 	const { data, isLoading, isError, refetch } = useQuery(
 		['search', 'city'],
 		() =>
@@ -28,14 +29,14 @@ export const CityStep = () => {
 		refetch()
 	}, [debouncedSearchTerm])
 
-	const { tour, editTour } = useEditTourStore()
-
 	if (isLoading) return <>Loading...</>
 	if (isError) return <>Error!</>
 
 	return (
 		<>
-			<h2 className='font-semibold text-center block mb-5'>Укажите город</h2>
+			<h2 className='font-semibold text-center block mb-5'>
+				{t('selectCity')}
+			</h2>
 			<Input
 				onChange={event => setSearchTerm(event.currentTarget.value)}
 				icon={<Icon path={mdiMagnify} size={1} color='#BFBFBF' />}

@@ -13,6 +13,7 @@ import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 import { usePreferencesStore } from 'store/preferences'
 import { currencyList, langList } from 'utilities/static'
 
@@ -45,8 +46,8 @@ export const Sidebar = ({ isVisible, onClose }: Props) => {
 	return (
 		<div
 			className={clsx(
-				'fixed overflow-y-scroll scrollbar transition-all shadow-xl xs:w-[320px] xs:pb-[70px] duration-500 ease-out h-screen left-0 top-0 bg-white p-8 pr-0 z-20 w-[300px]',
-				isVisible ? '' : '-left-[400px] overflow-y-scroll',
+				'fixed overflow-y-scroll scrollbar transition-all shadow-xl xs:w-[320px] xs:pb-[70px] duration-500 ease-out h-screen  top-0 bg-white p-8 pr-0 z-20 w-[300px]',
+				isVisible ? 'left-0' : '-left-[400px] overflow-y-scroll',
 			)}
 		>
 			<NoSSR>
@@ -143,8 +144,10 @@ export const Sidebar = ({ isVisible, onClose }: Props) => {
 							<button
 								className='flex py-2 px-7 gap-x-3 hover:bg-[#F6F6F5] rounded-lg transition-all duration-300 ease-out w-full mt-12'
 								onClick={() => {
-									signOut(auth)
-									push('/')
+									signOut(auth).then(() => {
+										toast.success(t('success'))
+										push('/')
+									})
 								}}
 							>
 								<Icon className={clsx('text-gray')} path={mdiLogout} size={1} />

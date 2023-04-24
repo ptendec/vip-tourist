@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 export interface Categories {
 	id: number
 	value: string
@@ -71,4 +73,29 @@ export interface Category {
 	id: number
 	name: string
 	value: string
+}
+
+export interface DescribeFields {
+	name: string
+	description: string
+	duration: string
+	seats: number
+}
+
+export interface AdditionalFields {
+	prerequisites?: string
+	included?: string
+	not_included?: string
+	prohibitions?: string
+	note?: string
+}
+
+export interface PricingFields {
+	adultPrice: number
+	childPrice: number
+}
+
+export interface Step {
+	id: number
+	element: ReactNode
 }

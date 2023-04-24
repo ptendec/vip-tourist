@@ -1,3 +1,10 @@
+import { AdditionalStep } from '@/components/Tour/Add/AdditionalStep'
+import { CityStep } from '@/components/Tour/Add/CityStep'
+import { DescribeStep } from '@/components/Tour/Add/DescribeStep'
+import { ImageStep } from '@/components/Tour/Add/ImageStep'
+import { PreviewStep } from '@/components/Tour/Add/PreviewStep'
+import { PricingStep } from '@/components/Tour/Add/PricingStep'
+
 import {
 	mdiAccount,
 	mdiAccountKey,
@@ -9,7 +16,13 @@ import {
 	mdiHome,
 	mdiTicketAccount,
 } from '@mdi/js'
-import { Category, Languages, ListItem, Navbar } from 'utilities/interfaces'
+import {
+	Category,
+	Languages,
+	ListItem,
+	Navbar,
+	Step,
+} from 'utilities/interfaces'
 import { Breadcrumb } from './interfaces'
 
 export const staticCategories: Category[] = [
@@ -68,14 +81,10 @@ export const staticCategories: Category[] = [
 		value: 'open_air',
 		name: 'openAir',
 	},
-	// {
-	// id: 12,
-	// value: 'Со снегом',
-	// },
 	{
-		id: 13,
-		value: 'on_water',
-		name: 'onWater',
+		id: 12,
+		value: 'adventure',
+		name: 'adventure',
 	},
 	{
 		id: 15,

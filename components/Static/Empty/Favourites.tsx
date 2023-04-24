@@ -1,10 +1,12 @@
 import { Button } from '@/components/UI/Button'
 import { mdiMessageImage, mdiStar } from '@mdi/js'
 import Icon from '@mdi/react'
+import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
 export const NoFavourites = () => {
 	const { push } = useRouter()
+	const { t } = useTranslation()
 
 	return (
 		<div className='mx-auto my-auto w-80'>
@@ -35,7 +37,7 @@ export const NoFavourites = () => {
 					push('/')
 				}}
 			>
-				Подобрать экскурсии
+				{t('pickUpTours')}
 			</Button>
 		</div>
 	)

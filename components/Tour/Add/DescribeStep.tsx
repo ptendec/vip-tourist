@@ -8,31 +8,36 @@ import { langList, staticCategories } from '@/utilities/static'
 import {
 	getAddedCategories,
 	getAddedLanguages,
-	isTourExists,
+	getNotAddedCategories,
+	removeAllCategories,
 } from '@/utilities/utilities'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { useDraftStore } from 'store/draft'
+import { useEffect, useState } from 'react'
+import { Tour, useDraftStore } from 'store/draft'
 
 export const DescribeStep = () => {
 	const { t } = useTranslation()
-	const { locale, pathname, query } = useRouter()
+	const { query } = useRouter()
 	const { user } = useFirebaseAuth()
-	const { addTour, tours, editTour } = useDraftStore()
-
-	const existingTour = isTourExists(query.id as string, tours)
+	const { tours, editTour } = useDraftStore()
+	const [existingTour, setExistingTour] = useState<Tour | undefined>(
+		tours.find(tour => tour.id === (query.id as string)),
+	)
 
 	useEffect(() => {
-		if (!existingTour) {
-			addTour({
+		setExistingTour(tours.find(tour => tour.id === (query.id as string)))
+	}, [tours.find(tour => tour.id === (query.id as string))])
+
+	useEffect(() => {
+		if (existingTour)
+			editTour(query.id as string, {
+				...existingTour,
+				...getNotAddedCategories(existingTour),
 				id: query.id as string,
-				profile: user?.uid,
 			})
-		}
-	}, [query.id])
-	console.log(existingTour?.languages)
-	console.log(getAddedLanguages(existingTour?.languages))
+	}, [])
+
 	return (
 		<>
 			<h2 className='font-semibold text-center block mb-5'>
@@ -68,16 +73,45 @@ export const DescribeStep = () => {
 					chosenItems={getAddedCategories(existingTour)}
 					list={staticCategories}
 					onChange={(items: ListItem[]) => {
-						editTour(query.id as string, {
-							...items.reduce((accumulator, value) => {
-								return { ...accumulator, [value.value]: true }
-							}, {}),
-							id: query.id as string,
-						})
+						if (items.length === 0 && existingTour) {
+							editTour(query.id as string, {
+								...removeAllCategories({
+									...existingTour,
+								}),
+								id: query.id as string,
+							})
+						} else {
+							if (existingTour) {
+								const newCategories = { ...existingTour }
+								staticCategories.forEach(category => {
+									if (
+										Object.entries(existingTour).find(
+											elem =>
+												elem[0] ===
+												items.find(item => item.value === category.value)
+													?.value,
+										)
+									) {
+										newCategories[category.value] = true
+									} else {
+										newCategories[category.value] = false
+									}
+								})
+								editTour(query.id as string, {
+									...newCategories,
+									id: query.id as string,
+									name: existingTour?.name,
+									description: existingTour?.description,
+								})
+							}
+						}
 					}}
 					label={t('categories')}
 				/>
-				<span className='capitalize text-xs font-medium'>
+				<span
+					key={JSON.stringify(existingTour)}
+					className='capitalize text-xs font-medium'
+				>
 					{getAddedCategories(existingTour)
 						.map(category => t(category.name))
 						.join(', ')}
@@ -97,7 +131,7 @@ export const DescribeStep = () => {
 					/>
 					<Input
 						defaultValue={existingTour?.placesCount}
-						label='Кол-во мест'
+						label={t('seatsAvailable')}
 						placeholder='17'
 						className='basis-[calc(50%_-_8px)]'
 						onChange={event => {
@@ -120,7 +154,10 @@ export const DescribeStep = () => {
 					}}
 					label={t('chooseLanguages')}
 				/>
-				<span className='capitalize text-xs font-medium'>
+				<span
+					key={JSON.stringify(existingTour?.languages)}
+					className='capitalize text-xs font-medium'
+				>
 					{existingTour?.languages
 						?.split('|')
 						.map(text => t(text))

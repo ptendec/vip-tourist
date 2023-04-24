@@ -1,7 +1,6 @@
 import { getCity } from '@/API/city.service'
 import { getTour } from '@/API/tour.service'
 import { components } from '@/API/types/api.types'
-import { Footer } from '@/components/Layout/Footer'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { Layout } from '@/modules/Layout'
@@ -125,7 +124,6 @@ const Main = () => {
 					</div>
 					<AdditionalInfo tour={tour} />
 					<Reviews reviews={tour.reviews} />
-					<Footer />
 				</Container>
 			</Wrapper>
 		</>

@@ -8,9 +8,15 @@ interface Props extends ComponentPropsWithoutRef<'div'> {
 
 export const Article = ({ title, description, className }: Props) => {
 	return (
-		<div className={clsx(className)}>
-			<p className='font-semibold mb-3'>{title}</p>
-			<span>{description !== '' ? description : 'Не указано'}</span>
-		</div>
+		<>
+			{description && (
+				<div className={clsx(className)}>
+					<p className='font-semibold mb-3 sm:text-sm'>{title}</p>
+					<span className='sm:text-sm'>
+						{description !== '' ? description : 'Не указано'}
+					</span>
+				</div>
+			)}
+		</>
 	)
 }

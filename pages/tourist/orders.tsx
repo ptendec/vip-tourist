@@ -1,9 +1,9 @@
 import { getMyOrders } from '@/API/order.service'
-import { Sidebar } from '@/components/Layout/Sidebar'
 import { NoOrders } from '@/components/Static/Empty/Orders'
 import { Container } from '@/components/UI/Container'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { useQuery } from '@tanstack/react-query'
 import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
@@ -39,9 +39,8 @@ const Main = () => {
 			<Head>
 				<title>VipTourist</title>
 			</Head>
-			<div className='flex justify-center w-full'>
-				<Sidebar className='basis-64 shrink-0'></Sidebar>
-				<Container className='pt-10 pb-24 flex flex-col xs:pt-0 min-h-screen'>
+			<Wrapper>
+				<Container className='pt-10 pb-24 flex flex-col xs:pt-0 min-h-screen mx-auto'>
 					{isError ? (
 						<NoOrders />
 					) : (
@@ -66,7 +65,7 @@ const Main = () => {
 						</div>
 					)}
 				</Container>
-			</div>
+			</Wrapper>
 		</>
 	)
 }

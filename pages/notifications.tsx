@@ -1,10 +1,9 @@
 import { getNotifications } from '@/API/notification.service'
-import { Footer } from '@/components/Layout/Footer'
-import { Sidebar } from '@/components/Layout/Sidebar'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { Layout } from '@/modules/Layout'
+import { Wrapper } from '@/modules/Layout/Wrapper'
 import { Breadcrumb } from '@/utilities/interfaces'
 import { useQuery } from '@tanstack/react-query'
 import { GetServerSideProps } from 'next'
@@ -53,8 +52,7 @@ const Main = () => {
 				<meta name='robots' content='noindex' />
 				<title>{t('notification')} | VipTourist</title>
 			</Head>
-			<div className='flex flex-row justify-center w-full'>
-				<Sidebar className='basis-64 shrink-0'></Sidebar>
+			<Wrapper>
 				<Container className='flex flex-row pt-10 pb-24 mx-auto'>
 					<div className='w-full'>
 						<div className='w-full h-full min-h-screen flex flex-col'>
@@ -72,10 +70,9 @@ const Main = () => {
 								</div>
 							))}
 						</div>
-						<Footer />
 					</div>
 				</Container>
-			</div>
+			</Wrapper>
 		</>
 	)
 }

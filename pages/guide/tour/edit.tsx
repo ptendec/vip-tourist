@@ -238,9 +238,9 @@ const Main = () => {
 
 	const edit = () => {
 		mutate(
+			// @ts-expect-error Не существует подобного поля, меня попросили добавить это
 			{
 				...tour,
-				// @ts-expect-error Не существует подобного поля, меня попросили добавить это
 				tourUpdated: true,
 			},
 			{
@@ -276,7 +276,7 @@ const Main = () => {
 				<Wrapper>
 					<Container className='justify-self-center pt-10 flex flex-col mx-auto'>
 						<div className={clsx('flex justify-between')}>
-							<h1 className='font-semibold text-lg'>Добавить тур</h1>
+							<h1 className='font-semibold text-lg'>{t('addTour')}</h1>
 							<div className='flex gap-x-4'>
 								<Button
 									className='bg-[#D84343] text-white h-8 px-3'

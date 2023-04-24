@@ -1,7 +1,7 @@
 import { components } from '@/API/types/api.types'
 import { DehydratedState } from '@tanstack/react-query'
-import { Draft } from 'store/draft'
-import { Categories, Navbar, User } from './interfaces'
+import { Draft, Tour } from 'store/draft'
+import { Categories, ListItem, Navbar, User } from './interfaces'
 import {
 	guideTopNavbar,
 	langList,
@@ -79,9 +79,8 @@ export const isDaysEqual = (date1: Date, date2: Date) => {
 		return false
 	}
 }
-export const getAddedCategories = (
-	categories?: components['schemas']['NewProfile'],
-) => {
+
+export const getAddedCategories = (categories?: Tour) => {
 	if (!categories) {
 		return []
 	}
@@ -90,6 +89,35 @@ export const getAddedCategories = (
 			_category => _category[0] == category.value && _category[1] !== false,
 		),
 	)
+}
+
+export const getNotAddedCategories = (tour: Tour): Tour => {
+	staticCategories.map(category => {
+		if (!Object.prototype.hasOwnProperty.call(tour, category.value)) {
+			tour[category.value] = false
+		}
+	})
+	return tour
+}
+
+export const removeAllCategories = (categories: Tour): Tour => {
+	return Object.entries(categories).reduce((acc, category) => {
+		acc[category[0]] = false
+		return acc
+	}, {} as Tour)
+}
+
+export const removeUnselectedCategories = (
+	categories: Tour,
+	items: ListItem[],
+): Tour => {
+	const result: Tour = { name: categories.name }
+	items.forEach(item => {
+		if (Object.prototype.hasOwnProperty.call(categories, item.value)) {
+			result[item.value] = categories[item.value]
+		}
+	})
+	return result
 }
 
 export const getAddedLanguages = (lanugages?: string) => {
@@ -128,3 +156,13 @@ export const calcDayDifference = (startDate: Date, endDate: Date) => {
 	)
 	return (start - end) / oneDay
 }
+
+export const groupBy = <T>(
+	array: T[],
+	predicate: (value: T, index: number, array: T[]) => string,
+) =>
+	array.reduce((acc, value, index, array) => {
+		const state = (acc[predicate(value, index, array)] ||= [])
+		state.push(value)
+		return acc
+	}, {} as { [key: string]: T[] })
