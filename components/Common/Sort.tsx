@@ -19,12 +19,13 @@ export const Sort = ({ isVisible, onClose, set, selected }: Props) => {
 	const [sort, setSort] = useState(
 		sortList.find(item => item?.value === selected),
 	)
+	console.log(isVisible)
 
 	return (
 		<div
 			className={clsx(
-				'fixed overflow-y-scroll scrollbar transition-all  duration-500 ease-out xs:w-[320px] xs:pb-[70px] h-screen right-0 top-0 shadow-xl bg-white p-8 z-10 w-[400px]',
-				isVisible ? '' : '-right-[400px] overflow-y-scroll',
+				'fixed overflow-y-scroll scrollbar transition-all  duration-500 ease-out xs:w-[320px] xs:pb-[70px] h-screen top-0 shadow-xl bg-white p-8 z-10 w-[400px]',
+				isVisible ? 'right-0' : '-right-[400px] overflow-y-scroll',
 			)}
 		>
 			<div className='flex flex-row justify-between mb-8'>

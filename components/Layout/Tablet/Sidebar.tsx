@@ -1,4 +1,4 @@
-import { editProfile, getProfile } from '@/API/profile.service'
+import { getProfile } from '@/API/profile.service'
 import NoSSR from '@/components/Common/NoSSR'
 import { ListBox } from '@/components/UI/ListBox'
 import { auth } from '@/config/firebase'
@@ -6,7 +6,7 @@ import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { getNavbarList } from '@/utilities/utilities'
 import { mdiEarth, mdiHiking, mdiLogout, mdiWallet } from '@mdi/js'
 import Icon from '@mdi/react'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { signOut } from 'firebase/auth'
 import { useTranslation } from 'next-i18next'
@@ -25,9 +25,8 @@ interface Props {
 export const Sidebar = ({ isVisible, onClose }: Props) => {
 	const { currency, editPreferences } = usePreferencesStore()
 	const { t } = useTranslation()
-	const { locale, pathname, push, asPath } = useRouter()
+	const { locale, pathname, push } = useRouter()
 	const { user } = useFirebaseAuth()
-	const { mutate } = useMutation(editProfile)
 
 	const { data, isLoading, isError } = useQuery(
 		['profile', user?.uid],
