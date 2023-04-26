@@ -1,18 +1,20 @@
-import { Popover as UIPopover, Transition } from '@headlessui/react'
+import { Transition, Popover as UIPopover } from '@headlessui/react'
 import clsx from 'clsx'
-import { Fragment, ReactNode } from 'react'
+import { ComponentPropsWithoutRef, Fragment, ReactNode } from 'react'
 
-interface Props {
+interface Props extends ComponentPropsWithoutRef<'div'> {
 	head: ReactNode
 	body: ReactNode
 }
 
-export const Popover = ({ head, body }: Props) => {
+export const Popover = ({ head, body, className }: Props) => {
 	return (
 		<UIPopover className='relative'>
 			{({ open }) => (
 				<>
-					<UIPopover.Button className={clsx('')}>{head}</UIPopover.Button>
+					<UIPopover.Button className={clsx('', className)}>
+						{head}
+					</UIPopover.Button>
 					<Transition
 						as={Fragment}
 						enter='transition ease-out duration-200'
@@ -24,7 +26,7 @@ export const Popover = ({ head, body }: Props) => {
 					>
 						<UIPopover.Panel
 							className={clsx(
-								'py-2.5 px-3 bg-white absolute rounded-lg right-0',
+								'py-2.5 px-3 bg-white absolute rounded-lg right-0 z-50',
 							)}
 						>
 							{body}

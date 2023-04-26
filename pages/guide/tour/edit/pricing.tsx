@@ -3,11 +3,12 @@ import { Button } from '@/components/UI/Button'
 import Checkbox from '@/components/UI/Checkbox'
 import { Container } from '@/components/UI/Container'
 import { Input } from '@/components/UI/Input'
+import { Popover } from '@/components/UI/Popover'
 import { Layout } from '@/modules/Layout'
 import { Wrapper } from '@/modules/Layout/Wrapper'
 import { PricingFields } from '@/utilities/interfaces'
 import { calcComission } from '@/utilities/utilities'
-import { mdiAccount, mdiBabyFaceOutline } from '@mdi/js'
+import { mdiAccount, mdiBabyFaceOutline, mdiInformation } from '@mdi/js'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
@@ -109,6 +110,30 @@ const Main = () => {
 								</h2>
 								<p className='text-sm mb-5'>{t('usdTag')}</p>
 								<div className=''>
+									<Popover
+										className='absolute right-0 top-1'
+										head={
+											<div className=''>
+												<button className=''>
+													<Icon
+														path={mdiInformation}
+														size={0.8}
+														className='color-yellow'
+													/>
+												</button>
+											</div>
+										}
+										body={
+											<span className='text-sm w-[200px] z-50 bottom-0 relative shadow-lg p-2 rounded-lg block'>
+												{t('commission1')} <br />
+												{t('commission2')} <br />
+												{t('commission3')} <br />
+												{t('commission4')} <br />
+												{t('commission5')} <br />
+												{t('commission6')} <br />
+											</span>
+										}
+									/>
 									<div className='flex justify-between mt-3'>
 										<Input
 											icon={<Icon path={mdiAccount} size={1} />}
