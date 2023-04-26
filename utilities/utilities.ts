@@ -166,3 +166,22 @@ export const groupBy = <T>(
 		state.push(value)
 		return acc
 	}, {} as { [key: string]: T[] })
+
+export const calcComission = (price: number) => {
+	if (price > 0 && price < 10) {
+		return Math.round((price + 2 + Number.EPSILON) * 100) / 100
+	} else if (price >= 10 && price < 31) {
+		console.log(Math.round((price * 1.2 + Number.EPSILON) * 100) / 100)
+		return Math.round((price * 1.2 + Number.EPSILON) * 100) / 100
+	} else if (price >= 31 && price < 40) {
+		return Math.round((price + 7 + Number.EPSILON) * 100) / 100
+	} else if (price >= 40 && price < 131) {
+		return Math.round((price * 1.18 + Number.EPSILON) * 100) / 100
+	} else if (price >= 131 && price < 231) {
+		return Math.round((price + 30 + Number.EPSILON) * 100) / 100
+	} else if (price >= 231 && price < 501) {
+		return Math.round((price * 1.13 + Number.EPSILON) * 100) / 100
+	} else if (price >= 501) {
+		return Math.round((price * 1.1 + Number.EPSILON) * 100) / 100
+	}
+}

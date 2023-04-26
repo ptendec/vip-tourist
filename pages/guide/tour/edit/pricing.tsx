@@ -6,6 +6,7 @@ import { Input } from '@/components/UI/Input'
 import { Layout } from '@/modules/Layout'
 import { Wrapper } from '@/modules/Layout/Wrapper'
 import { PricingFields } from '@/utilities/interfaces'
+import { calcComission } from '@/utilities/utilities'
 import { mdiAccount, mdiBabyFaceOutline } from '@mdi/js'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
@@ -34,6 +35,7 @@ const Main = () => {
 		handleSubmit,
 		setValue,
 		trigger,
+		watch,
 		formState: { errors, isValid },
 	} = useForm<PricingFields>()
 	const { t } = useTranslation()
@@ -120,6 +122,17 @@ const Main = () => {
 											error={errors.adultPrice?.message}
 										/>
 										<Input
+											icon={<Icon path={mdiAccount} size={1} />}
+											readOnly={true}
+											value={calcComission(Number(watch('adultPrice')))}
+											label={t('withComission')}
+											placeholder='129'
+											className='basis-[calc(50%_-_8px)]'
+											type='number'
+										/>
+									</div>
+									<div className='flex justify-between mt-3 mb-5'>
+										<Input
 											icon={<Icon path={mdiBabyFaceOutline} size={1} />}
 											label={t('childPrice')}
 											placeholder='23'
@@ -129,8 +142,16 @@ const Main = () => {
 											})}
 											error={errors.childPrice?.message}
 										/>
+										<Input
+											icon={<Icon path={mdiAccount} size={1} />}
+											readOnly={true}
+											value={calcComission(Number(watch('childPrice')))}
+											label={t('withComission')}
+											placeholder='129'
+											className='basis-[calc(50%_-_8px)]'
+											type='number'
+										/>
 									</div>
-									<div className='flex justify-between mt-3 mb-5'></div>
 
 									<span className='block bg-gray h-[0.33px]' />
 									<label className='flex justify-between items-center text-sm font-semibold my-4'>
