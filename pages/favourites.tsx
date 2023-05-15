@@ -7,62 +7,72 @@ import { Cards } from '@/modules/Cards'
 import { Layout } from '@/modules/Layout'
 import { Wrapper } from '@/modules/Layout/Wrapper'
 import { useQuery } from '@tanstack/react-query'
+import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 import { ReactElement, useEffect } from 'react'
 import { useFavouritesStore } from 'store/favourites'
 import { favouritesBreadcrumbs } from 'utilities/static'
 
+export const getServerSideProps: GetServerSideProps = async context => {
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale as string, ['common'])),
+    },
+  }
+}
+
 const Main = () => {
-	const { locale, query } = useRouter()
-	const { t } = useTranslation()
-	const { favourites } = useFavouritesStore()
+  const { locale, query } = useRouter()
+  const { t } = useTranslation()
+  const { favourites } = useFavouritesStore()
 
-	const { data, isLoading, isError, refetch } = useQuery(
-		['favourites'],
-		() => getFavourites({ locale: locale as string, tours: favourites }),
-		{
-			enabled: !!favourites.length,
-			retry: false,
-		},
-	)
+  const { data, isLoading, isError, refetch } = useQuery(
+    ['favourites'],
+    () => getFavourites({ locale: locale as string, tours: favourites }),
+    {
+      enabled: !!favourites.length,
+      retry: false,
+    },
+  )
 
-	useEffect(() => {
-		refetch()
-	}, [favourites])
+  useEffect(() => {
+    refetch()
+  }, [favourites])
 
-	if (isLoading) return <>Loading...</>
+  if (isLoading) return <>Loading...</>
 
-	return (
-		<>
-			<Head>
-				<meta name='robots' content='noindex' />
-				<title>{`${t('wishlist')} | VipTourist`}</title>
-			</Head>
-			<Wrapper>
-				<Container className='flex flex-col pt-10 pb-24 mx-auto'>
-					<div className='w-full h-full min-h-screen flex flex-col'>
-						<Breadcrumbs
-							className='self-start mb-8'
-							breadcrumbs={favouritesBreadcrumbs}
-						/>
-						<NoSSR>
-							{favourites.length === 0 || isError ? (
-								<NoFavourites />
-							) : (
-								<Cards tours={data} />
-							)}
-						</NoSSR>
-					</div>
-				</Container>
-			</Wrapper>
-		</>
-	)
+  return (
+    <>
+      <Head>
+        <meta name='robots' content='noindex' />
+        <title>{`${t('wishlist')} | VipTourist`}</title>
+      </Head>
+      <Wrapper>
+        <Container className='flex flex-col pt-10 pb-24 mx-auto'>
+          <div className='w-full h-full min-h-screen flex flex-col'>
+            <Breadcrumbs
+              className='self-start mb-8'
+              breadcrumbs={favouritesBreadcrumbs}
+            />
+            <NoSSR>
+              {!favourites.length || isError ? (
+                <NoFavourites />
+              ) : (
+                <Cards tours={data} />
+              )}
+            </NoSSR>
+          </div>
+        </Container>
+      </Wrapper>
+    </>
+  )
 }
 
 Main.getLayout = function getLayout(page: ReactElement) {
-	return <Layout>{page}</Layout>
+  return <Layout>{page}</Layout>
 }
 
 export default Main

@@ -4,7 +4,7 @@ import Icon from '@mdi/react'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 
-export const NoFavourites = () => {
+export const NoNotifications = () => {
   const { push } = useRouter()
   const { t } = useTranslation()
 
@@ -28,7 +28,7 @@ export const NoFavourites = () => {
           ))}
         </span>
       </div>
-      <p className='text-lg mt-12 text-center mb-8'>{t('favTag')}</p>
+      <p className='text-lg mt-12 text-center mb-8'>{t('noSuggestions')}</p>
       <Button
         className='w-8/12 mx-auto'
         onClick={() => {

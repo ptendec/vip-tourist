@@ -1,4 +1,5 @@
 import { getNotifications } from '@/API/notification.service'
+import { NoNotifications } from '@/components/Static/Empty/Notifications'
 import { Breadcrumbs } from '@/components/UI/Breadcrumbs'
 import { Container } from '@/components/UI/Container'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
@@ -14,71 +15,81 @@ import Head from 'next/head'
 import { ReactElement } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async context => {
-	return {
-		props: {
-			...(await serverSideTranslations(context.locale as string, ['common'])),
-		},
-	}
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale as string, ['common'])),
+    },
+  }
 }
 
 const Main = () => {
-	const { locale, query } = useRouter()
-	const { t } = useTranslation()
-	const { user } = useFirebaseAuth()
+  const { locale, query } = useRouter()
+  const { t } = useTranslation()
+  const { user } = useFirebaseAuth()
 
-	const { data, isLoading, isError } = useQuery(['favourites'], () =>
-		getNotifications({ locale: locale as string, uid: user?.uid as string }),
-	)
+  const { data, isLoading, isError } = useQuery(
+    ['favourites'],
+    () =>
+      getNotifications({ locale: locale as string, uid: user?.uid as string }),
+    {
+      retry: false,
+    },
+  )
+  console.log(isError || !data)
 
-	const notificationsBreadcrumbs: Breadcrumb[] = [
-		{
-			id: 1,
-			name: 'home',
-			href: '/',
-		},
-		{
-			id: 2,
-			name: 'notification',
-			href: '/notifications',
-		},
-	]
+  const notificationsBreadcrumbs: Breadcrumb[] = [
+    {
+      id: 1,
+      name: 'home',
+      href: '/',
+    },
+    {
+      id: 2,
+      name: 'notification',
+      href: '/notifications',
+    },
+  ]
 
-	if (isLoading) return <>Loading...</>
-	if (isError) return <>Error...</>
+  if (isLoading) return <>Loading...</>
+  if (isError) return <>Error...</>
 
-	return (
-		<>
-			<Head>
-				<meta name='robots' content='noindex' />
-				<title>{t('notification')} | VipTourist</title>
-			</Head>
-			<Wrapper>
-				<Container className='flex flex-row pt-10 pb-24 mx-auto'>
-					<div className='w-full'>
-						<div className='w-full h-full min-h-screen flex flex-col'>
-							<Breadcrumbs
-								className='self-start mb-8'
-								breadcrumbs={notificationsBreadcrumbs}
-							/>
-							{data.map(item => (
-								<div
-									key={item.id}
-									className='w-1/2 border border-lightGray rounded-lg px-3 py-2 shadow-lg'
-								>
-									<p className='font-medium'>{item.title}</p>
-									<span className='text-sm'>{item.body}</span>
-								</div>
-							))}
-						</div>
-					</div>
-				</Container>
-			</Wrapper>
-		</>
-	)
+  return (
+    <>
+      <Head>
+        <meta name='robots' content='noindex' />
+        <title>{t('notification')} | VipTourist</title>
+      </Head>
+      <Wrapper>
+        <Container className='flex flex-row pt-10 pb-24 mx-auto'>
+          <div className='w-full'>
+            <div className='w-full h-full min-h-screen flex flex-col'>
+              <Breadcrumbs
+                className='self-start mb-8'
+                breadcrumbs={notificationsBreadcrumbs}
+              />
+              {isError || !data || !data.length ? (
+                <NoNotifications />
+              ) : (
+                data.map(item => (
+                  <div
+                    key={item.id}
+                    className='w-1/2 border border-lightGray rounded-lg px-3 py-2 shadow-lg'
+                  >
+                    <p className='font-medium'>{item.title}</p>
+                    <span className='text-sm'>{item.body}</span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </Container>
+      </Wrapper>
+    </>
+  )
 }
 
 Main.getLayout = function getLayout(page: ReactElement) {
-	return <Layout>{page}</Layout>
+  return <Layout>{page}</Layout>
 }
 
 export default Main
