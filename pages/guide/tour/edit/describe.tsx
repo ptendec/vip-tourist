@@ -1,9 +1,8 @@
 import { getTour } from '@/API/tour.service'
 import { components } from '@/API/types/api.types'
 import NoSSR from '@/components/Common/NoSSR'
-import { ChooseCategories } from '@/components/Modal/Categories'
+import { ChooseCategories } from '@/components/Modal/Edit/Categories'
 import { Button } from '@/components/UI/Button'
-import { Categories } from '@/components/UI/Categories'
 import { Container } from '@/components/UI/Container'
 import { Input } from '@/components/UI/Input'
 import { MultiSelect } from '@/components/UI/MultiSelect'
@@ -11,12 +10,8 @@ import { Textarea } from '@/components/UI/Textarea'
 import { Layout } from '@/modules/Layout'
 import { Wrapper } from '@/modules/Layout/Wrapper'
 import { DescribeFields, ListItem } from '@/utilities/interfaces'
-import { langList, staticCategories } from '@/utilities/static'
-import {
-  getAddedCategories,
-  getAddedLanguages,
-  removeAllCategories,
-} from '@/utilities/utilities'
+import { langList } from '@/utilities/static'
+import { getAddedCategories, getAddedLanguages } from '@/utilities/utilities'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { GetServerSideProps } from 'next'
@@ -315,47 +310,13 @@ const Main = () => {
                     })}
                     error={errors.description?.message}
                   />
-                  <Categories
-                    className='mt-2'
-                    chosenItems={getAddedCategories(tour)}
-                    list={staticCategories}
-                    onChange={(items: ListItem[]) => {
-                      if (items.length === 0 && tour) {
-                        editTour({
-                          ...tour,
-                          ...removeAllCategories(tour),
-                          id: query.id as string,
-                        })
-                      } else {
-                        if (tour) {
-                          staticCategories.forEach(category => {
-                            if (
-                              Object.entries(tour).find(
-                                elem =>
-                                  elem[0] ===
-                                  items.find(
-                                    item => item.value === category.value,
-                                  )?.value,
-                              )
-                            ) {
-                              // @ts-expect-error Ожидаемая ошибка
-                              tour[category.value] = true
-                            } else {
-                              // @ts-expect-error Ожидаемая ошибка
-                              tour[category.value] = false
-                            }
-                          })
-                          editTour({
-                            ...tour,
-                            id: query.id as string,
-                            name: tour?.name,
-                            description: tour?.description,
-                          })
-                        }
-                      }
-                    }}
-                    label={t('categories')}
-                  />
+                  <Button
+                    type='button'
+                    onClick={() => setIsCategories(true)}
+                    className='my-2'
+                  >
+                    {t('selectCategories')}
+                  </Button>
                   <span
                     key={JSON.stringify(tour)}
                     className='capitalize text-xs font-medium'
