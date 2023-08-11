@@ -1,48 +1,43 @@
 import { searchCity } from '@/API/city.service'
-import { Input } from '@/components/UI/Input'
 import { useDebounce } from '@/hooks/useDebounce'
 import { isTourExists } from '@/utilities/utilities'
-import { mdiFlagVariantOff, mdiMagnify } from '@mdi/js'
-import Icon from '@mdi/react'
 import { useQuery } from '@tanstack/react-query'
-import clsx from 'clsx'
 import { useTranslation } from 'next-i18next'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDraftStore } from 'store/draft'
 
 export const CityStep = () => {
-	const { t } = useTranslation()
-	const { locale, pathname, query } = useRouter()
-	const { addTour, tours, editTour } = useDraftStore()
-	const [searchTerm, setSearchTerm] = useState('')
-	const debouncedSearchTerm: string = useDebounce<string>(searchTerm, 500)
-	const { data, isLoading, isError, refetch } = useQuery(
-		['search', 'city'],
-		() =>
-			searchCity({
-				name: searchTerm,
-			}),
-	)
+  const { t } = useTranslation()
+  const { locale, pathname, query } = useRouter()
+  const { addTour, tours, editTour } = useDraftStore()
+  const [searchTerm, setSearchTerm] = useState('')
+  const debouncedSearchTerm: string = useDebounce<string>(searchTerm, 500)
+  const { data, isLoading, isError, refetch } = useQuery(
+    ['search', 'city'],
+    () =>
+      searchCity({
+        name: searchTerm,
+      }),
+  )
 
-	useEffect(() => {
-		refetch()
-	}, [debouncedSearchTerm])
+  useEffect(() => {
+    refetch()
+  }, [debouncedSearchTerm])
 
-	const existingTour = isTourExists(query.id as string, tours)
+  const existingTour = isTourExists(query.id as string, tours)
 
-	useEffect(() => {
-		if (!existingTour) {
-			addTour({
-				id: query.id as string,
-				name: '',
-			})
-		}
-	}, [query.id])
+  useEffect(() => {
+    if (!existingTour) {
+      addTour({
+        id: query.id as string,
+        name: '',
+      })
+    }
+  }, [query.id])
 
-	if (isLoading) return <>Loading...</>
-	if (isError) return <>Error!</>
+  if (isLoading) return <>Loading...</>
+  if (isError) return <>Error!</>
 
-	return <></>
+  return <></>
 }

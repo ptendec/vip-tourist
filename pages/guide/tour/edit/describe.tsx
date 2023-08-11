@@ -293,7 +293,7 @@ const Main = () => {
                 <div>
                   <Input
                     className='mb-5'
-                    label='Название'
+                    label='enterTourName'
                     placeholder={t('enterTourName') as string}
                     {...register('name', {
                       required: `${t('fieldShouldntBe')}`,

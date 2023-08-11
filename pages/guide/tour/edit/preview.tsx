@@ -160,7 +160,7 @@ const Main = () => {
                   id='save'
                   className='px-3 h-8'
                   onClick={() => {
-                    toast.success('Изменения сохранены')
+                    toast.success('success')
                     push('/guide/account', undefined, { shallow: true })
                   }}
                 >
@@ -268,7 +268,9 @@ const Main = () => {
                         {t('whatIncluded')}
                       </p>
                       <span className='sm:text-sm'>
-                        {tour?.included !== '' ? tour?.included : 'Не указано'}
+                        {tour?.included !== ''
+                          ? tour?.included
+                          : t('undefined')}
                       </span>
                     </div>
                     <div className='my-3 w-full h-[1px] bg-lightGray' />
@@ -279,7 +281,7 @@ const Main = () => {
                       <span className='sm:text-sm'>
                         {tour?.not_included !== ''
                           ? tour?.not_included
-                          : 'Не указано'}
+                          : t('undefined')}
                       </span>
                     </div>
                     <div className='my-3 w-full h-[1px] bg-lightGray' />

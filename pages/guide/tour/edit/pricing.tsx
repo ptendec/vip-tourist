@@ -70,7 +70,7 @@ const Main = () => {
         <Tooltip
           noArrow
           delayShow={200}
-          content='Сохранить на время'
+          content={t('save') ?? ''}
           anchorSelect='save'
           place='bottom'
         />
@@ -92,7 +92,7 @@ const Main = () => {
                   id='save'
                   className='px-3 h-8'
                   onClick={() => {
-                    toast.success('Изменения сохранены')
+                    toast.success('success')
                     push('/guide/account', undefined, { shallow: true })
                   }}
                 >

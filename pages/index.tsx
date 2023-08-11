@@ -24,103 +24,103 @@ import { useRecentStore } from 'store/recent'
 import { calcDayDifference, json } from 'utilities/utilities'
 
 export const getServerSideProps: GetServerSideProps = async context => {
-	const queryClient = new QueryClient()
-	await queryClient.prefetchQuery(['tours'], () =>
-		getTours({ locale: context.locale as string, query: '_limit=10' }),
-	)
-	await queryClient.prefetchQuery(['cities'], () =>
-		getCities({ locale: context.locale as string, query: '_popular=true' }),
-	)
-	return {
-		props: {
-			...(await serverSideTranslations(context.locale as string, ['common'])),
-			dehydratedState: json(dehydrate(queryClient)),
-		},
-	}
+  const queryClient = new QueryClient()
+  await queryClient.prefetchQuery(['tours'], () =>
+    getTours({ locale: context.locale as string, query: '_limit=10' }),
+  )
+  await queryClient.prefetchQuery(['cities'], () =>
+    getCities({ locale: context.locale as string, query: '_popular=true' }),
+  )
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale as string, ['common'])),
+      dehydratedState: json(dehydrate(queryClient)),
+    },
+  }
 }
 
 const Main = () => {
-	const { t } = useTranslation()
-	const { locale } = useRouter()
-	const { lastAlert, setAlert } = usePreferencesStore()
-	const { recents } = useRecentStore()
-	const [isInstallApp, setIsInstallApp] = useState(true)
+  const { t } = useTranslation()
+  const { locale } = useRouter()
+  const { lastAlert, setAlert } = usePreferencesStore()
+  const { recents } = useRecentStore()
+  const [isInstallApp, setIsInstallApp] = useState(true)
 
-	const {
-		data: recent,
-		isLoading,
-		isError,
-		refetch,
-	} = useQuery(
-		['favourites'],
-		() => getFavourites({ locale: locale as string, tours: recents }),
-		{
-			enabled: !!recents.length,
-			retry: false,
-		},
-	)
+  const {
+    data: recent,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery(
+    ['favourites'],
+    () => getFavourites({ locale: locale as string, tours: recents }),
+    {
+      enabled: !!recents.length,
+      retry: false,
+    },
+  )
 
-	const {
-		data: tours,
-		isLoading: isToursLoading,
-		isError: isToursError,
-	} = useQuery(['tours'], () =>
-		getTours({ locale: locale as string, query: '_limit=10' }),
-	)
+  const {
+    data: tours,
+    isLoading: isToursLoading,
+    isError: isToursError,
+  } = useQuery(['tours'], () =>
+    getTours({ locale: locale as string, query: '_limit=10' }),
+  )
 
-	const {
-		data: cities,
-		isLoading: isCitiesLoading,
-		isError: isCitiesError,
-	} = useQuery(['cities'], () =>
-		getCities({ locale: locale as string, query: '_popular=true' }),
-	)
+  const {
+    data: cities,
+    isLoading: isCitiesLoading,
+    isError: isCitiesError,
+  } = useQuery(['cities'], () =>
+    getCities({ locale: locale as string, query: '_popular=true' }),
+  )
 
-	if (isCitiesLoading || isToursLoading) return <>Loading...</>
-	if (isToursError || isCitiesError) return <>Error!</>
+  if (isCitiesLoading || isToursLoading) return <>Loading...</>
+  if (isToursError || isCitiesError) return <>Error!</>
 
-	return (
-		<>
-			<Head>
-				<title>VipTourist</title>
-			</Head>
-			<NoSSR>
-				<Alert
-					isVisible={
-						!!(
-							lastAlert === undefined ||
-							calcDayDifference(new Date(), new Date(lastAlert)) > 7
-						)
-					}
-					onClose={() => setAlert()}
-				/>
-				<InstallApp
-					onClose={() => setIsInstallApp(false)}
-					isVisible={isInstallApp}
-				/>
-			</NoSSR>
-			<Wrapper>
-				<Container className='pt-10 pb-24 flex flex-col mx-auto'>
-					<Search />
-					<Cards title={t('popularTours')} tours={tours} />
-					{recent && recent.length > 0 && (
-						<Cards title={t('recentlyWatched')} tours={recent} />
-					)}
-					<Link
-						href={'/cities'}
-						className='text-green font-semibold text-sm ml-auto inline-block relative top-14'
-					>
-						{t('showAll')}
-					</Link>
-					<Towns cities={cities}></Towns>
-				</Container>
-			</Wrapper>
-		</>
-	)
+  return (
+    <>
+      <Head>
+        <title>VipTourist</title>
+      </Head>
+      <NoSSR>
+        <Alert
+          isVisible={
+            !!(
+              lastAlert === undefined ||
+              calcDayDifference(new Date(), new Date(lastAlert)) > 7
+            )
+          }
+          onClose={() => setAlert()}
+        />
+        <InstallApp
+          onClose={() => setIsInstallApp(false)}
+          isVisible={isInstallApp}
+        />
+      </NoSSR>
+      <Wrapper>
+        <Container className='pt-10 xs:pt-0 pb-24 flex flex-col mx-auto'>
+          <Search />
+          <Cards title={t('popularTours')} tours={tours} />
+          {recent && recent.length > 0 && (
+            <Cards title={t('recentlyWatched')} tours={recent} />
+          )}
+          <Link
+            href={'/cities'}
+            className='text-green font-semibold text-sm ml-auto inline-block relative top-14'
+          >
+            {t('showAll')}
+          </Link>
+          <Towns cities={cities}></Towns>
+        </Container>
+      </Wrapper>
+    </>
+  )
 }
 
 Main.getLayout = function getLayout(page: ReactElement) {
-	return <Layout>{page}</Layout>
+  return <Layout>{page}</Layout>
 }
 
 export default Main

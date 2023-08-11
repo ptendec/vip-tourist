@@ -45,6 +45,7 @@ export const ChooseCategories = ({ isVisible, onClose }: Props) => {
       },
       {},
     )
+    console.log(transformedObject)
 
     if (existingTour) {
       editTour(query.id as string, {

@@ -190,14 +190,14 @@ const Main = () => {
           <div className='mt-8'>
             <p className='font-semibold text-lg flex gap-x-3 items-center'>
               {t('myTours')}
-              <Link
+              <a
                 id='addTour'
                 href={`/guide/tour/add/describe/?id=${generateUUID()}&step=1`}
               >
                 <Button className='rounded-full w-6 h-6'>
                   <Icon path={mdiPlus} size={0.8} />
                 </Button>
-              </Link>
+              </a>
             </p>
           </div>
           <div className='flex gap-x-3 mt-4 md:overflow-x-auto scrollbar-hide '>

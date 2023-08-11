@@ -157,7 +157,7 @@ const Main = () => {
                   id='save'
                   className='px-3 h-8'
                   onClick={() => {
-                    toast.success('Изменения сохранены')
+                    toast.success('success')
                     push('/guide/account', undefined, { shallow: true })
                   }}
                 >

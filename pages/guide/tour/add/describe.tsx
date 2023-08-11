@@ -51,6 +51,7 @@ const Main = () => {
   const [existingTour, setExistingTour] = useState<Tour | undefined>(
     tours.find(tour => tour.id === (query.id as string)),
   )
+
   const [isCategories, setIsCategories] = useState(false)
 
   useEffect(() => {
